@@ -1,7 +1,7 @@
 import React from "react";
-import ReactDOM from 'react-dom';
 import "../../styles/LoginForm.css";
-const LoginForm = () => {
+
+export function LoginForm() {
     return (
         <div className=
             "d-flex justify-content-center align-items-center mt-5 bg-white p-3">
@@ -97,5 +97,3 @@ const LoginForm = () => {
         </div>
     );
 };
-
-export default LoginForm;
