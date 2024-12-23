@@ -130,6 +130,11 @@ class Group_Finances(db.Model):
     create_by = db.Column(db.Integer, db.ForeignKey('users.id_user',ondelete = 'CASCADE'), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
 
+    # Relaciones bidireccionales
+    group = db.relationship('Groups', backref='group_finances_group')
+    finance = db.relationship('Finances', backref='group_finances_finance')
+    user = db.relationship('Users', backref='group_finances_user')
+
     def __repr__(self):
         return f'<Group_Finance {self.id_group} - {self.id_finance} from {self.create_by}>'
 
