@@ -1,11 +1,11 @@
 # Aplicación de Gestión Financiera Personal
 
-## Descripción General
+## Descripción General.
 
 Esta aplicación ayuda a los usuarios a registrar sus ingresos, gastos y presupuestos, ofreciendo un análisis detallado de su situación financiera y recomendaciones personalizadas basadas en sus hábitos de consumo. Está diseñada para simplificar la gestión financiera personal con funcionalidades visuales y fáciles de usar.
 En el que aparte puede crear grupos de usuarios con el que compartiran las finanzas y un chat en el que estará fromado por los integrantes del grupo para poder comunicarse entre ellos sin necesidad de una aplicación externa.
 
-## Funcionalidades Principales
+## Funcionalidades Principales..
 
 1. Registro de Transacciones
 
