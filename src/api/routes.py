@@ -63,7 +63,7 @@ def login():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@api.route('/profile', methods=['GET'])
+@api.route('/home', methods=['GET'])
 @jwt_required()
 def profile():
     try:
