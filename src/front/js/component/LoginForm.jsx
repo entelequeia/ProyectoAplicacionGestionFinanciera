@@ -1,11 +1,48 @@
-import React from "react";
-import { CiUser } from "react-icons/ci";
+import React, { useState } from "react";
 import { MdOutlineEmail } from "react-icons/md";
 import { TbPasswordFingerprint } from "react-icons/tb";
 import { FaTwitter, FaFacebook, FaLinkedin } from "react-icons/fa";
 import "../../styles/LoginForm.css";
+import { useNavigate } from "react-router-dom";
 
-export function LoginForm() {
+export function LoginForm({ onLogin }) {
+    const [email, setEmail] = useState()
+    const [password, setPassword] = useState()
+    const [message, setMessage] = useState()
+    const [error, setError] = useState(false)
+    const navigate = useNavigate()
+
+    const Login = async ({ email, password }) => {
+        try {
+            const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 'email': email, 'password': password })
+            })
+            const data = await response.json()
+            if (response.status === 200) {
+                localStorage.setItem('token', data.token)
+                onLogin(data.token)
+                navigate('/home')
+            }
+
+            if (response.status !== 200) {
+                setError(true)
+                setMessage(data.error)
+                setInterval(() => setError(false), 3000)
+            }
+        } catch (error) {
+            setError(true)
+            setMessage('Error en la conexión')
+            console.log('error', error)
+        }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        Login({ email, password })
+    }
+
     return (
         <div className="d-flex justify-content-center align-items-center mt-5 bg-white p-3">
             <div className="d-flex flex-md-row bg-white rounded shadow-lg overflow-hidden custom-container">
@@ -29,21 +66,14 @@ export function LoginForm() {
                     {/* Formulario de registro */}
                     <form className="w-100" style={{ maxWidth: '400px' }}>
                         <div className="mb-3 input-container">
-                            <CiUser className="icon" />
-                            <input
-                                type="text"
-                                id="name"
-                                className="form-control"
-                                placeholder="Name"
-                            />
-                        </div>
-                        <div className="mb-3 input-container">
                             <MdOutlineEmail className="icon" />
                             <input
                                 type="email"
                                 id="email"
                                 className="form-control"
                                 placeholder="Email"
+                                required
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                         <div className="mb-3 input-container">
@@ -53,12 +83,21 @@ export function LoginForm() {
                                 id="password"
                                 className="form-control"
                                 placeholder="Password"
+                                required
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <button type="submit" id="btnSingup" className="btn btn-violet bg-gradient w-100 py-2 rounded-pill">
+                        <button type="submit" onClick={handleSubmit} id="btnSingup" className="btn btn-violet bg-gradient w-100 py-2 rounded-pill">
                             SIGN IN
                         </button>
                     </form>
+
+                    {/* Mensaje de error */}
+                    {error && (
+                        <div className="alert alert-danger mt-3" role="alert">
+                            {message}
+                        </div>
+                    )}
 
                     {/* Íconos Sociales */}
                     <div className="d-flex justify-content-center mt-5">
