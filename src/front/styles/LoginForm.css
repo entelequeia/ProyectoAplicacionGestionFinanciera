@@ -2,40 +2,47 @@
 @tailwind components;
 @tailwind utilities; */
 
-/* PARTE IZQUIERDA */
-.custom1-container {
-    background-color: #5614f0;
-    border-radius: 15px;
-    padding: 30px;
-    max-width: 500px;
+/* Sección izquierda*/
+.bg-primary {
+    background-color: #7879F1 !important;
 }
 
-#text1 {
-    font-weight: 500;
-
-}
-
-/* PARTE DERECHA */
-
-.text-violet2 {
-    color: #5614f0;
-    font-size: 45px;
-    font-weight: 500;
+.bg-secondary {
+    background-color: #ffffff !important;
 }
 
 #btnSingup {
-    background-color: #5614f0;
+    background-color: #5D5FEF;
     color: white;
     border: none;
 }
 
 #btnSingup:hover {
-    background-color: #200563;
+    background-color: #7879F1;
 }
 
-#botonRedes {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
+/* Botones de redes sociales */
+.btn-light {
+    background-color: #ffffff;
+    color: #000000;
 }
+
+.btn-light:hover {
+    background-color: #f8f9fa;
+}
+
+/* Seccion derecha: Formulario */
+.form-control {
+    background-color: #cacaca;
+}
+
+.display-4, .display-5 {
+    font-weight: 500;
+}
+
+/* Sección de social media icons */
+i {
+    font-size: 15px;
+}
+
+
