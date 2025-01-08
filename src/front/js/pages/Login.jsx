@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { MdOutlineEmail } from "react-icons/md";
 import { TbPasswordFingerprint } from "react-icons/tb";
 import { FaTwitter, FaFacebook, FaLinkedin } from "react-icons/fa";
-import "../../styles/LoginForm.css";
-import { useNavigate } from "react-router-dom";
+import "../../styles/Login.css";
+import { useNavigate, Link } from "react-router-dom";
 
-export function LoginForm({ onLogin }) {
+export function Login({ onLogin }) {
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     const [message, setMessage] = useState()
@@ -50,18 +50,18 @@ export function LoginForm({ onLogin }) {
                 <div className="bg-lightviolet bg-gradient text-white d-flex flex-column align-items-center justify-content-center col-lg-6 col-md-6 col-sm-12 p-5 position-relative z-index-2 custom1-container">
                     <h1 className="display-4 mb-4 fw-bolder">Welcome Back!</h1>
                     <p className="lead mb-5">
-                        To keep connected, please login with your account.
+                        or create an account with your email.
                     </p>
                     {/* Botón de iniciar sesión */}
                     <button className="btn btn-outline-light text-white rounded-pill px-5 py-2 shadow-sm btn-signin">
-                        SIGN UP
+                        <Link to="/signup" className="text-white text-decoration-none">SIGN UP</Link>
                     </button>
                 </div>
 
                 {/* Sección derecha: Create Account */}
                 <div className="bg-violet text-center text-white d-flex flex-column align-items-center justify-content-center col-lg-6 col-md-6 col-sm-12 p-5 position-relative z-index-2 custom2-container">
-                    <h1 className="display-5 text-violet2 mb-4">Create Account</h1>
-                    <p className="text-muted mb-5">or use your email for registration</p>
+                    <h1 className="display-5 text-violet2 mb-4">Login</h1>
+                    <p className="text-muted mb-5">use your email to access</p>
 
                     {/* Formulario de registro */}
                     <form className="w-100" style={{ maxWidth: '400px' }}>
@@ -87,7 +87,12 @@ export function LoginForm({ onLogin }) {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <button type="submit" onClick={handleSubmit} id="btnSingup" className="btn btn-violet bg-gradient w-100 py-2 rounded-pill">
+                        <button
+                            type="submit"
+                            onClick={handleSubmit}
+                            id="btnSingup"
+                            className="btn btn-violet bg-gradient w-100 py-2 rounded-pill"
+                        >
                             SIGN IN
                         </button>
                     </form>
