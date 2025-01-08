@@ -1,7 +1,3 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
-
 /* PARTE IZQUIERDA */
 .custom1-container {
     background-color: #5614f0;
@@ -17,7 +13,7 @@
 }
 
 /* PARTE DERECHA */
-.custom2-container{
+.custom2-container {
     width: 60%;
     height: 100%;
 }
@@ -28,7 +24,7 @@
     font-weight: 500;
 }
 
-.form-control{
+.form-control {
     background-color: #f7f7f7;
 }
 
@@ -39,6 +35,10 @@
 }
 
 #btnSingup:hover {
+    background-color: #200563;
+}
+
+.btn-signin:hover {
     background-color: #200563;
 }
 

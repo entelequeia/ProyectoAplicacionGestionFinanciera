@@ -11,7 +11,8 @@ import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
-import { LoginForm } from "./pages/LoginForm.jsx";
+import { Login } from "./pages/Login.jsx";
+import { Signup } from "./pages/Signup.jsx";
 
 //create your first component
 const Layout = () => {
@@ -68,7 +69,8 @@ const Layout = () => {
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
-                        <Route element={<LoginForm onLogin={handleLogin}/>} path="/" />
+                        <Route element={<Login onLogin={handleLogin}/>} path="/" />
+                        <Route element={<Signup />} path="/signup" />
                         {isValidToken
                         ? <Route element={<Home />} path="/home" />
                         : <Route path='*' element={<h1>No tienes acceso</h1>} />}

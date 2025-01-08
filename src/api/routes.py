@@ -14,7 +14,7 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
-@api.route('/singup', methods=['POST'])
+@api.route('/signup', methods=['POST'])
 def create_user():
     try:
         request_body = request.get_json()
