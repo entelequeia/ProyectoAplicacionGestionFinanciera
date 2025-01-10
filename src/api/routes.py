@@ -72,3 +72,16 @@ def profile():
         return jsonify(user.serialize()), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@api.route('/finances/<int:id_user>', methods=['GET'])
+def finances(id_user):
+    try:
+        user = Users.query.filter_by(id_user=id_user).first()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        response = [finance.serialize() for finance in user.finances]
+        return jsonify(response), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
