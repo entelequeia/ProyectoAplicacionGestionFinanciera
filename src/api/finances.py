@@ -3,6 +3,24 @@ from models import db, Finances
 
 finances_bp = Blueprint ('finances', __name__)
 
+# Ruta para obtener las categorías
+@finances_bp.route('/api/categories', methods=['GET'])
+def get_categories():
+    categories = [
+        {"id": 1, "label": "Comida"},
+        {"id": 2, "label": "Transporte"},
+    ]
+    return jsonify(categories)
+
+# Ruta para obtener los tipos
+@finances_bp.route('/api/types', methods=['GET'])
+def get_types():
+    types = [
+        {"id": 1, "label": "Ingresos"},
+        {"id": 2, "label": "Gastos"},
+    ]
+    return jsonify(types)
+
 @finances_bp.route('/finances', methods= ['GET'])
 def get_finances():
     finances = Finances.query.all()
@@ -15,15 +33,15 @@ def get_finance(id):
         return jsonify({"error": "Finance not found"}), 404
     return jsonify(finance.seriaize()), 200
 
-@finances_bp.route('/finances', methods= ['POST'])
-def create_finances():
+@finances_bp.route('/finances', methods=['POST'])
+def create_finance():
     data = request.get_json()
-    try: 
-        new_finance = Finances (
+    try:
+        new_finance = Finances(
             name=data['name'],
             amount=data['amount'],
             date=data['date'],
-            description=data.get['description'],
+            description=data.get('description'),
             id_category=data['id_category'],
             id_user=data['id_user'],
             id_type=data['id_type']
@@ -32,9 +50,9 @@ def create_finances():
         db.session.commit()
         return jsonify(new_finance.serialize()), 201
     except Exception as e:
-        return jsonify({'error': str(e)}), 400
+        return jsonify({"error": str(e)}), 400
 
-@finances_bp.route('/finances <int:id>', methods= ['PUT'])
+@finances_bp.route('/finances/<int:id>', methods= ['PUT'])
 def update_finance():
     data = request.get_json()
     finance = Finances.quary.get(id)
