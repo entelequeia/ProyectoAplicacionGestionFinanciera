@@ -29,10 +29,10 @@ def get_finances():
 
 @finances_bp.route('/api/finances/<int:id>', methods= ['GET'])
 def get_finances_id(id):
-    finance = Finances.query.get(id)
+    finance = Finances.query.filter_by(id_finance=id).first()
     if not finance:
         return jsonify({"error": "Finance not found"}), 404
-    return jsonify(finance.seriaize()), 200
+    return jsonify(finance.serialize()), 200
 
 @finances_bp.route('/api/finances', methods=['POST'])
 def create_finance():
@@ -54,23 +54,23 @@ def create_finance():
         return jsonify({"error": str(e)}), 400
 
 @finances_bp.route('/api/finances/<int:id>', methods= ['PUT'])
-def update_finance():
+def update_finance(id):
     data = request.get_json()
-    finance = Finances.quary.get(id)
+    finance = Finances.query.get(id)
     if not finance:
         return jsonify({"error": "Finance not found"}), 404
-    try: 
-            finance.name = data ['name']
-            finance.amount = data ['amount']
-            finance.date = data ['date']
-            finance.description = data.get ['description']
-            finance.id_category = data ['id_category']
-            finance.id_user = data ['id_ser']
-            finance.id_type = data ['id_type']
-            db.session.commit()
-            return jsonify(finance.serialize()), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 400
+    try:
+        finance.name = data['name']  
+        finance.amount = data['amount']  
+        finance.date = data['date']  
+        finance.description = data.get('description')  
+        finance.id_category = data['id_category']  
+        finance.id_user = data['id_user']  
+        finance.id_type = data['id_type']  
+        db.session.commit()  
+        return jsonify(finance.serialize()), 200  
+    except Exception as e:  
+        return jsonify({"error": str(e)}), 400
     
 @finances_bp.route('/api/finances/<int:id>', methods= ['DELETE'])
 def delete_finance(id):
