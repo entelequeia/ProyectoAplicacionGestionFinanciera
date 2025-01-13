@@ -14,7 +14,7 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
-@api.route('/singup', methods=['POST'])
+@api.route('/signup', methods=['POST'])
 def create_user():
     try:
         request_body = request.get_json()
@@ -63,12 +63,25 @@ def login():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@api.route('/profile', methods=['GET'])
+@api.route('/home', methods=['GET'])
 @jwt_required()
 def profile():
     try:
         current_user = get_jwt_identity()
         user = Users.query.filter_by(email=current_user).first()
         return jsonify(user.serialize()), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@api.route('/finances/<int:id_user>', methods=['GET'])
+def finances(id_user):
+    try:
+        user = Users.query.filter_by(id_user=id_user).first()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        response = [finance.serialize() for finance in user.finances]
+        return jsonify(response), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
