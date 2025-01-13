@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, Users
+from api.models import db, Users, Groups, Roles
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -83,5 +83,47 @@ def finances(id_user):
 
         response = [finance.serialize() for finance in user.finances]
         return jsonify(response), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@api.route('/create_groups', methods=['POST'])
+def create_groups():
+    try:
+        request_body = request.get_json()
+
+        if not request_body or "name" not in request_body:
+            return jsonify({"error": "Request body is empty"}), 400
+        
+        if len(request_body["name"]) < 1:
+            return jsonify({"error": "Name is too short"}), 400
+        
+        group_duplicate = Groups.query.filter_by(name=request_body["name"]).first()
+        if group_duplicate:
+            return jsonify({"error": "Group already exists"}), 400
+        
+        group = Groups(name=request_body["name"], description=request_body.get("description"))
+        db.session.add(group)
+        db.session.commit()
+        return jsonify({"success": "Group created successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
+@api.route('change_rol/<int:id_user>', methods=['PUT'])
+def change_rol(id_user):
+    try:
+        user = Users.query.filter_by(id_user=id_user).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        data = request.get_json()
+
+        if 'id_rol' in data:
+            user.id_rol = data['id_rol']
+            db.session.commit()
+            return jsonify({"success": "Rol changed successfully"}), 200
+        else:
+            return jsonify({"error": "Missing id_rol"}), 400
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
