@@ -72,9 +72,9 @@ class Finances(db.Model):
     id_type = db.Column(db.Integer, db.ForeignKey('types.id_type'), nullable=False)
 
     # Relaciones bidireccionales
-    user = db.relationship('Users', backref='finances_user')
-    """ category = db.relationship('Categories', backref='finances_category')
-    type = db.relationship('Types', backref='finances_type') """
+    user = db.relationship('Users', backref='finances')
+    # """ category = db.relationship('Categories', backref='finances_category')
+    # type = db.relationship('Types', backref='finances_type') """
 
     def __repr__(self):
         return f'<Finance {self.name}>'

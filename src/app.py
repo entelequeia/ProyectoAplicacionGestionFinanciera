@@ -13,7 +13,7 @@ from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
 
 # Blueprint
-from routes.finances import finances_bp
+from api.finances import finances_bp
 
 
 # from models import Person
@@ -45,7 +45,7 @@ setup_admin(app)
 setup_commands(app)
 
 # Blueprint de finanzas con un prefijo '/api'
-app.register_blueprint(finances_bp, url_prefix='/api/finances')
+app.register_blueprint(finances_bp, name = "hola" )
 
 
 # Add all endpoints form the API with a "api" prefix

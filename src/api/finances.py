@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify
-from models import db, Finances
+from api.models import db, Finances
 
-finances_bp = Blueprint ('finances', __name__)
+
+finances_bp = Blueprint('finances', __name__)
 
 # Ruta para obtener las categorías
 @finances_bp.route('/api/categories', methods=['GET'])
@@ -21,19 +22,19 @@ def get_types():
     ]
     return jsonify(types)
 
-@finances_bp.route('/finances', methods= ['GET'])
+@finances_bp.route('/api/finances', methods= ['GET'])
 def get_finances():
     finances = Finances.query.all()
     return jsonify([finance.serialize() for finance in finances]), 200
 
-@finances_bp.route('/finances/<int:id>', methods= ['GET'])
-def get_finance(id):
+@finances_bp.route('/api/finances/<int:id>', methods= ['GET'])
+def get_finances_id(id):
     finance = Finances.query.get(id)
     if not finance:
         return jsonify({"error": "Finance not found"}), 404
     return jsonify(finance.seriaize()), 200
 
-@finances_bp.route('/finances', methods=['POST'])
+@finances_bp.route('/api/finances', methods=['POST'])
 def create_finance():
     data = request.get_json()
     try:
@@ -52,7 +53,7 @@ def create_finance():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-@finances_bp.route('/finances/<int:id>', methods= ['PUT'])
+@finances_bp.route('/api/finances/<int:id>', methods= ['PUT'])
 def update_finance():
     data = request.get_json()
     finance = Finances.quary.get(id)
@@ -71,7 +72,7 @@ def update_finance():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
     
-@finances_bp.route('/finances <int:id>', methods= ['DELETE'])
+@finances_bp.route('/api/finances/<int:id>', methods= ['DELETE'])
 def delete_finance(id):
     finance = Finances.query.get(id)
     if not finance:
