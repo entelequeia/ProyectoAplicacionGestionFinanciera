@@ -73,8 +73,10 @@ class Finances(db.Model):
 
     # Relaciones bidireccionales
     user = db.relationship('Users', backref='finances')
-    """ category = db.relationship('Categories', backref='finances_category')
-    type = db.relationship('Types', backref='finances_type') """
+    # """ category = db.relationship('Categories', backref='finances_category')
+    # type = db.relationship('Types', backref='finances_type') """
+
+
 
     def __repr__(self):
         return f'<Finance {self.name}>'
