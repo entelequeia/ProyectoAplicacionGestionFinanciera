@@ -13,7 +13,7 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
-
+# Crear un nuevo usuario
 @api.route('/signup', methods=['POST'])
 def create_user():
     try:
@@ -39,6 +39,7 @@ def create_user():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Iniciar sesión con usuario existente y obtener token
 @api.route('/login', methods=['POST'])
 def login():
     try:
@@ -63,6 +64,7 @@ def login():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Solo se puede acceder a esta ruta si el token es válido
 @api.route('/home', methods=['GET'])
 @jwt_required()
 def profile():
@@ -73,6 +75,7 @@ def profile():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Obtener las finanzas de un usuario
 @api.route('/finances/<int:id_user>', methods=['GET'])
 def finances(id_user):
     try:
@@ -85,7 +88,8 @@ def finances(id_user):
         return jsonify(response), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
+# Crear un nuevo grupo    
 @api.route('/create_groups', methods=['POST'])
 def create_groups():
     try:
@@ -108,7 +112,8 @@ def create_groups():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-        
+
+# Cambiar el rol de un usuario     
 @api.route('change_rol/<int:id_user>', methods=['PUT'])
 def change_rol(id_user):
     try:
