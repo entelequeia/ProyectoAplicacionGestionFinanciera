@@ -113,7 +113,7 @@ def create_groups():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Cambiar el rol de un usuario     
+# Cambiar el rol de un usuario una vez que cree el grupo
 @api.route('change_rol/<int:id_user>', methods=['PUT'])
 def change_rol(id_user):
     try:
