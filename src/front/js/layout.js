@@ -76,6 +76,7 @@ const Layout = () => {
                     <Routes>
                         <Route element={<Login onLogin={handleLogin}/>} path="/" />
                         <Route element={<Signup />} path="/signup" />
+                        <Route element={<Demo />} path="/demo" />
                         {isValidToken
                         ? <Route element={<Home />} path="/home" />
                         : <Route path='*' element={<h1>No tienes acceso</h1>} />}
