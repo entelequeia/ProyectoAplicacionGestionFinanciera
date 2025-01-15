@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 import { Loader } from "./component/Loader.jsx";
+import { Error404 } from "./pages/Error404.jsx";
 import { Context } from "./store/appContext";
 
 import { Home } from "./pages/home";
@@ -80,7 +81,7 @@ const Layout = () => {
                         {isValidToken
                         ? <Route element={<Home />} path="/home" />
                         : <Route path='*' element={<h1>No tienes acceso</h1>} />}
-                        <Route element={<h1>Not found!</h1>} />
+                         <Route path="/error404" element={<Error404 />}/> 
                     </Routes>
                     <Footer />
                 </ScrollToTop>
