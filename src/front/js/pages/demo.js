@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-
+import { FinanceForm } from "./FinanzasLogin.jsx";
 import { Context } from "../store/appContext";
 
 export const Demo = () => {
@@ -7,6 +7,7 @@ export const Demo = () => {
 
 	return (
 		<div className="container">
+			<FinanceForm/>
 		</div>
 	);
 };
