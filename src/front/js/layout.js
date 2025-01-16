@@ -8,13 +8,14 @@ import { Context } from "./store/appContext";
 import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
+import { Login } from "./pages/Login.jsx";
+import { Signup } from "./pages/Signup.jsx";
+import { Groups } from "./pages/Groups.jsx";
+
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
-import { Login } from "./pages/Login.jsx";
-import { Signup } from "./pages/Signup.jsx";
-
 
 //create your first component
 const Layout = () => {
@@ -43,7 +44,8 @@ const Layout = () => {
                     const data = await response.json()
                     if (response.ok){
                         setIsValidToken(true)
-                        actions.adduserData(data)
+                        actions.addUserData(data)
+                        actions.addUserGroup(data)
                     } else {
                         setIsValidToken(false)
                         localStorage.removeItem('token')
@@ -76,6 +78,7 @@ const Layout = () => {
                     <Routes>
                         <Route element={<Login onLogin={handleLogin}/>} path="/" />
                         <Route element={<Signup />} path="/signup" />
+                        <Route element={<Groups />} path="/groups" />
                         {isValidToken
                         ? <Route element={<Home />} path="/home" />
                         : <Route path='*' element={<h1>No tienes acceso</h1>} />}

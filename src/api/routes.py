@@ -76,7 +76,7 @@ def profile():
         return jsonify({"error": str(e)}), 500
 
 # Obtener las finanzas de un usuario
-@api.route('/finances/<int:id_user>', methods=['GET'])
+@api.route('/finances2/<int:id_user>', methods=['GET'])
 def finances(id_user):
     try:
         user = Users.query.filter_by(id_user=id_user).first()
@@ -108,7 +108,7 @@ def create_groups():
         group = Groups(name=request_body["name"], description=request_body.get("description"))
         db.session.add(group)
         db.session.commit()
-        return jsonify({"success": "Group created successfully"}), 200
+        return jsonify(group.serialize()), 200  
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -130,5 +130,40 @@ def change_rol(id_user):
         else:
             return jsonify({"error": "Missing id_rol"}), 400
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+# Agregar usuario a un grupo
+@api.route('/add_user_to_group/<int:id_user>', methods=['PUT'])
+def add_user_to_group(id_user):
+    try:
+        user = Users.query.filter_by(id_user=id_user).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        data = request.get_json()
+        if 'id_group' in data:
+            group = Groups.query.filter_by(id_group=data['id_group']).first()
+            if not group:
+                return jsonify({"error": "Group not found"}), 404
+            user.id_group = data['id_group']
+            db.session.commit()
+            return jsonify({"success": "User added to group successfully"}), 200
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+# Eliminar usuario de un grupo
+@api.route('/delete_user_from_group/<int:id_user>', methods=['DELETE'])
+def delete_user_from_group(id_user):
+    try:
+        user = Users.query.filter_by(id_user=id_user).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        user.id_group = None
+        db.session.commit()
+        return jsonify({"success": "User deleted from group successfully"}), 200
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 500

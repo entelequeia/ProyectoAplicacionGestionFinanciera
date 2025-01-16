@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, Finances
 
-
 finances_bp = Blueprint('finances', __name__)
 
 # Ruta para obtener las categorías

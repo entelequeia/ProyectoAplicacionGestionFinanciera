@@ -26,7 +26,7 @@ export function ChartJSFinancesUser() {
   useEffect(() => {
     const getFinance = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/finances/${store.userData.id}`)
+        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/finances2/${store.userData.id}`)
         const data = await response.json()
         const billsData = data
           .filter(item => item.id_category === 1) // Filtra los objetos son Gastos

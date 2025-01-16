@@ -1,11 +1,15 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			userData: {}
+			userData: {},
+			userGroup: {},
 		},
 		actions: {
-			adduserData: (data) => {
+			addUserData: (data) => {
 				setStore({ userData: data });
+			},
+			addUserGroup: (data) => {
+				setStore({ userGroup: data });
 			},
 		}
 	};
