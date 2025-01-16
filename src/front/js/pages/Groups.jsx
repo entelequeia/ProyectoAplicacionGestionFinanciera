@@ -42,6 +42,7 @@ export function Groups() {
       const data = await response.json()
       if (response.status === 200) {
         console.log('HECHO', data)
+        changeRol()
       }
 
       if (response.status !== 200) {
@@ -73,6 +74,27 @@ export function Groups() {
       }
     } catch (error) {
       console.log('Error al crear grupo', error)
+    }
+  }
+
+  const changeRol = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/change_rol/${store.userData.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ "id_rol": 1 }) // 1 es el id del rol de administrador,
+      })
+
+      const data = await response.json()
+      if (response.status === 200) {
+        console.log('HECHO', data)
+      }
+      
+      if (response.status !== 200) {
+        console.log(data)
+      }
+    } catch (error) {
+      console.log('Error al cambiar rol', error)
     }
   }
 
