@@ -7,7 +7,7 @@ import "../../styles/FinanceForm.css";
 const InputField = ({ label, id, type, value, onChange, placeholder, required, icon }) => (
     <div className="mb-4 position-relative">
         <label htmlFor={id} className="form-label fw-bold" style={{ color: "var(--label-color)" }}>
-            {label}
+            {label}{required && <span style={{ color: "red" }}> *</span>}
         </label>
         <div className="input-group">
             {icon && (
@@ -28,6 +28,7 @@ const InputField = ({ label, id, type, value, onChange, placeholder, required, i
                     color: "var(--text-color)",
                     borderRadius: "5px",
                 }}
+                aria-label={label}
             />
         </div>
     </div>
@@ -37,7 +38,7 @@ const InputField = ({ label, id, type, value, onChange, placeholder, required, i
 const SelectField = ({ label, id, value, onChange, options, required, icon }) => (
     <div className="mb-4 position-relative">
         <label htmlFor={id} className="form-label fw-bold" style={{ color: "var(--label-color)" }}>
-            {label}
+            {label}{required && <span style={{ color: "red" }}> *</span>}
         </label>
         <div className="input-group">
             {icon && (
@@ -56,13 +57,18 @@ const SelectField = ({ label, id, value, onChange, options, required, icon }) =>
                     color: "var(--text-color)",
                     borderRadius: "5px",
                 }}
+                aria-label={label}
             >
                 <option value="">Select {label}</option>
-                {options.map((option) => (
-                    <option key={option.id} value={option.id} className="text-secondary">
-                        {option.label}
-                    </option>
-                ))}
+                {options.length > 0 ? (
+                    options.map((option) => (
+                        <option key={option.id} value={option.id} className="text-secondary">
+                            {option.label}
+                        </option>
+                    ))
+                ) : (
+                    <option disabled>No options available</option>
+                )}
             </select>
         </div>
     </div>
@@ -85,74 +91,50 @@ export function FinanceForm() {
 
     // Fetch Categories and Types from API
     useEffect(() => {
-        const fetchCategories = async () => {
+        const fetchOptions = async (endpoint, setter, fallbackData) => {
             try {
-                const response = await fetch(`${process.env.BACKEND_URL}api/categories`);
-                const data = await response.json();
-                    setCategories(data);
-                    console.log(data);
-                    
+                const response = await fetch(`${process.env.BACKEND_URL}api/${endpoint}`);
                 if (response.ok) {
-                    
+                    const data = await response.json();
+                    setter(data);
                 } else {
-                    console.warn("Using default categories due to fetch error.");
-                    setCategories([
-                        { id: "1", label: "Comida" },
-                        { id: "2", label: "Transporte" }
-                    ]);
+                    console.warn(`Using default ${endpoint} due to fetch error.`);
+                    setter(fallbackData);
                 }
             } catch (error) {
-                console.error("Error fetching categories:", error);
-                setCategories([
-                    { id: "1", label: "Comida" },
-                    { id: "2", label: "Transporte" }
-                ]);
+                console.error(`Error fetching ${endpoint}:`, error);
+                setter(fallbackData);
             }
         };
 
-        const fetchTypes = async () => {
-            try {
-                const response = await fetch(`${process.env.BACKEND_URL}api/types`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setTypes(data);
-                } else {
-                    console.warn("Using default types due to fetch error.");
-                    setTypes([
-                        { id: "1", label: "Ingresos" },
-                        { id: "2", label: "Gastos" }
-                    ]);
-                }
-            } catch (error) {
-                console.error("Error fetching types:", error);
-                setTypes([
-                    { id: "1", label: "Ingresos" },
-                    { id: "2", label: "Gastos" }
-                ]);
-            }
-        }
+        fetchOptions("categories", setCategories, [
+            { id: "1", label: "Comida" },
+            { id: "2", label: "Transporte" },
+        ]);
 
-        fetchCategories();
-        fetchTypes();
+        fetchOptions("types", setTypes, [
+            { id: "1", label: "Ingresos" },
+            { id: "2", label: "Gastos" },
+        ]);
     }, []);
 
     // Manejo de cambios de entrada
     const handleChange = (e) => {
         const { id, value } = e.target;
+        if (id === "amount" && value < 0) return; 
         setFinanceData((prev) => ({ ...prev, [id]: value }));
     };
 
     // Envío de formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Validar entradas
         if (!financeData.name || financeData.amount <= 0 || !financeData.date || !financeData.id_category || !financeData.id_type) {
             setMessage("Please fill in all required fields with valid data.");
             return;
         }
 
         try {
-            const response = await fetch(`${process.env.BACKEND_URL || 'https://studious-goldfish-6p59gv66ggqfxqx6-3001.app.github.dev/'}api/finances`, {
+            const response = await fetch(`${process.env.BACKEND_URL || 'https://example.com/'}api/finances`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -185,7 +167,7 @@ export function FinanceForm() {
                             {message}
                         </div>
                     )}
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} noValidate>
                         <div className="row">
                             <div className="col-12 col-md-6">
                                 <InputField
