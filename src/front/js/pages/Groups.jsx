@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export function Groups() {
   const [name, setName] = useState()
   const [description, setDescription] = useState()
   const [message, setMessage] = useState()
-  const [showAdmin, setShowAdmin] = useState(false)
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user')
     return savedUser ? JSON.parse(savedUser) : null
@@ -14,16 +13,11 @@ export function Groups() {
     return savedGroup ? JSON.parse(savedGroup) : null
   })
 
-  console.log('inicio user', user)
-  console.log('inicio grupo', group)
-
   useEffect(() => {
     if (!group) {
       setMessage('No perteneces a ningún grupo, puedes crear uno nuevo.');
-      setShowAdmin(true);
     } else {
       setMessage(`Ya perteneces a un grupo: ${group.name}`);
-      setShowAdmin(true);
     }
   }, [group]);
 
@@ -107,7 +101,6 @@ export function Groups() {
 
       const data = await response.json()
       if (response.status === 200) {
-        console.log('HECHO', data)
         localStorage.removeItem('group')
         changeRol({ id_rol: 2 })
       }
@@ -135,12 +128,25 @@ export function Groups() {
         </button>
       )}
 
-      {user.id_rol === 1 && (
+      {user?.id_rol === 1 && (
         <div>
           <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGroup">
             Delete Group
           </button>
 
+          <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGroup">
+            Delete Group
+          </button>
+
+          <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGroup">
+            Delete Group
+          </button>
+
+          <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGroup">
+            Delete Group
+          </button>
+
+          {/* Delete Group */}
           <div className="modal fade" id="deleteGroup" aria-labelledby="deleteGroupLabel" aria-hidden="true">
             <div className="modal-dialog">
               <div className="modal-content">
