@@ -1,5 +1,5 @@
 // src/components/BarChart.js
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -12,7 +12,6 @@ import {
   PointElement,
   LineElement
 } from "chart.js";
-import { Context } from "../store/appContext";
 
 // Registrar los componentes de Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement);
@@ -21,12 +20,15 @@ export function ChartJSFinancesUser() {
   const [income, setIncome] = useState([0])
   const [bills, setBills] = useState([0])
   const [date, setDate] = useState([0])
-  const { store, actions } = useContext(Context);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user')
+    return savedUser ? JSON.parse(savedUser) : null
+  })
 
   useEffect(() => {
     const getFinance = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/finances2/${store.userData.id}`)
+        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/finances2/${user.id}`)
         const data = await response.json()
         const billsData = data
           .filter(item => item.id_category === 1) // Filtra los objetos son Gastos

@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 import { Loader } from "./component/Loader.jsx";
-import { Context } from "./store/appContext";
 
 import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
@@ -28,7 +27,6 @@ const Layout = () => {
     const [token, setToken] = useState(localStorage.getItem("token"))
     const [isValidToken, setIsValidToken] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
-    const { store, actions } = useContext(Context);
 
     useEffect(() => {
         const validateToken = async () => {
@@ -44,8 +42,7 @@ const Layout = () => {
                     const data = await response.json()
                     if (response.ok){
                         setIsValidToken(true)
-                        actions.addUserData(data)
-                        actions.addUserGroup(data)
+                        localStorage.setItem('user', JSON.stringify(data))
                     } else {
                         setIsValidToken(false)
                         localStorage.removeItem('token')

@@ -167,3 +167,17 @@ def delete_user_from_group(id_user):
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# Eliminar grupo
+@api.route('/delete_group/<int:id_group>', methods=['DELETE'])
+def delete_group(id_group):
+    try:
+        group = Groups.query.filter_by(id_group=id_group).first()
+        if not group:
+            return jsonify({"error": "Group not found"}), 404
+        
+        db.session.delete(group)
+        db.session.commit()
+        return jsonify({"success": "Group deleted"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
