@@ -134,7 +134,7 @@ export function FinanceForm() {
         }
 
         try {
-            const response = await fetch(`${process.env.BACKEND_URL || 'https://example.com/'}api/finances`, {
+            const response = await fetch(`${process.env.BACKEND_URL || 'https://studious-goldfish-6p59gv66ggqfxqx6-3001.app.github.dev/'}api/finances`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
