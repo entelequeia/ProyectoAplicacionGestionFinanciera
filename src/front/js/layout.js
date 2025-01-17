@@ -11,7 +11,7 @@ import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
 
-import { Navbar } from "./component/navbar";
+import { Navbar } from "./component/Navbar.jsx";
 import { Footer } from "./component/footer";
 import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
@@ -73,17 +73,19 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    <Navbar />
+                    {isValidToken && <Navbar />}
                     <Routes>
                         <Route element={<Login onLogin={handleLogin}/>} path="/" />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Demo />} path="/demo" />
-                        {isValidToken
-                        ? <Route element={<Home />} path="/home" />
-                        : <Route path='*' element={<h1>No tienes acceso</h1>} />}
-                         <Route path="/error404" element={<Error404 />}/> 
+                        {isValidToken ? (
+                            <>
+                            <Route element={<Home />} path="/home" />
+                            </>
+                        ) : <Route path='/asas' element={<h1>No tienes acceso</h1>} />}
+                        <Route path="*" element={<Error404 />}/> 
                     </Routes>
-                    <Footer />
+                    {isValidToken && <Footer />}
                 </ScrollToTop>
             </BrowserRouter>
         </div>
