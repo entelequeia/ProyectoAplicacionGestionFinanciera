@@ -17,14 +17,14 @@ export function Navbar() {
 
 	return (
 		<div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-			<button className="toggle-button" onClick={toggleSidebar} disabled>
+			<button className="toggle-button" onClick={toggleSidebar}>
 				{collapsed ? ">" : "<"}
 			</button>
 
 			<div className="sidebar-menu">
 				<ul>
 					<li>
-						<CiHome /> <Link to="/home">Dashboard</Link>
+						<CiHome /> <Link to="/home">Home</Link>
 					</li>
 					<li>
 						<BsCash /> <Link to="/currency">Currency Conversion</Link>
