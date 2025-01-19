@@ -26,37 +26,45 @@ export function ChartJSFinancesUser() {
   useEffect(() => {
     const getFinance = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/finances/${store.userData.id}`)
+        const response = await fetch(`${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/2`
+        if (!response.ok) throw new Error("Error fetching data");
         const data = await response.json()
-        const billsData = data
-          .filter(item => item.id_category === 1) // Filtra los objetos son Gastos
-          .map(item => item.amount); // Extrae la cantidad
+        // Procesar los datos y validacion para que no sea Null o vacíos antes de procesarlos
+        const billsData =
+          data?.filter((item) => item.id_category === 1) // Filtra los objetos son Gastos
+            .map((item) => item.amount) || []; // Extrae la cantidad
+
 
         const incomesData = data
           .filter(item => item.id_category === 2) // Filtra los objetos son Ingresos
-          .map(item => item.amount); // Extrae la cantidad
+          .map(item => item.amount) || []; // Extrae la cantidad
 
-        const dateData = data
-          .map(item => item.date); // Extrae la fecha
-
-        const formatDate = dateData.map(item => {
-          return new Date(item).toLocaleDateString('es-ES', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })
-        })
-
-        setBills(billsData); // Actualiza el estado
-        setIncome(incomesData); // Actualiza el estado
-        setDate(formatDate); // Actualiza el estado
+        const dateData =
+          data?.map((item) =>
+            new Date(item.date).toLocaleDateString("es-ES", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          ) || [];
+        // Actualizar estados
+        setBills(billsData);
+        setIncome(incomesData);
+        setDate(dateData);
       } catch (error) {
         console.log('Error getting finance', error)
+        setError("Hubo un error al obtener los datos financieros.");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
-    getFinance()
-  }, [])
+    getFinance();
+  }, [store.userData.id]);
+
+  // Estados de carga y error:
+  if (loading) return <div>Cargando datos...</div>;
+  if (error) return <div>{error}</div>;
 
   const data = {
     labels: date,
@@ -76,7 +84,21 @@ export function ChartJSFinancesUser() {
         borderWidth: 1,
       },
     ],
-  }
+  };
 
-  return <Line data={data} />;
+  // Opciones del gráfico para personalización
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Ingresos y Gastos Mensuales",
+      },
+    },
+  };
+
+  return <Line data={data} options={options} />;
 };
