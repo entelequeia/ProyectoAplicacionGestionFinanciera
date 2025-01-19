@@ -28,7 +28,7 @@ const DonutChart = () => {
           `${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/2`
         );
         const data = await response.json();  
-        // jugar con este (exampleData)
+        // jugar con este (exampleData/response.json())
 
         // Si no tenemos datos de la API, usamos los datos de ejemplo
         const finalData = data.length ? data : exampleData;
