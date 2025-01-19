@@ -1,4 +1,3 @@
-// src/components/BarChart.js
 import React, { useContext, useEffect, useState } from "react";
 import { Line } from 'react-chartjs-2';
 import {
@@ -18,41 +17,44 @@ import { Context } from "../store/appContext";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement);
 
 export function ChartJSFinancesUser() {
-  const [income, setIncome] = useState([0])
-  const [bills, setBills] = useState([0])
-  const [date, setDate] = useState([0])
+  const [income, setIncome] = useState([0]);
+  const [bills, setBills] = useState([0]);
+  const [date, setDate] = useState([0]);
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
   const { store, actions } = useContext(Context);
 
   useEffect(() => {
     const getFinance = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/2`
+        const response = await fetch(`${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/2`);
         if (!response.ok) throw new Error("Error fetching data");
-        const data = await response.json()
-        // Procesar los datos y validacion para que no sea Null o vacíos antes de procesarlos
+        const data = await response.json();
+
+        // Validación para asegurar que los datos existen
         const billsData =
           data?.filter((item) => item.id_category === 1) // Filtra los objetos son Gastos
-            .map((item) => item.amount) || []; // Extrae la cantidad
-
+            .map((item) => item.amount) || [];
 
         const incomesData = data
           .filter(item => item.id_category === 2) // Filtra los objetos son Ingresos
-          .map(item => item.amount) || []; // Extrae la cantidad
+          .map(item => item.amount) || [];
 
         const dateData =
           data?.map((item) =>
-            new Date(item.date).toLocaleDateString("es-ES", {
+            item.date ? new Date(item.date).toLocaleDateString("es-ES", {
               year: "numeric",
               month: "long",
               day: "numeric",
-            })
+            }) : "Fecha no disponible"
           ) || [];
+
         // Actualizar estados
         setBills(billsData);
         setIncome(incomesData);
         setDate(dateData);
       } catch (error) {
-        console.log('Error getting finance', error)
+        console.log('Error getting finance', error);
         setError("Hubo un error al obtener los datos financieros.");
       } finally {
         setLoading(false);
@@ -86,7 +88,6 @@ export function ChartJSFinancesUser() {
     ],
   };
 
-  // Opciones del gráfico para personalización
   const options = {
     responsive: true,
     plugins: {
@@ -102,3 +103,4 @@ export function ChartJSFinancesUser() {
 
   return <Line data={data} options={options} />;
 };
+
