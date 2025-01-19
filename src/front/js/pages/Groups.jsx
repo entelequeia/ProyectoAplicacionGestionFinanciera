@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 export function Groups() {
   const [name, setName] = useState()
   const [description, setDescription] = useState()
+  const [nameGroup, setNameGroup] = useState()
   const [message, setMessage] = useState()
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user')
@@ -12,6 +13,9 @@ export function Groups() {
     const savedGroup = localStorage.getItem('group')
     return savedGroup ? JSON.parse(savedGroup) : null
   })
+
+  console.log(user);
+  console.log(group);
 
   useEffect(() => {
     if (!group) {
@@ -32,7 +36,10 @@ export function Groups() {
 
       const data = await response.json()
       if (response.status === 200) {
-        console.log('HECHO', data)
+        setUser(prevUser => ({
+          ...prevUser,
+          id_group: id_group
+        }))
         changeRol({ id_rol: 1 })
       }
 
@@ -79,7 +86,10 @@ export function Groups() {
 
       const data = await response.json()
       if (response.status === 200) {
-        console.log('HECHO', data)
+        setUser(prevUser => ({
+          ...prevUser,
+          id_rol: id_rol
+        }))
       }
 
       if (response.status !== 200) {
@@ -113,6 +123,28 @@ export function Groups() {
     }
   }
 
+  // Cambiar nombre del grupo
+  const renameGroup = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/rename_group/${group.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ "name": nameGroup })
+      })
+
+      const data = await response.json()
+      if (response.status === 200) {
+        console.log(data)
+      }
+
+      if (response.status !== 200) {
+        console.log(data)
+      }
+    } catch (error) {
+      console.log('Error al cambiar rol', error)
+    }
+  }
+
   // Manejar el evento de submit del formulario de creación de grupo y llamar a la función de creación de grupo
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -123,28 +155,81 @@ export function Groups() {
     <div>
       <div className="alert alert-warning" role="alert">{message}</div>
       {!group && (
-        <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Crear grupo
-        </button>
+        <div>
+          <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGroup">
+            Create Group
+          </button>
+
+          {/* Create Group */}
+          <div className="modal fade" id="createGroup" aria-labelledby="createGroupLabel" aria-hidden="true">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="createGroupLabel">New Group</h1>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div className="modal-body">
+                  <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                      <label htmlFor="name" className="form-label">Name for Group</label>
+                      <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="description" className="form-label">Description</label>
+                      <textarea className="form-control" id="description" rows="3" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+                    </div>
+                    <div className="modal-footer">
+                      <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" className="btn btn-primary">Create Group</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {user?.id_rol === 1 && (
         <div>
-          <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGroup">
-            Delete Group
+          <button type="button" className="btn btn-warning" data-bs-toggle="modal" data-bs-target="#renameGroup">
+            Rename Group
+          </button>
+
+          <button type="button" disabled className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
+            Add User
+          </button>
+
+          <button type="button" disabled className="btn btn-info" data-bs-toggle="modal" data-bs-target="#addFinanze">
+            Add Finance
           </button>
 
           <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGroup">
             Delete Group
           </button>
 
-          <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGroup">
-            Delete Group
-          </button>
-
-          <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGroup">
-            Delete Group
-          </button>
+          {/* Name Group */}
+          <div className="modal fade" id="renameGroup" aria-labelledby="renameGroupLabel" aria-hidden="true">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="renameGroupLabel">Rename Group</h1>
+                </div>
+                <div className="modal-body">
+                  <form onSubmit={''}>
+                    <div className="mb-3">
+                      <label htmlFor="name" className="form-label">New Name</label>
+                      <input type="text" className="form-control" id="name" value={nameGroup} onChange={(e) => setNameGroup(e.target.value)} />
+                    </div>
+                  </form>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" className="btn btn-danger" onClick={renameGroup}>Rename Group</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Delete Group */}
           <div className="modal fade" id="deleteGroup" aria-labelledby="deleteGroupLabel" aria-hidden="true">
@@ -165,32 +250,6 @@ export function Groups() {
       )}
 
 
-      <div className="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">Nuevo Grupo</h1>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="name" className="form-label">Nombre del Grupo</label>
-                  <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="description" className="form-label">Descripción</label>
-                  <textarea className="form-control" id="description" rows="3" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                  <button type="submit" className="btn btn-primary">Crear Grupo</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

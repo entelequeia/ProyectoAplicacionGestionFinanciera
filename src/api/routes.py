@@ -167,7 +167,24 @@ def delete_user_from_group(id_user):
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# Cambiar Nombre Grupo
+@api.route('/rename_group/<int:id_group>', methods=['PUT'])
+def rename_group(id_group):
+    try:
+        group = Groups.query.filter_by(id_group=id_group).first()
+        if not group:
+            return jsonify({"error": "Group not found"}), 404
+
+        data = request.get_json()
+        if 'name' in data:
+            group.name = data['name']
+            db.session.commit()
+            return jsonify({"success": "Nmae change successfully"}), 200
     
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500 
+
 # Eliminar grupo
 @api.route('/delete_group/<int:id_group>', methods=['DELETE'])
 def delete_group(id_group):
