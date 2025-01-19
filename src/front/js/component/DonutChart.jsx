@@ -6,7 +6,7 @@ import { Context } from "../store/appContext";
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DonutChart = () => {
+export function DonutChart () {
   const [categories, setCategories] = useState([]);
   const [values, setValues] = useState([]);
   const [total, setTotal] = useState(0);
@@ -27,8 +27,8 @@ const DonutChart = () => {
         const response = await fetch(
           `${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/2`
         );
-        const data = await response.json();  
-        // jugar con este (exampleData/response.json())
+        const data = await exampleData;  
+        // jugar con este (exampleData/response.json() )
 
         // Si no tenemos datos de la API, usamos los datos de ejemplo
         const finalData = data.length ? data : exampleData;
@@ -115,5 +115,3 @@ const DonutChart = () => {
     </div>
   );
 };
-
-export default DonutChart;
