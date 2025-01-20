@@ -25,6 +25,25 @@ export function Groups() {
     }
   }, [group]);
 
+  //Obetener el Grupo del usuario
+  const getGroup = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_user_group/${user.id}`)
+
+      const updatedGroup = await response.json()
+      if (response.status === 200) {
+        setGroup(updatedGroup);
+        localStorage.setItem('group', JSON.stringify(updatedGroup));
+      }
+
+      if (response.status !== 200) {
+        console.log(data)
+      }
+    } catch (error) {
+      console.log('Error al cambiar rol', error)
+    }
+  }
+
   // Añadir usuario al grupo pasandole el id del grupo almadenado en el estado
   const addUserToGroup = async ({ id_group }) => {
     try {
@@ -140,6 +159,7 @@ export function Groups() {
           ...prevGroup,
           name: nameGroup
         }))
+        await getGroup()
       }
 
       if (response.status !== 200) {

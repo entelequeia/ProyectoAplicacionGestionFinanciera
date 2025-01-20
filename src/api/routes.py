@@ -203,12 +203,18 @@ def delete_group(id_group):
 @api.route('/get_user_group/<int:id_user>', methods=['GET'])
 def get_user_group(id_user):
     try:
+        # Busca al usuario en la base de datos
         user = Users.query.filter_by(id_user=id_user).first()
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        response = [user.serialize() for user in Users]
-        return jsonify(response), 200
+        # Busca el grupo asociado al usuario
+        group = Groups.query.filter_by(id_group=user.id_group).first()
+        if not group:
+            return jsonify({"error": "Group not found for the user"}), 404
+
+        # Retorna la información del grupo
+        return jsonify(group.serialize()), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
