@@ -1,18 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../../styles/AccessDenied.css";
+import image from "../../img/denied.png"
 
 
 export function AccessDenied() {
   return (
     <div className="denied-container">
-      
-    <h1 className="denied-title"> We are sorry...</h1>
+      <img className="denied-image" src={image} width={300} alt="denied"/>
+
+      <h1 className="denied-title"> We are sorry...</h1>
       <p>
-        The page you're trying to access has restricted access. <br/>Please refer to your system administrator.
+        You don't have permissions to access this page. <br />Please check out your credentials and try again.
       </p>
-      <button className="returnButton"><Link to="/" className="denied-link">homepage</Link></button>
+      <Link to="/" className="btn custom-btn">
+        Go to home
+      </Link>
     </div>
-    
+
   );
 };

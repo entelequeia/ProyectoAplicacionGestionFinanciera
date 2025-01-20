@@ -15,6 +15,7 @@ import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
+import { AccessDenied } from "./pages/AccessDenied.jsx";
 
 
 //create your first component
@@ -80,7 +81,7 @@ const Layout = () => {
                         <Route element={<Demo />} path="/demo" />
                         {isValidToken
                         ? <Route element={<Home />} path="/home" />
-                        : <Route path='*' element={<h1>No tienes acceso</h1>} />}
+                        : <Route path='/access-denied' element={<AccessDenied/>} />}
                          <Route path="/error404" element={<Error404 />}/> 
                     </Routes>
                     <Footer />
