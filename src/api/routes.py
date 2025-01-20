@@ -76,7 +76,7 @@ def profile():
         return jsonify({"error": str(e)}), 500
 
 # Obtener las finanzas de un usuario
-@api.route('/finances/<int:id_user>', methods=['GET'])
+@api.route('/finances2/<int:id_user>', methods=['GET'])
 def finances(id_user):
     try:
         user = Users.query.filter_by(id_user=id_user).first()
