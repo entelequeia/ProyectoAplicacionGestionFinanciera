@@ -198,3 +198,17 @@ def delete_group(id_group):
         return jsonify({"success": "Group deleted"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# Obtener el Grupo del usuario
+@api.route('/get_user_group/<int:id_user>', methods=['GET'])
+def get_user_group(id_user):
+    try:
+        user = Users.query.filter_by(id_user=id_user).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        response = [user.serialize() for user in Users]
+        return jsonify(response), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

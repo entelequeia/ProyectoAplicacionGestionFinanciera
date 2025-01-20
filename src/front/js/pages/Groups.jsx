@@ -219,9 +219,10 @@ export function Groups() {
               <div className="modal-content">
                 <div className="modal-header">
                   <h1 className="modal-title fs-5" id="renameGroupLabel">Rename Group</h1>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div className="modal-body">
-                  <form onSubmit={''}>
+                  <form onSubmit={(e) => { e.preventDefault(); renameGroup(); }}>
                     <div className="mb-3">
                       <label htmlFor="name" className="form-label">New Name</label>
                       <input type="text" className="form-control" id="name" value={nameGroup} onChange={(e) => setNameGroup(e.target.value)} />
