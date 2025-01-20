@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 export function Groups() {
-  const [name, setName] = useState()
-  const [description, setDescription] = useState()
-  const [nameGroup, setNameGroup] = useState()
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
   const [message, setMessage] = useState()
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user')
@@ -13,6 +12,7 @@ export function Groups() {
     const savedGroup = localStorage.getItem('group')
     return savedGroup ? JSON.parse(savedGroup) : null
   })
+  const [nameGroup, setNameGroup] = useState(group ? group.name : '')
 
   console.log(user);
   console.log(group);
@@ -113,6 +113,7 @@ export function Groups() {
       if (response.status === 200) {
         localStorage.removeItem('group')
         changeRol({ id_rol: 2 })
+        setGroup(null)
       }
 
       if (response.status !== 200) {
@@ -135,6 +136,10 @@ export function Groups() {
       const data = await response.json()
       if (response.status === 200) {
         console.log(data)
+        setGroup(prevGroup => ({
+          ...prevGroup,
+          name: nameGroup
+        }))
       }
 
       if (response.status !== 200) {
@@ -225,7 +230,7 @@ export function Groups() {
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" className="btn btn-danger" onClick={renameGroup}>Rename Group</button>
+                  <button type="button" className="btn btn-warning" onClick={renameGroup}>Rename Group</button>
                 </div>
               </div>
             </div>

@@ -180,7 +180,7 @@ def rename_group(id_group):
         if 'name' in data:
             group.name = data['name']
             db.session.commit()
-            return jsonify({"success": "Nmae change successfully"}), 200
+            return jsonify({"success": "Name change successfully"}), 200
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500 
