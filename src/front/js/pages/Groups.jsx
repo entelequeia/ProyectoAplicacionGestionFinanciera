@@ -18,12 +18,14 @@ export function Groups() {
   console.log(group);
 
   useEffect(() => {
-    if (!group) {
-      setMessage('No perteneces a ningún grupo, puedes crear uno nuevo.');
-    } else {
+    if (!group && user.id_group) {
+      getGroup();
+    } else if (group) {
       setMessage(`Ya perteneces a un grupo: ${group.name}`);
+    } else {
+      setMessage('No perteneces a ningún grupo, puedes crear uno nuevo.');
     }
-  }, [group]);
+  }, [user, group]);
 
   //Obetener el Grupo del usuario
   const getGroup = async () => {
@@ -40,7 +42,7 @@ export function Groups() {
         console.log(data)
       }
     } catch (error) {
-      console.log('Error al cambiar rol', error)
+      console.log('Error al cargar el grupo', error)
     }
   }
 
@@ -59,7 +61,7 @@ export function Groups() {
           ...prevUser,
           id_group: id_group
         }))
-        changeRol({ id_rol: 1 })
+        await changeRol({ id_rol: 1 })
       }
 
       if (response.status !== 200) {
@@ -84,6 +86,7 @@ export function Groups() {
         localStorage.setItem('group', JSON.stringify(data))
         setGroup(data)
         await addUserToGroup({ id_group: data.id })
+        location.reload();
       }
 
       if (response.status !== 200) {
@@ -109,6 +112,10 @@ export function Groups() {
           ...prevUser,
           id_rol: id_rol
         }))
+        localStorage.setItem('user', JSON.stringify({
+          ...user,
+          id_rol: id_rol
+        }));
       }
 
       if (response.status !== 200) {
@@ -131,8 +138,9 @@ export function Groups() {
       const data = await response.json()
       if (response.status === 200) {
         localStorage.removeItem('group')
-        changeRol({ id_rol: 2 })
         setGroup(null)
+        await changeRol({ id_rol: 2 })
+        setInterval(() => { location.reload() }, 1000)
       }
 
       if (response.status !== 200) {
@@ -159,6 +167,7 @@ export function Groups() {
           ...prevGroup,
           name: nameGroup
         }))
+        location.reload()
         await getGroup()
       }
 
@@ -242,7 +251,7 @@ export function Groups() {
                   <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div className="modal-body">
-                  <form onSubmit={(e) => { e.preventDefault(); renameGroup(); }}>
+                  <form onSubmit={renameGroup}>
                     <div className="mb-3">
                       <label htmlFor="name" className="form-label">New Name</label>
                       <input type="text" className="form-control" id="name" value={nameGroup} onChange={(e) => setNameGroup(e.target.value)} />
