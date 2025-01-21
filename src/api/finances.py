@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, Finances
-
+from  flask_cors import CORS
 
 finances_bp = Blueprint('finances', __name__)
-
+CORS(finances_bp)
 # Ruta para obtener las categorías
 @finances_bp.route('/api/categories', methods=['GET'])
 def get_categories():

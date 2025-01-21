@@ -1,82 +1,119 @@
-// src/components/BarChart.js
 import React, { useContext, useEffect, useState } from "react";
-import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
+import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, Title, Tooltip, Legend, Filler, PointElement } from "chart.js";
+import { Context } from "../store/appContext";
+
+// Registramos los componentes necesarios de Chart.js
+ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
-  PointElement,
-  LineElement
-} from "chart.js";
-import { Context } from "../store/appContext";
-
-// Registrar los componentes de Chart.js
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement);
+  Filler,
+  PointElement
+);
 
 export function ChartJSFinancesUser() {
-  const [income, setIncome] = useState([0])
-  const [bills, setBills] = useState([0])
-  const [date, setDate] = useState([0])
-  const { store, actions } = useContext(Context);
+  const [chartData, setChartData] = useState({ labels: [], incomes: [], expenses: [] });
+  const { store } = useContext(Context);
 
+  // Hook useEffect para obtener los datos
   useEffect(() => {
     const getFinance = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/finances/${store.userData.id}`)
-        const data = await response.json()
-        const billsData = data
-          .filter(item => item.id_category === 1) // Filtra los objetos son Gastos
-          .map(item => item.amount); // Extrae la cantidad
+        const response = await fetch(
+          `${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/2`
+        );
+        if (!response.ok) throw new Error("Error fetching data");
+        const data = await response.json();
 
-        const incomesData = data
-          .filter(item => item.id_category === 2) // Filtra los objetos son Ingresos
-          .map(item => item.amount); // Extrae la cantidad
+        // Agrupamos datos por fecha
+        const groupedData = data.reduce((acc, item) => {
+          const formattedDate = new Date(item.date).toISOString().split("T")[0];
 
-        const dateData = data
-          .map(item => item.date); // Extrae la fecha
+          if (!acc[formattedDate]) {
+            acc[formattedDate] = { incomes: 0, expenses: 0 };
+          }
 
-        const formatDate = dateData.map(item => {
-          return new Date(item).toLocaleDateString('es-ES', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
+          if (item.id_category === 1) {
+            acc[formattedDate].expenses += item.amount;
+          } else if (item.id_category === 2) {
+            acc[formattedDate].incomes += item.amount;
+          }
+
+          return acc;
+        }, {});
+        // fechas en orden cronologico
+        const sortedDates = Object.keys(groupedData).sort((a, b) => new Date(a) - new Date(b));
+
+        // Convertimos el objeto agrupado en arrays para el gráfico
+        const labels = sortedDates.map((date) =>
+          new Date(date).toLocaleDateString("es-ES", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
           })
-        })
+        );
+        const incomes = sortedDates.map((date) => groupedData[date].incomes);
+        const expenses = sortedDates.map((date) => groupedData[date].expenses);
 
-        setBills(billsData); // Actualiza el estado
-        setIncome(incomesData); // Actualiza el estado
-        setDate(formatDate); // Actualiza el estado
-      } catch (error) {
-        console.log('Error getting finance', error)
+        setChartData({ labels, incomes, expenses });
+      } catch (err) {
+        console.error("Error fetching finances:", err);
+        setError(err.message || "Hubo un error al obtener los datos financieros.");
       }
-    }
+    };
 
-    getFinance()
-  }, [])
+    getFinance();
+  }, [store.userData.id]);
 
+  // Si los datos se cargaron correctamente, mostramos el gráfico con los datos obtenidos
   const data = {
-    labels: date,
+    labels: chartData.labels,
     datasets: [
       {
-        label: "Ingresos",
-        data: income,
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-        borderColor: "rgba(54, 162, 235, 1)",
+        label: "Gastos",
+        data: chartData.expenses,
+        backgroundColor: "rgba(255, 99, 132, 0.2)", 
+        borderColor: "rgba(255, 99, 132, 1)", 
         borderWidth: 1,
+        fill: true, 
       },
       {
-        label: "Gastos",
-        data: bills,
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        label: "Ingresos",
+        data: chartData.incomes,
+        backgroundColor: "rgba(54, 162, 235, 0.2)", 
+        borderColor: "rgba(54, 162, 235, 1)", 
         borderWidth: 1,
+        fill: true, 
       },
     ],
-  }
+  };
 
-  return <Line data={data} />;
-};
+  const options = {
+    responsive: true,
+    plugins: {
+      filler: {
+        propagate: false,
+      },
+      title: {
+        display: true,
+        text: "Ingresos y Gastos Diarios",
+      },
+    },
+    pointBackgroundColor: "#fff",
+    radius: 10,
+    interaction: {
+      intersect: false,
+    },
+    elements: {
+      line: {
+        tension: 0.4, 
+      },
+    },
+  };
+
+  return <Line data={data} options={options} />;
+}
