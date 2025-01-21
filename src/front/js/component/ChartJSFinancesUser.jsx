@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, Title, Tooltip, Legend, Filler, PointElement } from "chart.js";
-import { Context } from "../store/appContext";
 
 // Registramos los componentes necesarios de Chart.js
 ChartJS.register(
@@ -17,14 +16,17 @@ ChartJS.register(
 
 export function ChartJSFinancesUser() {
   const [chartData, setChartData] = useState({ labels: [], incomes: [], expenses: [] });
-  const { store } = useContext(Context);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user')
+    return savedUser ? JSON.parse(savedUser) : null
+  })
 
   // Hook useEffect para obtener los datos
   useEffect(() => {
     const getFinance = async () => {
       try {
         const response = await fetch(
-          `${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/2`
+          `${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/${user.id}`
         );
         if (!response.ok) throw new Error("Error fetching data");
         const data = await response.json();
@@ -34,7 +36,7 @@ export function ChartJSFinancesUser() {
           const formattedDate = new Date(item.date).toISOString().split("T")[0];
 
           if (!acc[formattedDate]) {
-            acc[formattedDate] = { incomes: 0, expenses: 0 };
+            acc[formattedDate] = { incomes: null, expenses: null };
           }
 
           if (item.id_category === 1) {
@@ -67,7 +69,7 @@ export function ChartJSFinancesUser() {
     };
 
     getFinance();
-  }, [store.userData.id]);
+  }, [user.id]);
 
   // Si los datos se cargaron correctamente, mostramos el gráfico con los datos obtenidos
   const data = {
@@ -76,18 +78,18 @@ export function ChartJSFinancesUser() {
       {
         label: "Gastos",
         data: chartData.expenses,
-        backgroundColor: "rgba(255, 99, 132, 0.2)", 
-        borderColor: "rgba(255, 99, 132, 1)", 
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 1,
-        fill: true, 
+        fill: true,
       },
       {
         label: "Ingresos",
         data: chartData.incomes,
-        backgroundColor: "rgba(54, 162, 235, 0.2)", 
-        borderColor: "rgba(54, 162, 235, 1)", 
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 1,
-        fill: true, 
+        fill: true,
       },
     ],
   };
@@ -110,7 +112,7 @@ export function ChartJSFinancesUser() {
     },
     elements: {
       line: {
-        tension: 0.4, 
+        tension: 0.4,
       },
     },
   };

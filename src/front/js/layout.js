@@ -17,8 +17,6 @@ import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/Navbar.jsx";
 import { Footer } from "./component/footer";
-import { Login } from "./pages/Login.jsx";
-import { Signup } from "./pages/Signup.jsx";
 import { AccessDenied } from "./pages/AccessDenied.jsx";
 
 //create your first component
@@ -84,6 +82,7 @@ const Layout = () => {
                         {isValidToken ? (
                             <>
                             <Route element={<Home />} path="/home" />
+                            <Route element={<Groups />} path="/groups" />
                             </>
                         ) : <Route path='/asas' element={<h1>No tienes acceso</h1>} />}
                         <Route path="*" element={<Error404 />}/> 
