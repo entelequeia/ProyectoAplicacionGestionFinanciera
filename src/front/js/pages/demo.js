@@ -6,7 +6,7 @@ export const Demo = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
-		<div className="container">
+		<div className="container"> 
 		</div>
 	);
 };
