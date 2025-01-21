@@ -7,7 +7,7 @@ class Users(db.Model):
     name = db.Column(db.String(80), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(255), unique=False, nullable=False)
-    id_group = db.Column(db.Integer, db.ForeignKey('groups.id_group'), nullable=True)
+    id_group = db.Column(db.Integer, db.ForeignKey('groups.id_group', ondelete='SET NULL'), nullable=True)
     id_rol = db.Column(db.Integer, db.ForeignKey('roles.id_rol'), nullable=False)
 
     # Relaciones bidireccionales

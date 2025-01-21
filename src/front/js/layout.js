@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
@@ -9,6 +9,10 @@ import { Context } from "./store/appContext";
 import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
+import { Login } from "./pages/Login.jsx";
+import { Signup } from "./pages/Signup.jsx";
+import { Groups } from "./pages/Groups.jsx";
+
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/Navbar.jsx";
@@ -16,7 +20,6 @@ import { Footer } from "./component/footer";
 import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
 import { AccessDenied } from "./pages/AccessDenied.jsx";
-
 
 //create your first component
 const Layout = () => {
@@ -29,7 +32,6 @@ const Layout = () => {
     const [token, setToken] = useState(localStorage.getItem("token"))
     const [isValidToken, setIsValidToken] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
-    const { store, actions } = useContext(Context);
 
     useEffect(() => {
         const validateToken = async () => {
@@ -45,7 +47,7 @@ const Layout = () => {
                     const data = await response.json()
                     if (response.ok){
                         setIsValidToken(true)
-                        actions.adduserData(data)
+                        localStorage.setItem('user', JSON.stringify(data))
                     } else {
                         setIsValidToken(false)
                         localStorage.removeItem('token')

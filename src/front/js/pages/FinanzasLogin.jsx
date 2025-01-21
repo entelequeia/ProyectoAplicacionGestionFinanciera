@@ -13,7 +13,7 @@ export function FinanceForm() {
     });
 
     useEffect(() => {
-    // APIS
+        // APIS
 
         //ejemplo de datos:
         setCategories([
@@ -28,7 +28,7 @@ export function FinanceForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(financeData);  
+        console.log(financeData);
     };
 
     return (
