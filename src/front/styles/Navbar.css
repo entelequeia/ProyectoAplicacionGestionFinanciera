@@ -205,3 +205,18 @@
 .sidebar.collapsed .sidebar-bottom ul li svg {
   margin: 0 auto;
 }
+
+.logout:hover {
+  background-color:#9e1c24  !important;
+
+  
+  
+}
+.logout:hover a {
+  color: white !important;
+}
+/* Más claro: #e5535c
+Similar pero más brillante: #c82333
+Tono medio: #d12238
+Más oscuro: #b21f29
+Más intenso: #9e1c24 */
