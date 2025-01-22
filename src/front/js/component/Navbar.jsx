@@ -18,7 +18,8 @@ export function Navbar() {
 	
 	const handleLogout = () => {
 		localStorage.removeItem("token");
-		navigate ("/");
+		location.replace("/");
+		
 		 
 	}
 
