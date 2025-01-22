@@ -6,8 +6,8 @@ class Users(db.Model):
     id_user = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(80), unique=False, nullable=False)
-    id_group = db.Column(db.Integer, db.ForeignKey('groups.id_group'), nullable=True)
+    password = db.Column(db.String(255), unique=False, nullable=False)
+    id_group = db.Column(db.Integer, db.ForeignKey('groups.id_group', ondelete='SET NULL'), nullable=True)
     id_rol = db.Column(db.Integer, db.ForeignKey('roles.id_rol'), nullable=False)
 
     # Relaciones bidireccionales
@@ -65,16 +65,18 @@ class Finances(db.Model):
     id_finance = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(120), nullable=True)
     id_category = db.Column(db.Integer, db.ForeignKey('categories.id_category'), nullable=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id_user'), nullable=False)
     id_type = db.Column(db.Integer, db.ForeignKey('types.id_type'), nullable=False)
 
     # Relaciones bidireccionales
-    user = db.relationship('Users', backref='finances_user')
-    """ category = db.relationship('Categories', backref='finances_category')
-    type = db.relationship('Types', backref='finances_type') """
+    user = db.relationship('Users', backref='finances')
+    # """ category = db.relationship('Categories', backref='finances_category')
+    # type = db.relationship('Types', backref='finances_type') """
+
+
 
     def __repr__(self):
         return f'<Finance {self.name}>'
@@ -129,6 +131,11 @@ class Group_Finances(db.Model):
     id_finance = db.Column(db.Integer, db.ForeignKey('finances.id_finance',ondelete = 'CASCADE'), nullable=False)
     create_by = db.Column(db.Integer, db.ForeignKey('users.id_user',ondelete = 'CASCADE'), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
+
+    # Relaciones bidireccionales
+    group = db.relationship('Groups', backref='group_finances_group')
+    finance = db.relationship('Finances', backref='group_finances_finance')
+    user = db.relationship('Users', backref='group_finances_user')
 
     def __repr__(self):
         return f'<Group_Finance {self.id_group} - {self.id_finance} from {self.create_by}>'
