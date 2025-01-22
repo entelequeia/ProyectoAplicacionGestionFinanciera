@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BsCash } from "react-icons/bs";
 import { IoIosLogOut } from "react-icons/io";
 import { FaRegEnvelope } from "react-icons/fa";
@@ -10,10 +10,17 @@ import '../../styles/Navbar.css'
 
 export function Navbar() {
 	const [collapsed, setCollapsed] = useState(false);
+	const navigate = useNavigate();
 
 	const toggleSidebar = () => {
 		setCollapsed(!collapsed);
 	};
+	
+	const handleLogout = () => {
+		localStorage.removeItem("token");
+		navigate ("/");
+		 
+	}
 
 	return (
 		<div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
@@ -52,8 +59,8 @@ export function Navbar() {
 					<li>
 						<IoHelp /> <Link to="/help">Help</Link>
 					</li>
-					<li>
-						<IoIosLogOut /> <Link to="/logout">Logout</Link>
+					<li className="logout">
+						<IoIosLogOut /> <Link to="/"  onClick={handleLogout}>Logout</Link>
 					</li>
 				</ul>
 			</div>
