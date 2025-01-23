@@ -25,9 +25,9 @@ const DonutChart = () => {
     const getFinanceData = async () => {
       try {
         const response = await fetch(
-          `${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/2`
+          `${process.env.BACKEND_URL || "http://localhost:3001/"}api/get_finances/2`
         );
-        const data = await exampleData;  
+        const data = await exampleData;
         // jugar con este (exampleData)
 
         // Si no tenemos datos de la API, usamos los datos de ejemplo
@@ -43,7 +43,7 @@ const DonutChart = () => {
 
         setCategories(categoriesData);
         setValues(valuesData);
-        setTotal(valuesData.reduce((sum, val) => sum + val, 0)); 
+        setTotal(valuesData.reduce((sum, val) => sum + val, 0));
       } catch (error) {
         console.log("Error getting finance data", error);
       }
@@ -55,20 +55,20 @@ const DonutChart = () => {
   const backgroundColors = ["#FF5733", "#33FF57", "#3357FF", "#FFC300", "#FF33A8"];
 
   const categoryIcons = {
-    "Ocio": "fas fa-sun", 
-    "Transporte": "fas fa-car", 
-    "Comida": "fas fa-utensils", 
-    "Vivienda": "fas fa-home", 
-    "Otros": "fas fa-gift" 
+    "Ocio": "fas fa-sun",
+    "Transporte": "fas fa-car",
+    "Comida": "fas fa-utensils",
+    "Vivienda": "fas fa-home",
+    "Otros": "fas fa-gift"
   };
 
   const data = {
-    labels: categories, 
+    labels: categories,
     datasets: [
       {
         label: "Gastos",
-        data: values, 
-        backgroundColor: backgroundColors.slice(0, categories.length), 
+        data: values,
+        backgroundColor: backgroundColors.slice(0, categories.length),
         borderWidth: 1,
       },
     ],

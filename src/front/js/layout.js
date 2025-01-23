@@ -6,7 +6,7 @@ import { Loader } from "./component/Loader.jsx";
 import { Error404 } from "./pages/Error404.jsx";
 import { Context } from "./store/appContext";
 
-import { Home } from "./pages/home";
+import { Home } from "./pages/Home.jsx";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import { Login } from "./pages/Login.jsx";
@@ -74,7 +74,7 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    {isValidToken && <Navbar />}
+                    {/* {isValidToken && <Navbar />} */}
                     <Routes>
                         <Route element={<Login onLogin={handleLogin}/>} path="/" />
                         <Route element={<Signup />} path="/signup" />
