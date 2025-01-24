@@ -1,20 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 import { Loader } from "./component/Loader.jsx";
 import { Context } from "./store/appContext";
 
-import { Home } from "./pages/home";
+import { Home } from "./pages/Home.jsx";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
-import injectContext from "./store/appContext";
-
-import { Navbar } from "./component/navbar";
-import { Footer } from "./component/footer";
 import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
+import { Groups } from "./pages/Groups.jsx";
+import { Error404 } from "./pages/Error404.jsx";
+import { AccessDenied } from "./pages/AccessDenied.jsx";
 
+import injectContext from "./store/appContext";
+
+import { Navbar } from "./component/Navbar.jsx";
+import { Footer } from "./component/footer";
+import { node } from "prop-types";
 
 //create your first component
 const Layout = () => {
@@ -26,8 +30,9 @@ const Layout = () => {
 
     const [token, setToken] = useState(localStorage.getItem("token"))
     const [isValidToken, setIsValidToken] = useState(false)
+    console.log("isValid",isValidToken)
     const [isLoading, setIsLoading] = useState(true)
-    const { store, actions } = useContext(Context);
+    console.log(token)
 
     useEffect(() => {
         const validateToken = async () => {
@@ -43,11 +48,13 @@ const Layout = () => {
                     const data = await response.json()
                     if (response.ok){
                         setIsValidToken(true)
-                        actions.adduserData(data)
+                        localStorage.setItem('user', JSON.stringify(data))
+                        console.log(response)
                     } else {
                         setIsValidToken(false)
                         localStorage.removeItem('token')
                         setToken(null)
+                        console.log("no")
                     }
                 } catch (error) {
                     console.log('Error validating token', error)
@@ -60,6 +67,7 @@ const Layout = () => {
         }
         validateToken()
     }, [token])
+  
 
     const handleLogin = (newToken) => {
         setToken(newToken);
@@ -72,17 +80,20 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    <Navbar />
+                    {/* {isValidToken && <Navbar />} */}
                     <Routes>
                         <Route element={<Login onLogin={handleLogin}/>} path="/" />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Demo />} path="/demo" />
-                        {isValidToken
-                        ? <Route element={<Home />} path="/home" />
-                        : <Route path='*' element={<h1>No tienes acceso</h1>} />}
-                        <Route element={<h1>Not found!</h1>} />
+                        {isValidToken ? (
+                            <>
+                            <Route element={<Home />} path="/home" />
+                            <Route element={<Groups />} path="/groups" />
+                            </>
+                        ) : <Route path='/access-denied' element={<AccessDenied/>} />}
+                        <Route path="*" element={<Error404 />}/> 
                     </Routes>
-                    <Footer />
+                    {/* {isValidToken && <Footer />} */}
                 </ScrollToTop>
             </BrowserRouter>
         </div>
