@@ -26,7 +26,7 @@ export function ChartJSFinancesUser() {
     const getFinance = async () => {
       try {
         const response = await fetch(
-          `${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/${user.id}`
+          `${process.env.BACKEND_URL || "http://localhost:3001/"}api/get_finances/${user.id}`
         );
         if (!response.ok) throw new Error("Error fetching data");
         const data = await response.json();
@@ -102,7 +102,6 @@ export function ChartJSFinancesUser() {
       },
       title: {
         display: true,
-        text: "Ingresos y Gastos Diarios",
       },
     },
     pointBackgroundColor: "#fff",

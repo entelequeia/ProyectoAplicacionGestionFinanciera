@@ -16,6 +16,11 @@ export function Navbar() {
 		setCollapsed(!collapsed);
 	};
 
+	const handleLogout = () => {
+		localStorage.removeItem("token");
+		location.replace("/");
+	}
+
 	return (
 		<div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
 			<button className="toggle-button" onClick={toggleSidebar}>
@@ -53,8 +58,8 @@ export function Navbar() {
 					<li>
 						<IoHelp /> <Link to="/help">Help</Link>
 					</li>
-					<li>
-						<IoIosLogOut /> <Link to="/logout">Logout</Link>
+					<li className="logout">
+						<IoIosLogOut /> <Link to="/" onClick={handleLogout}>Logout</Link>
 					</li>
 				</ul>
 			</div>

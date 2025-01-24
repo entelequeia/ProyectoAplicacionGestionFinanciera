@@ -76,7 +76,7 @@ def profile():
         return jsonify({"error": str(e)}), 500
 
 # Obtener las finanzas de un usuario
-@api.route('/finances2/<int:id_user>', methods=['GET'])
+@api.route('/get_finances/<int:id_user>', methods=['GET'])
 def finances(id_user):
     try:
         user = Users.query.filter_by(id_user=id_user).first()
@@ -88,6 +88,34 @@ def finances(id_user):
         return jsonify(response), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# Obtener Finanzas con Categoría y Tipo
+@api.route('/get_finances_all/<int:id_user>', methods=['GET'])
+def get_finanzes_all(id_user):
+    try:
+        user = Users.query.filter_by(id_user=id_user).first()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Iteramos las finanzas del usuario
+        response = []
+        for finance in user.finances:
+            finance_data = finance.serialize()
+
+            # Accedemos al nombre de la categoría y lo añadimos
+            finance_data["category"] = finance.category.category  # finance.category es el objeto relacionado
+            
+            # Accedemos al nombre del tipo y lo añadimos
+            finance_data["type"] = finance.types.type  # finance.types es el objeto relacionado
+            
+            response.append(finance_data)
+
+        return jsonify(response), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 
 # Crear un nuevo grupo    
 @api.route('/create_groups', methods=['POST'])
