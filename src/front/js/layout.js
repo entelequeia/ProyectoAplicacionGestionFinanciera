@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 import { Loader } from "./component/Loader.jsx";
-import { Error404 } from "./pages/Error404.jsx";
 import { Context } from "./store/appContext";
 
 import { Home } from "./pages/Home.jsx";
@@ -12,12 +11,13 @@ import { Single } from "./pages/single";
 import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
 import { Groups } from "./pages/Groups.jsx";
+import { Error404 } from "./pages/Error404.jsx";
+import { AccessDenied } from "./pages/AccessDenied.jsx";
 
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/Navbar.jsx";
 import { Footer } from "./component/footer";
-import { AccessDenied } from "./pages/AccessDenied.jsx";
 import { node } from "prop-types";
 
 //create your first component
@@ -51,9 +51,9 @@ const Layout = () => {
                         localStorage.setItem('user', JSON.stringify(data))
                         console.log(response)
                     } else {
-                        //setIsValidToken(false)
-                        //localStorage.removeItem('token')
-                        //setToken(null)
+                        setIsValidToken(false)
+                        localStorage.removeItem('token')
+                        setToken(null)
                         console.log("no")
                     }
                 } catch (error) {
@@ -90,7 +90,7 @@ const Layout = () => {
                             <Route element={<Home />} path="/home" />
                             <Route element={<Groups />} path="/groups" />
                             </>
-                        ) : <Route path='/asas' element={<h1>No tienes acceso</h1>} />}
+                        ) : <Route path='/access-denied' element={<AccessDenied/>} />}
                         <Route path="*" element={<Error404 />}/> 
                     </Routes>
                     {/* {isValidToken && <Footer />} */}
