@@ -87,7 +87,7 @@ const Layout = () => {
                         ) : <Route path='/asas' element={<h1>No tienes acceso</h1>} />}
                         <Route path="*" element={<Error404 />}/> 
                     </Routes>
-                    {isValidToken && <Footer />}
+                    {/* {isValidToken && <Footer />} */}
                 </ScrollToTop>
             </BrowserRouter>
         </div>

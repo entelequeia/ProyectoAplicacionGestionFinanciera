@@ -119,6 +119,17 @@ export function Home() {
                         </div>
                     </section>
                 </div>
+                <div className="section-row chart-row">
+                    <section className="chart">
+                        <h3>Monthly Overview</h3>
+                        <div className="chart-container">
+                            <ChartJSFinancesUser />
+                        </div>
+                    </section>
+                    <section>
+                        <h1>Hola mundoo</h1>
+                    </section>
+                </div>
             </main>
         </div>
     );

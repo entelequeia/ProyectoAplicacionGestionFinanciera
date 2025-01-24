@@ -102,7 +102,6 @@ export function ChartJSFinancesUser() {
       },
       title: {
         display: true,
-        text: "Ingresos y Gastos Diarios",
       },
     },
     pointBackgroundColor: "#fff",
