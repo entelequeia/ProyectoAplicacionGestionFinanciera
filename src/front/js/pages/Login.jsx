@@ -61,7 +61,7 @@ export function Login({ onLogin }) {
                 {/* Sección derecha: Create Account */}
                 <div className="bg-violet text-center text-white d-flex flex-column align-items-center justify-content-center col-lg-6 col-md-6 col-sm-12 p-5 position-relative z-index-2 custom2-container">
                     <h1 className="display-5 text-violet2 mb-4">Login</h1>
-                    <p className="text-muted mb-5">use your email to access</p>
+                    <p className="text-muted mb-5">use your email to login</p>
 
                     {/* Formulario de registro */}
                     <form className="w-100" style={{ maxWidth: '400px' }}>
