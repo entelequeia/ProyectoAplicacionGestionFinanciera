@@ -12,12 +12,14 @@ import { Single } from "./pages/single";
 import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
 import { Groups } from "./pages/Groups.jsx";
+import { CurrencyConversion } from "./pages/CurrencyConversion.jsx";
 
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/Navbar.jsx";
 import { Footer } from "./component/footer";
 import { AccessDenied } from "./pages/AccessDenied.jsx";
+import "../styles/layout.css"
 
 //create your first component
 const Layout = () => {
@@ -71,10 +73,10 @@ const Layout = () => {
     if(isLoading) return <Loader />
 
     return (
-        <div>
+        <div class="app-container">
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    {isValidToken && <Navbar />}
+                    {isValidToken && <Navbar />} 
                     <Routes>
                         <Route element={<Login onLogin={handleLogin}/>} path="/" />
                         <Route element={<Signup />} path="/signup" />
@@ -83,6 +85,7 @@ const Layout = () => {
                             <>
                             <Route element={<Home />} path="/home" />
                             <Route element={<Groups />} path="/groups" />
+                            <Route element={<CurrencyConversion />} path="/currency" />
                             </>
                         ) : <Route path='/asas' element={<h1>No tienes acceso</h1>} />}
                         <Route path="*" element={<Error404 />}/> 

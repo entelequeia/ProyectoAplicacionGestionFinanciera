@@ -8,7 +8,7 @@
   color: #333333;
   display: flex;
   flex-direction: column;
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -158,6 +158,7 @@
   font-size: 1em;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   margin-top: -10px;
+  
 }
 
 .sidebar .sidebar-menu ul li {
@@ -205,3 +206,30 @@
 .sidebar.collapsed .sidebar-bottom ul li svg {
   margin: 0 auto;
 }
+
+@media only screen and (max-width: 600px) {
+
+  .sidebar .toggle-button {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 48px;
+    height: 48px;
+    background: #333333;
+    color: #ffffff;
+    margin-top: 0px;
+  }
+
+  .sidebar {
+    width: 420px;
+  }
+
+  .sidebar.collapsed  {
+    width: 0px;
+  }
+
+  .sidebar.collapsed *:not(.toggle-button) {
+    opacity: 0;
+  }  
+
+  }
