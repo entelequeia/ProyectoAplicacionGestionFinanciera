@@ -3,64 +3,76 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Context } from "../store/appContext";
 
-// Registrar los componentes necesarios de Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DonutChart = () => {
+export function DonutChart() {
   const [categories, setCategories] = useState([]);
   const [values, setValues] = useState([]);
   const [total, setTotal] = useState(0);
+  const [details, setDetails] = useState([]);
+  const [error, setError] = useState(null);
   const { store } = useContext(Context);
 
-  // Datos de ejemplo (cuando no se obtienen de la API)
-  const exampleData = [
-    { category_name: "Ocio", amount: 200 },
-    { category_name: "Transporte", amount: 150 },
-    { category_name: "Comida", amount: 300 },
-    { category_name: "Vivienda", amount: 450 },
-    { category_name: "Otros", amount: 100 }
-  ];
+  const categoryMap = {
+    3: "Transporte",
+    4: "Transferencias",
+    5: "Comida",
+    6: "Ocio",
+    7: "Supermercado",
+    8: "Otros",
+  };
+
+  const backgroundColors = ["#FF5733", "#33FF57", "#3357FF", "#FFC300", "#FF33A8"];
 
   useEffect(() => {
     const getFinanceData = async () => {
       try {
+        const userId = store.userData?.id || 2;
         const response = await fetch(
-          `${process.env.BACKEND_URL || "http://localhost:3001/"}api/get_finances/2`
+          `${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/${userId}`
         );
-        const data = await exampleData;
-        // jugar con este (exampleData)
+        const data = await response.json();
 
-        // Si no tenemos datos de la API, usamos los datos de ejemplo
-        const finalData = data.length ? data : exampleData;
+        if (!Array.isArray(data) || !data.length) {
+          setError("No tienes finanzas registradas.");
+          setCategories([]);
+          setValues([]);
+          setDetails([]);
+          setTotal(0);
+          return;
+        }
 
-        // Procesar los datos para obtener categorías y valores
-        const categoriesData = [...new Set(finalData.map(item => item.category_name))];
-        const valuesData = categoriesData.map(category =>
-          finalData
-            .filter(item => item.category_name === category)
+        const processedData = data.map((item) => ({
+          category_name: categoryMap[item.id_category] || "Otros",
+          name: item.name,
+          amount: item.amount,
+        }));
+
+        const categoriesData = [...new Set(processedData.map((item) => item.category_name))];
+        const valuesData = categoriesData.map((category) =>
+          processedData
+            .filter((item) => item.category_name === category)
             .reduce((sum, item) => sum + item.amount, 0)
         );
 
+        const detailsData = categoriesData.map((category) => ({
+          category,
+          items: processedData.filter((item) => item.category_name === category),
+        }));
+
         setCategories(categoriesData);
         setValues(valuesData);
+        setDetails(detailsData);
         setTotal(valuesData.reduce((sum, val) => sum + val, 0));
-      } catch (error) {
-        console.log("Error getting finance data", error);
+        setError(null);
+      } catch (err) {
+        console.error("Error obteniendo los datos de la API:", err);
+        setError("Hubo un problema al conectar con el servidor.");
       }
     };
 
     getFinanceData();
-  }, [store.userData.id]);
-
-  const backgroundColors = ["#FF5733", "#33FF57", "#3357FF", "#FFC300", "#FF33A8"];
-
-  const categoryIcons = {
-    "Ocio": "fas fa-sun",
-    "Transporte": "fas fa-car",
-    "Comida": "fas fa-utensils",
-    "Vivienda": "fas fa-home",
-    "Otros": "fas fa-gift"
-  };
+  }, [store.userData?.id]);
 
   const data = {
     labels: categories,
@@ -74,46 +86,83 @@ const DonutChart = () => {
     ],
   };
 
+  const options = {
+    responsive: true,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const category = context.label;
+            const value = context.raw;
+            return `${category}: €${value}`;
+          },
+        },
+      },
+      legend: {
+        position: "top",
+      },
+    },
+    elements: {
+      arc: {
+        borderWidth: 2,
+        borderColor: "#ffffff",
+        backgroundColor: "#ff0",
+        hoverBorderColor: "#fff",
+        hoverBorderWidth: 3,
+        backgroundColor: backgroundColors.slice(0, categories.length),
+      },
+    },
+    animation: {
+      animateRotate: true,
+      animateScale: true,
+    },
+  };
+
   return (
     <div className="container mt-5">
-      <div className="row justify-content-center">
-        {/* Card con la gráfica */}
-        <div className="col-12 col-md-6">
-          <div className="card shadow-sm p-3 mb-4 bg-white rounded">
-            <div className="card-body">
-              <h5 className="card-title text-center">Distribución de Gastos</h5>
-              {/* Gráfico */}
-              <div className="d-flex justify-content-center">
-                <Doughnut data={data} />
+      {error ? (
+        <div className="alert alert-warning text-center">
+          <strong>{error}</strong>
+          <p>Por favor, revisa tu conexión o registra finanzas para ver la gráfica.</p>
+        </div>
+      ) : (
+        <div className="row justify-content-center">
+          {/* Card con la gráfica */}
+          <div className="col-12 col-md-6">
+            <div className="card shadow-sm p-3 mb-4 bg-white rounded">
+              <div className="card-body">
+                <h5 className="card-title text-center">Distribución de Gastos</h5>
+                <div className="d-flex justify-content-center">
+                  <Doughnut data={data} options={options} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Lista detallada de gastos */}
+          <div className="col-12 col-md-6 mt-4 mt-md-0">
+            <div className="card shadow-sm p-3 mb-4 bg-white rounded">
+              <div className="card-body">
+                <h5 className="card-title">Detalles por Categoría</h5>
+                {details.map((detail, index) => (
+                  <div key={index} className="mb-3">
+                    <h6 style={{ color: backgroundColors[index] }}>{detail.category}</h6>
+                    <ul className="list-unstyled">
+                      {detail.items.map((item, idx) => (
+                        <li key={idx} className="d-flex justify-content-between">
+                          <span>{item.name}</span>
+                          <span>€{item.amount}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+                <h6 className="text-right">Total de Gastos: €{total.toFixed(2)}</h6>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Lista de categorías con iconos y euro */}
-        <div className="col-12 col-md-6 mt-4 mt-md-0">
-          <div className="card shadow-sm p-3 mb-4 bg-white rounded">
-            <div className="card-body">
-              <h5 className="card-title">Gastos por Categoría</h5>
-              <ul className="list-unstyled">
-                {categories.map((category, index) => (
-                  <li key={index} className="d-flex align-items-center mb-2">
-                    <i
-                      className={`${categoryIcons[category]} mr-2`}
-                      style={{ fontSize: "20px", color: backgroundColors[index] }}
-                    ></i>
-                    {category}: €{values[index]}
-                  </li>
-                ))}
-              </ul>
-              {/* Total de gastos */}
-              <h6 className="text-right">Total de Gastos: €{total}</h6>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
-};
-
-export default DonutChart;
+}
