@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/home.css";
 import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
+import { DonutChart } from "../component/DonutChart.jsx";
 
 export function Home() {
     const [user, setUser] = useState(() => {
@@ -40,9 +41,6 @@ export function Home() {
             .reduce((acc, item) => acc + item.amount, 0); // Sumamos los ingresos
         setIngresos(ingresosTotales);
     }, [finance])
-
-    console.log(finance);
-    console.log(gastos);
 
     return (
         <div className="dashboard-container">
@@ -127,7 +125,9 @@ export function Home() {
                         </div>
                     </section>
                     <section>
-                        <h1>Hola mundoo</h1>
+                        <div className="chart-container">
+                            <DonutChart />
+                        </div>
                     </section>
                 </div>
             </main>
