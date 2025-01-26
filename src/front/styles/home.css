@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  
 }
 
 /* Header */
@@ -18,6 +19,7 @@
 .dashboard-container {
   display: flex;
   flex-direction: column;
+  width: 100vw;
 }
 
 /* Section container for transactions and overview */
@@ -197,7 +199,7 @@
 /* Estilos generales del contenedor de la gráfica */
 .chart-row {
   display: flex;
-  justify-content: center;
+  
   align-items: center;
   /* padding: 20px; */
 }
@@ -219,7 +221,7 @@
 
 .chart-container {
   width: 100%;
-  height: 400px;
+  height: 330px;
   display: flex;
   justify-content: center;
   align-items: center;

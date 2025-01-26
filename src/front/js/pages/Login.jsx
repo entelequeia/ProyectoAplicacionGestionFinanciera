@@ -44,8 +44,8 @@ export function Login({ onLogin }) {
     }
 
     return (
-        <div className="d-flex justify-content-center align-items-center mt-5 bg-white p-3">
-            <div className="d-flex flex-md-row bg-white rounded shadow-lg overflow-hidden custom-container">
+        <div className="d-flex justify-content-center align-items-center mt-5 bg-white p-3 w-100" >
+            <div className="d-flex flex-md-row bg-white rounded shadow-lg overflow-hidden custom-container" style={{marginTop:"50px"}}>
                 {/* Sección izquierda: Welcome Back */}
                 <div className="bg-lightviolet bg-gradient text-white d-flex flex-column align-items-center justify-content-center col-lg-6 col-md-6 col-sm-12 p-5 position-relative z-index-2 custom1-container">
                     <h1 className="display-4 mb-4 fw-bolder">Welcome Back!</h1>
