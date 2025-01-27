@@ -18,7 +18,7 @@ export function Home() {
         description: "",
         id_category: "",
         id_user: user?.id,
-        id_type: null,
+        id_type: "",
     });
     const [categories, setCategories] = useState([]);
     const [types, setTypes] = useState([]);
@@ -294,9 +294,10 @@ export function Home() {
                                         <select
                                             id="type"
                                             value={financeData.id_type}
-                                            onChange={(e) => setFinanceData({ ...financeData, id_type: e.target.value })}
+                                            onChange={(e) => setFinanceData({ ...financeData, id_type: e.target.value === "" ? null : e.target.value })}
                                             className="form-select"
-                                            required
+                                            required={financeData.id_category === "1"}
+                                            disabled={financeData.id_category === "2"}
                                         >
                                             <option value="" disabled>Select Type</option>
                                             {types.map((type) => (

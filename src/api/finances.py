@@ -39,7 +39,7 @@ def create_finance():
             description=data.get('description'),
             id_category=data['id_category'],
             id_user=data['id_user'],
-            id_type=data['id_type']
+            id_type=data.get('id_type')
         )
         db.session.add(new_finance)
         db.session.commit()
