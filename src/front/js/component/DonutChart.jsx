@@ -20,8 +20,11 @@ export function DonutChart() {
         const response = await fetch(`${process.env.BACKEND_URL || "http://localhost:3001/"}api/get_finances_all/${user.id}`);
         const data = await response.json();
 
+        // Filtrar datos nulos o vacíos
+        const filteredData = data.filter(item => item.type !== null && item.type !== "");
+
         // Agrupar por tipo de finanza y calcular los totales
-        const groupedData = data.reduce((acc, item) => {
+        const groupedData = filteredData.reduce((acc, item) => {
           acc[item.type] = (acc[item.type] || 0) + item.amount;
           return acc;
         }, {});

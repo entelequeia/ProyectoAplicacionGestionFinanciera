@@ -29,7 +29,6 @@ export function Home() {
             try {
                 const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_all/${user.id}`);
                 const data = await response.json();
-                console.log(JSON.stringify(financeData))
                 if (response.ok) {
                     setFinance(data);
                 } else {
@@ -88,6 +87,7 @@ export function Home() {
     }, [finance])
 
     const postFinance = async () => {
+        console.log(financeData);
         try {
             const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/create_finance`, {
                 method: 'POST',
@@ -100,9 +100,18 @@ export function Home() {
             const data = await response.json();
 
             if (response.ok) {
+                const category = categories.find(c => c.id === parseInt(financeData.id_category))?.category || "No category";
+                const type = types.find(t => t.id === parseInt(financeData.id_type))?.type || null;
+
+                const newFinance = {
+                    ...data,
+                    category,
+                    type,
+                };
+
+                setFinance((prevFinance) => [...prevFinance, newFinance]);
                 setMessage("Finance added successfully");
                 setTimeout(() => { setMessage(null) }, 3000);
-                setFinance((prevFinance) => [...prevFinance, data]);
             } else {
                 console.error('Error adding finance', data);
             }
@@ -294,7 +303,7 @@ export function Home() {
                                         <select
                                             id="type"
                                             value={financeData.id_type}
-                                            onChange={(e) => setFinanceData({ ...financeData, id_type: e.target.value === "" ? null : e.target.value })}
+                                            onChange={(e) => setFinanceData({ ...financeData, id_type: financeData.id_category === "1" ? e.target.value : null })}
                                             className="form-select"
                                             required={financeData.id_category === "1"}
                                             disabled={financeData.id_category === "2"}

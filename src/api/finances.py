@@ -32,6 +32,11 @@ def get_finances_id(id):
 def create_finance():
     data = request.get_json()
     try:
+        # Procesa campos que podrían venir como cadenas vacías
+        id_type = data.get('id_type')  # Obtén el valor de id_type
+        if id_type == "" or id_type is None:  # Si es cadena vacía o None, conviértelo a None
+            id_type = None
+
         new_finance = Finances(
             name=data['name'],
             amount=data['amount'],
@@ -39,7 +44,7 @@ def create_finance():
             description=data.get('description'),
             id_category=data['id_category'],
             id_user=data['id_user'],
-            id_type=data.get('id_type')
+            id_type=id_type
         )
         db.session.add(new_finance)
         db.session.commit()
