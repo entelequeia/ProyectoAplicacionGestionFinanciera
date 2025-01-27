@@ -230,61 +230,61 @@ export function Groups() {
 
       {user?.id_rol === 1 && (
 
-       <div className='settings'> 
-       
-        <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><CgOptions /> Options
+        <div className='settings'>
 
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end">
+          <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><CgOptions /> Options
+
+          </button>
+          <ul className="dropdown-menu dropdown-menu-end">
             <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#renameGroup">Rename Group</button></li>
             <li><button disabled className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser">Add User</button></li>
             <li><button disabled className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addFinanze">Add Finance</button></li>
             <li className='delete-btn'><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#deleteGroup">Delete Group</button></li>
           </ul>
-        
-        <div>
-         
 
-          {/* Name Group */}
-          <div className="modal fade" id="renameGroup" aria-labelledby="renameGroupLabel" aria-hidden="true">
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h1 className="modal-title fs-5" id="renameGroupLabel">Rename Group</h1>
-                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div>
+
+
+            {/* Name Group */}
+            <div className="modal fade" id="renameGroup" aria-labelledby="renameGroupLabel" aria-hidden="true">
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="renameGroupLabel">Rename Group</h1>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div className="modal-body">
+                    <form onSubmit={renameGroup}>
+                      <div className="mb-3">
+                        <label htmlFor="name" className="form-label">New Name</label>
+                        <input type="text" className="form-control" id="name" value={nameGroup} onChange={(e) => setNameGroup(e.target.value)} />
+                      </div>
+                    </form>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" className="btn rename-button" onClick={renameGroup}>Rename Group</button>
+                  </div>
                 </div>
-                <div className="modal-body">
-                  <form onSubmit={renameGroup}>
-                    <div className="mb-3">
-                      <label htmlFor="name" className="form-label">New Name</label>
-                      <input type="text" className="form-control" id="name" value={nameGroup} onChange={(e) => setNameGroup(e.target.value)} />
-                    </div>
-                  </form>
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" className="btn rename-button" onClick={renameGroup}>Rename Group</button>
+              </div>
+            </div>
+
+            {/* Delete Group */}
+            <div className="modal fade" id="deleteGroup" aria-labelledby="deleteGroupLabel" aria-hidden="true">
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="deleteGroupLabel">Surely you want to delete the group</h1>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" className="btn delete-button" onClick={deleteGroup}>Delete Group</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Delete Group */}
-          <div className="modal fade" id="deleteGroup" aria-labelledby="deleteGroupLabel" aria-hidden="true">
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h1 className="modal-title fs-5" id="deleteGroupLabel">Surely you want to delete the group</h1>
-                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" className="btn delete-button" onClick={deleteGroup}>Delete Group</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         </div>
       )}
 

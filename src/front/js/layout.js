@@ -75,7 +75,7 @@ const Layout = () => {
     if(isLoading) return <Loader />
 
     return (
-        <div class="app-container">
+        <div className="app-container">
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     {isValidToken && <Navbar />} 
