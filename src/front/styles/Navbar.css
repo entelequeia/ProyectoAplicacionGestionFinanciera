@@ -87,6 +87,7 @@
   font-size: 0.9em;
   border-top: 1px solid #eeeeee;
   color: #999999;
+  position: sticky;
 }
 
 /* Bottom Section for Help and Logout */
@@ -232,4 +233,13 @@
     opacity: 0;
   }  
 
+  }
+  .logout:hover {
+    background-color:#9e1c24  !important;
+  
+    
+    
+  }
+  .logout:hover a {
+    color: white !important;
   }
