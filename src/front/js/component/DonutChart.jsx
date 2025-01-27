@@ -1,86 +1,84 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Context } from "../store/appContext";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export function DonutChart() {
-  const [categories, setCategories] = useState([]);
+  const [types, setTypes] = useState([]);
   const [values, setValues] = useState([]);
   const [total, setTotal] = useState(0);
-  const [details, setDetails] = useState([]);
-  const [error, setError] = useState(null);
-  const { store } = useContext(Context);
-
-  const categoryMap = {
-    3: "Transporte",
-    4: "Transferencias",
-    5: "Comida",
-    6: "Ocio",
-    7: "Supermercado",
-    8: "Otros",
-  };
-
-  const backgroundColors = ["#FF5733", "#33FF57", "#3357FF", "#FFC300", "#FF33A8"];
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user')
+    return savedUser ? JSON.parse(savedUser) : null
+  });
 
   useEffect(() => {
     const getFinanceData = async () => {
       try {
-        const userId = store.userData?.id || 2;
-        const response = await fetch(
-          `${process.env.BACKEND_URL || "http://localhost:3001/"}api/finances2/${userId}`
-        );
+        const response = await fetch(`${process.env.BACKEND_URL || "http://localhost:3001/"}api/get_finances_all/${user.id}`);
         const data = await response.json();
 
-        if (!Array.isArray(data) || !data.length) {
-          setError("No tienes finanzas registradas.");
-          setCategories([]);
-          setValues([]);
-          setDetails([]);
-          setTotal(0);
-          return;
-        }
+        // Filtrar datos nulos o vacíos
+        const filteredData = data.filter(item => item.type !== null && item.type !== "");
 
-        const processedData = data.map((item) => ({
-          category_name: categoryMap[item.id_category] || "Otros",
-          name: item.name,
-          amount: item.amount,
-        }));
+        // Agrupar por tipo de finanza y calcular los totales
+        const groupedData = filteredData.reduce((acc, item) => {
+          acc[item.type] = (acc[item.type] || 0) + item.amount;
+          return acc;
+        }, {});
 
-        const categoriesData = [...new Set(processedData.map((item) => item.category_name))];
-        const valuesData = categoriesData.map((category) =>
-          processedData
-            .filter((item) => item.category_name === category)
-            .reduce((sum, item) => sum + item.amount, 0)
-        );
+        // Crear arrays separados para categorías y valores
+        const types = Object.keys(groupedData);
+        const amounts = Object.values(groupedData);
 
-        const detailsData = categoriesData.map((category) => ({
-          category,
-          items: processedData.filter((item) => item.category_name === category),
-        }));
-
-        setCategories(categoriesData);
-        setValues(valuesData);
-        setDetails(detailsData);
-        setTotal(valuesData.reduce((sum, val) => sum + val, 0));
-        setError(null);
-      } catch (err) {
-        console.error("Error obteniendo los datos de la API:", err);
-        setError("Hubo un problema al conectar con el servidor.");
+        // Actualizar estados
+        setTypes(types);
+        setValues(amounts);
+        setTotal(amounts.reduce((sum, val) => sum + val, 0));
+      } catch (error) {
+        console.log("Error getting finance data", error);
       }
     };
 
     getFinanceData();
-  }, [store.userData?.id]);
+  }, [user.id]);
+
+  const backgroundColors = [
+    "rgba(255, 99, 132, 0.2)",
+    "rgba(54, 162, 235, 0.2)",
+    "rgba(255, 206, 86, 0.2)",
+    "rgba(75, 192, 192, 0.2)",
+    "rgba(153, 102, 255, 0.2)",
+    "rgba(255, 159, 64, 0.2)",
+    "rgba(102, 255, 153, 0.2)"];
+
+  const borderColors = [
+    "rgba(255, 99, 132, 1)",
+    "rgba(54, 162, 235, 1)",
+    "rgba(255, 206, 86, 1)",
+    "rgba(75, 192, 192, 1)",
+    "rgba(153, 102, 255, 1)",
+    "rgba(255, 159, 64, 1)",
+    "rgba(102, 255, 153, 1)"
+  ];
+
+  const typeIcons = {
+    "Ocio": "fas fa-sun",
+    "Transporte": "fas fa-car",
+    "Comida": "fas fa-utensils",
+    "Vivienda": "fas fa-home",
+    "Otros": "fas fa-gift"
+  };
 
   const data = {
-    labels: categories,
+    labels: types,
     datasets: [
       {
         label: "Gastos",
         data: values,
-        backgroundColor: backgroundColors.slice(0, categories.length),
+        backgroundColor: backgroundColors.slice(0, types.length),
+        borderColor: borderColors.slice(0, types.length),
         borderWidth: 1,
       },
     ],
@@ -161,8 +159,30 @@ export function DonutChart() {
               </div>
             </div>
           </div>
+
+          {/* Lista de tipos con iconos y euro */}
+          <div className="col-12 col-md-6 mt-4 mt-md-0">
+            <div className="card shadow-sm p-3 mb-4 bg-white rounded">
+              <div className="card-body">
+                <h5 className="card-title">Gastos por Tipos</h5>
+                <ul className="list-unstyled">
+                  {types.map((type, index) => (
+                    <li key={index} className="d-flex align-items-center mb-2">
+                      <i
+                        className={`${typeIcons[type]} mr-2`}
+                        style={{ fontSize: "20px", color: borderColors[index] }}
+                      ></i>
+                      {type}: €{values[index]}
+                    </li>
+                  ))}
+                </ul>
+                {/* Total de gastos */}
+                <h6 className="text-right">Total de Gastos: €{total}</h6>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
   );
-}
+};

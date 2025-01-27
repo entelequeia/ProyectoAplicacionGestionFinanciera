@@ -107,7 +107,7 @@ def get_finanzes_all(id_user):
             finance_data["category"] = finance.category.category  # finance.category es el objeto relacionado
             
             # Accedemos al nombre del tipo y lo añadimos
-            finance_data["type"] = finance.types.type  # finance.types es el objeto relacionado
+            finance_data["type"] = finance.types.type if finance.types else None  # finance.types es el objeto relacionado
             
             response.append(finance_data)
 

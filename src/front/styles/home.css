@@ -136,22 +136,6 @@
   margin-bottom: 20px;
 }
 
-/* Botón de agregar finanzas */
-.add-finance-btn {
-  background-color: #2563eb;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: not-allowed;
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
-}
-
-.add-finance-btn:disabled {
-  pointer-events: none;
-}
-
 .expense {
   color: #e74c3c;
 }
