@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import "../../styles/Groups.css";
+import { BsJustify } from 'react-icons/bs';
+import { CgOptions } from "react-icons/cg";
+
 
 export function Groups() {
   const [name, setName] = useState('')
@@ -21,9 +25,9 @@ export function Groups() {
     if (!group && user.id_group) {
       getGroup();
     } else if (group) {
-      setMessage(`Ya perteneces a un grupo: ${group.name}`);
+      setMessage(`You already belong to a group named: ${group.name}`);
     } else {
-      setMessage('No perteneces a ningún grupo, puedes crear uno nuevo.');
+      setMessage('You don’t belong to any group; you can create a new one.');
     }
   }, [user, group]);
 
@@ -187,10 +191,10 @@ export function Groups() {
 
   return (
     <div>
-      <div className="alert alert-warning" role="alert">{message}</div>
+      <h2 className="encabezado" role="alert">{message}</h2>
       {!group && (
         <div>
-          <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGroup">
+          <button type="button" className="btn create-group-btn" data-bs-toggle="modal" data-bs-target="#createGroup">
             Create Group
           </button>
 
@@ -214,7 +218,7 @@ export function Groups() {
                     </div>
                     <div className="modal-footer">
                       <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" className="btn btn-primary">Create Group</button>
+                      <button type="submit" className="btn create-button">Create Group</button>
                     </div>
                   </form>
                 </div>
@@ -225,22 +229,21 @@ export function Groups() {
       )}
 
       {user?.id_rol === 1 && (
+
+       <div className='settings'> 
+       
+        <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><CgOptions /> Options
+
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#renameGroup">Rename Group</button></li>
+            <li><button disabled className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser">Add User</button></li>
+            <li><button disabled className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addFinanze">Add Finance</button></li>
+            <li className='delete-btn'><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#deleteGroup">Delete Group</button></li>
+          </ul>
+        
         <div>
-          <button type="button" className="btn btn-warning" data-bs-toggle="modal" data-bs-target="#renameGroup">
-            Rename Group
-          </button>
-
-          <button type="button" disabled className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
-            Add User
-          </button>
-
-          <button type="button" disabled className="btn btn-info" data-bs-toggle="modal" data-bs-target="#addFinanze">
-            Add Finance
-          </button>
-
-          <button type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGroup">
-            Delete Group
-          </button>
+         
 
           {/* Name Group */}
           <div className="modal fade" id="renameGroup" aria-labelledby="renameGroupLabel" aria-hidden="true">
@@ -260,7 +263,7 @@ export function Groups() {
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" className="btn btn-warning" onClick={renameGroup}>Rename Group</button>
+                  <button type="button" className="btn rename-button" onClick={renameGroup}>Rename Group</button>
                 </div>
               </div>
             </div>
@@ -276,11 +279,12 @@ export function Groups() {
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" className="btn btn-danger" onClick={deleteGroup}>Delete Group</button>
+                  <button type="button" className="btn delete-button" onClick={deleteGroup}>Delete Group</button>
                 </div>
               </div>
             </div>
           </div>
+        </div>
         </div>
       )}
 

@@ -60,7 +60,7 @@ export function Signup() {
         {/* Sección izquierda: Create Account */}
         <div className="text-center text-white d-flex flex-column align-items-center justify-content-center col-lg-6 col-md-6 col-sm-12 p-5 position-relative z-index-2 custom2-container">
           <h1 className="display-5 text-violet2 mb-4">Create Account</h1>
-          <p className="text-muted mb-5">use your name and email for registration</p>
+          <p className="text-muted mb-5">use your name and email to register</p>
 
           {/* Formulario de registro */}
           <form className="w-100" style={{ maxWidth: '400px' }}>
@@ -135,7 +135,7 @@ export function Signup() {
         <div className="bg-lightviolet bg-gradient text-white d-flex flex-column align-items-center justify-content-center col-lg-6 col-md-6 col-sm-12 p-5 position-relative z-index-2 custom1-container">
           <h1 className="display-4 mb-4 fw-bolder">To Access!</h1>
           <p className="lead mb-5">
-            To keep connected, please login with your account.
+            To stay connected, please login with your account.
           </p>
           {/* Botón de iniciar sesión */}
           <button className="btn btn-outline-light text-white rounded-pill px-5 py-2 shadow-sm btn-signin">

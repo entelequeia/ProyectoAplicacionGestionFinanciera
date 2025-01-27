@@ -11,6 +11,7 @@ import { Single } from "./pages/single";
 import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
 import { Groups } from "./pages/Groups.jsx";
+import { CurrencyConversion } from "./pages/CurrencyConversion.jsx";
 import { Error404 } from "./pages/Error404.jsx";
 import { AccessDenied } from "./pages/AccessDenied.jsx";
 
@@ -18,6 +19,7 @@ import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/Navbar.jsx";
 import { Footer } from "./component/footer";
+import "../styles/layout.css"
 import { node } from "prop-types";
 
 //create your first component
@@ -73,10 +75,10 @@ const Layout = () => {
     if(isLoading) return <Loader />
 
     return (
-        <div>
+        <div class="app-container">
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    {/* {isValidToken && <Navbar />} */}
+                    {isValidToken && <Navbar />} 
                     <Routes>
                         <Route element={<Login onLogin={handleLogin}/>} path="/" />
                         <Route element={<Signup />} path="/signup" />
@@ -85,6 +87,7 @@ const Layout = () => {
                             <>
                             <Route element={<Home />} path="/home" />
                             <Route element={<Groups />} path="/groups" />
+                            <Route element={<CurrencyConversion />} path="/currency" />
                             </>
                         ) : <Route path='/access-denied' element={<AccessDenied/>} />}
                         <Route path="*" element={<Error404 />}/> 
