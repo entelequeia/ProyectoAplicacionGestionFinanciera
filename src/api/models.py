@@ -69,7 +69,7 @@ class Finances(db.Model):
     description = db.Column(db.String(120), nullable=True)
     id_category = db.Column(db.Integer, db.ForeignKey('categories.id_category'), nullable=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id_user'), nullable=False)
-    id_type = db.Column(db.Integer, db.ForeignKey('types.id_type'), nullable=False)
+    id_type = db.Column(db.Integer, db.ForeignKey('types.id_type'), nullable=True)
 
     # Relaciones bidireccionales
     user = db.relationship('Users', backref='finances')

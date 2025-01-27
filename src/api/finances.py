@@ -1,26 +1,20 @@
 from flask import Blueprint, request, jsonify
-from api.models import db, Finances
+from api.models import db, Finances, Categories, Types
 from  flask_cors import CORS
 
 finances_bp = Blueprint('finances', __name__)
 CORS(finances_bp)
 # Ruta para obtener las categorías
-@finances_bp.route('/api/categories', methods=['GET'])
+@finances_bp.route('/api/get_categories', methods=['GET'])
 def get_categories():
-    categories = [
-        {"id": 1, "label": "Comida"},
-        {"id": 2, "label": "Transporte"},
-    ]
-    return jsonify(categories)
+    category = Categories.query.all()
+    return jsonify([category.serialize() for category in category])
 
 # Ruta para obtener los tipos
-@finances_bp.route('/api/types', methods=['GET'])
+@finances_bp.route('/api/get_types', methods=['GET'])
 def get_types():
-    types = [
-        {"id": 1, "label": "Ingresos"},
-        {"id": 2, "label": "Gastos"},
-    ]
-    return jsonify(types)
+    types = Types.query.all()
+    return jsonify([type.serialize() for type in types])
 
 @finances_bp.route('/api/finances', methods= ['GET'])
 def get_finances():
@@ -34,7 +28,7 @@ def get_finances_id(id):
         return jsonify({"error": "Finance not found"}), 404
     return jsonify(finance.serialize()), 200
 
-@finances_bp.route('/api/finances', methods=['POST'])
+@finances_bp.route('/api/create_finance', methods=['POST'])
 def create_finance():
     data = request.get_json()
     try:
@@ -49,7 +43,7 @@ def create_finance():
         )
         db.session.add(new_finance)
         db.session.commit()
-        return jsonify(new_finance.serialize()), 201
+        return jsonify(new_finance.serialize()), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
