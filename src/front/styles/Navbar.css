@@ -159,7 +159,6 @@
   font-size: 1em;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   margin-top: -10px;
-  
 }
 
 .sidebar .sidebar-menu ul li {
@@ -209,7 +208,6 @@
 }
 
 @media only screen and (max-width: 600px) {
-
   .sidebar .toggle-button {
     position: absolute;
     top: 16px;
@@ -225,21 +223,19 @@
     width: 420px;
   }
 
-  .sidebar.collapsed  {
+  .sidebar.collapsed {
     width: 0px;
   }
 
   .sidebar.collapsed *:not(.toggle-button) {
     opacity: 0;
-  }  
+  }
+}
 
-  }
-  .logout:hover {
-    background-color:#9e1c24  !important;
-  
-    
-    
-  }
-  .logout:hover a {
-    color: white !important;
-  }
+.logout:hover {
+  background-color: #9e1c24 !important;
+}
+
+.logout:hover a {
+  color: white !important;
+}

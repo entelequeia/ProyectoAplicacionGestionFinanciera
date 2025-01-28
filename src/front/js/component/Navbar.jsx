@@ -9,7 +9,6 @@ import { IoAnalytics, IoPersonOutline, IoHelp } from "react-icons/io5";
 import '../../styles/Navbar.css'
 
 export function Navbar() {
-	
 	const [collapsed, setCollapsed] = useState(false);
 
 	const toggleSidebar = () => {
