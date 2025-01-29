@@ -7,8 +7,15 @@ from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 import bcrypt
+from flask_mail import Message
 
 api = Blueprint('api', __name__)
+
+mail = None
+
+def init_mail(app_mail):
+    global mail
+    mail = app_mail
 
 # Allow CORS requests to this API
 CORS(api)
@@ -114,8 +121,6 @@ def get_finanzes_all(id_user):
         return jsonify(response), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
 
 # Crear un nuevo grupo    
 @api.route('/create_groups', methods=['POST'])
@@ -243,6 +248,49 @@ def get_user_group(id_user):
 
         # Retorna la información del grupo
         return jsonify(group.serialize()), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Enviar invitación 
+@api.route('/send_invitation', methods=['POST'])
+def send_invitation():
+    try:
+        if mail is None:
+            return jsonify({"error": "Mail service is not initialized"}), 500
+
+        data = request.get_json()
+
+        if "email" not in data or "id_group" not in data:
+            return jsonify({"error": "Missing email or id_group"}), 400
+        
+        group = Groups.query.filter_by(id_group=data["id_group"]).first()
+        if not group:
+            return jsonify({"error": "Group not found"}), 404
+        
+        # Crear el correo de invitación
+        invite_link_accept = f"{request.host_url}api/accept_invitation/{data['id_group']}/{data['email']}"
+        invite_link_reject = f"{request.host_url}api/reject_invitation/{data['id_group']}/{data['email']}"
+
+        # Crear el mensaje
+        message = Message(
+            subject="¡Te han invitado a un grupo!",
+            sender="safehaven4geeks@gmail.com",
+            recipients=[data["email"]],
+            html=f"""
+                <h1>¡Hola!</h1>
+                <p>Has sido invitado al grupo <b>{group.name}</b>.</p>
+                <p>Haz clic en una de las opciones a continuación:</p>
+                <a href="{invite_link_accept}">Aceptar Invitación</a>
+                <br>
+                <a href="{invite_link_reject}">Rechazar Invitación</a>
+            """
+        )
+
+        # Enviar el correo
+        mail.send(message)
+
+        return jsonify({"success": "Invitation sent"}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
