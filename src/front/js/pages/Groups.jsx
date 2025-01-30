@@ -7,6 +7,7 @@ import { CgOptions } from "react-icons/cg";
 export function Groups() {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [email, setEmail] = useState('')
   const [message, setMessage] = useState()
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user')
@@ -183,6 +184,28 @@ export function Groups() {
     }
   }
 
+  // Enviar invitación a un usuario
+  const sendInvitation = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/send_invitation`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 'email': email, 'id_group': group.id })
+      })
+
+      const data = await response.json()
+      if (response.status === 200) {
+        console.log(data)
+      }
+
+      if (response.status !== 200) {
+        console.log(data)
+      }
+    } catch (error) {
+      console.log('Error al enviar invitación', error)
+    }
+  }
+
   // Manejar el evento de submit del formulario de creación de grupo y llamar a la función de creación de grupo
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -237,7 +260,7 @@ export function Groups() {
           </button>
           <ul className="dropdown-menu dropdown-menu-end">
             <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#renameGroup">Rename Group</button></li>
-            <li><button disabled className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser">Add User</button></li>
+            <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser">Add User</button></li>
             <li><button disabled className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addFinanze">Add Finance</button></li>
             <li className='delete-btn'><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#deleteGroup">Delete Group</button></li>
           </ul>
@@ -245,7 +268,7 @@ export function Groups() {
           <div>
 
 
-            {/* Name Group */}
+            {/* Rename Group */}
             <div className="modal fade" id="renameGroup" aria-labelledby="renameGroupLabel" aria-hidden="true">
               <div className="modal-dialog">
                 <div className="modal-content">
@@ -264,6 +287,30 @@ export function Groups() {
                   <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" className="btn rename-button" onClick={renameGroup}>Rename Group</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Add User */}
+            <div className="modal fade" id="addUser" aria-labelledby="addUserLabel" aria-hidden="true">
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="addUserLabel">Add User</h1>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div className="modal-body">
+                    <form onSubmit={sendInvitation}>
+                      <div className="mb-3">
+                        <label htmlFor="name" className="form-label">Send Invitation to User</label>
+                        <input type="text" className="form-control" id="name" placeholder='example@gamil.com' onChange={(e) => setEmail(e.target.value)} />
+                      </div>
+                    </form>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" className="btn rename-button" onClick={sendInvitation}>Send Invitation</button>
                   </div>
                 </div>
               </div>

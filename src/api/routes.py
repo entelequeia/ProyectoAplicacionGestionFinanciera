@@ -8,6 +8,13 @@ from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 import bcrypt
 from flask_mail import Message
+from dotenv import load_dotenv
+import os
+from urllib.parse import quote
+
+load_dotenv()
+
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000/")
 
 api = Blueprint('api', __name__)
 
@@ -268,9 +275,11 @@ def send_invitation():
         if not group:
             return jsonify({"error": "Group not found"}), 404
         
+        email_safe = data["email"].replace('.', 'DOT')
+        
         # Crear el correo de invitación
-        invite_link_accept = f"{request.host_url}api/accept_invitation/{data['id_group']}/{data['email']}"
-        invite_link_reject = f"{request.host_url}api/reject_invitation/{data['id_group']}/{data['email']}"
+        invite_link_accept = f"{FRONTEND_URL}api/accept_invitation/{data['id_group']}/{email_safe}"
+        invite_link_reject = f"{FRONTEND_URL}api/reject_invitation/{data['id_group']}/{data['email']}"
 
         # Crear el mensaje
         message = Message(
