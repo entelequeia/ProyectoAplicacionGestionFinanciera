@@ -32,8 +32,8 @@ class Groups(db.Model):
     name = db.Column(db.String(80), unique=True, nullable=False)
     description = db.Column(db.String(120), unique=False, nullable=True)
 
-    # Relaciones bidireccionales
-    user = db.relationship('Users', backref='groups')
+    # Relación con Group_Finances
+    group_finances = db.relationship('Group_Finances', backref='group', lazy=True)
 
     def __repr__(self):
         return f'<Group {self.name}>'
@@ -43,7 +43,11 @@ class Groups(db.Model):
             "id": self.id_group,
             "name": self.name,
             "description": self.description,
-            }
+        }
+
+
+
+
     
 class Roles(db.Model):
     id_rol = db.Column(db.Integer, primary_key=True)
@@ -127,13 +131,13 @@ class Types(db.Model):
     
 class Group_Finances(db.Model):
     id_group_finance = db.Column(db.Integer, primary_key=True)
-    id_group = db.Column(db.Integer, db.ForeignKey('groups.id_group',ondelete = 'CASCADE'), nullable=False)
-    id_finance = db.Column(db.Integer, db.ForeignKey('finances.id_finance',ondelete = 'CASCADE'), nullable=False)
-    create_by = db.Column(db.Integer, db.ForeignKey('users.id_user',ondelete = 'CASCADE'), nullable=False)
+    id_group = db.Column(db.Integer, db.ForeignKey('groups.id_group', ondelete='CASCADE'), nullable=False)
+    id_finance = db.Column(db.Integer, db.ForeignKey('finances.id_finance', ondelete='CASCADE'), nullable=False)
+    create_by = db.Column(db.Integer, db.ForeignKey('users.id_user', ondelete='CASCADE'), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
 
     # Relaciones bidireccionales
-    group = db.relationship('Groups', backref='group_finances_group')
+    group_relation = db.relationship('Groups', backref='group_finances', lazy=True)
     finance = db.relationship('Finances', backref='group_finances_finance')
     user = db.relationship('Users', backref='group_finances_user')
 
@@ -147,4 +151,4 @@ class Group_Finances(db.Model):
             "id_finance": self.id_finance,
             "create_by": self.create_by,
             "date": self.date
-            }
+        }
