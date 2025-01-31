@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import "../../styles/Groups.css";
-import { BsJustify } from 'react-icons/bs';
+import { FaUsers } from "react-icons/fa";
 import { CgOptions } from "react-icons/cg";
 
 
@@ -9,6 +9,7 @@ export function Groups() {
   const [description, setDescription] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState()
+  const [usersGroup, setUsersGroup] = useState([])
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user')
     return savedUser ? JSON.parse(savedUser) : null
@@ -28,9 +29,25 @@ export function Groups() {
     } else if (group) {
       setMessage(`You already belong to a group named: ${group.name}`);
     } else {
-      setMessage('You don’t belong to any group; you can create a new one.');
+      setMessage('You don`t belong to any group; you can create a new one.');
     }
   }, [user, group]);
+
+  useEffect(() => {
+    const getUserGroup = async () => {
+      try {
+        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_users_group/${group.id}`)
+        const data = await response.json()
+        if (response.ok) {
+          setUsersGroup(data)
+        }
+      } catch (error) {
+        console.log('Error getting user group', error)
+      }
+    }
+
+    getUserGroup()
+  }, [group])
 
   //Obetener el Grupo del usuario
   const getGroup = async () => {
@@ -248,6 +265,19 @@ export function Groups() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {group && (
+        <div>
+          <button type="button" className="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <FaUsers /> Users
+          </button>
+          <ul className="dropdown-menu dropdown-menu-end">
+            {usersGroup.map(user => (
+              <li key={user.id} className="dropdown-item">{user.email}</li>
+            ))}
+          </ul>
         </div>
       )}
 

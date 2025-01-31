@@ -316,3 +316,16 @@ def get_group_name(id_group):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# Obtener usuarios de un grupo
+@api.route('/get_users_group/<int:id_group>', methods=['GET'])
+def get_users_group(id_group):
+    try:
+        group = Groups.query.filter_by(id_group=id_group).first()
+        if not group:
+            return jsonify({"error": "Group not found"}), 404
+
+        return jsonify([user.serialize() for user in group.user]), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
