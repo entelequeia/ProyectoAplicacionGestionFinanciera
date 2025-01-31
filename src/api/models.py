@@ -27,13 +27,16 @@ class Users(db.Model):
             "id_rol": self.id_rol
             }
     
+
 class Groups(db.Model):
     id_group = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     description = db.Column(db.String(120), unique=False, nullable=True)
 
-    # Relación con Group_Finances
+    # Relaciones bidireccionales
+    user = db.relationship('Users', backref='groups')
     group_finances = db.relationship('Group_Finances', backref='group', lazy=True)
+
 
     def __repr__(self):
         return f'<Group {self.name}>'
@@ -42,12 +45,11 @@ class Groups(db.Model):
         return {
             "id": self.id_group,
             "name": self.name,
-            "description": self.description,
+            "description": self.description
         }
+    
 
-
-
-
+    
     
 class Roles(db.Model):
     id_rol = db.Column(db.Integer, primary_key=True)
@@ -67,18 +69,18 @@ class Roles(db.Model):
     
 class Finances(db.Model):
     id_finance = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=False, nullable=False)
+    name = db.Column(db.String(80), unique=True, nullable=False)
     amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(120), nullable=True)
     id_category = db.Column(db.Integer, db.ForeignKey('categories.id_category'), nullable=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id_user'), nullable=False)
-    id_type = db.Column(db.Integer, db.ForeignKey('types.id_type'), nullable=True)
+    id_type = db.Column(db.Integer, db.ForeignKey('types.id_type'), nullable=False)
 
     # Relaciones bidireccionales
     user = db.relationship('Users', backref='finances')
     category = db.relationship('Categories', backref='finances_category')
-    # type = db.relationship('Types', backref='finances_type') """
+    type = db.relationship('Types', backref='finances_type')
 
 
 
@@ -133,22 +135,21 @@ class Group_Finances(db.Model):
     id_group_finance = db.Column(db.Integer, primary_key=True)
     id_group = db.Column(db.Integer, db.ForeignKey('groups.id_group', ondelete='CASCADE'), nullable=False)
     id_finance = db.Column(db.Integer, db.ForeignKey('finances.id_finance', ondelete='CASCADE'), nullable=False)
-    create_by = db.Column(db.Integer, db.ForeignKey('users.id_user', ondelete='CASCADE'), nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
+    id_user = db.Column(db.Integer, db.ForeignKey('users.id_user', ondelete='CASCADE'), nullable=False)
+    date = db.Column(db.Date, nullable=False)
 
     # Relaciones bidireccionales
-    group_relation = db.relationship('Groups', backref='group_finances', lazy=True)
     finance = db.relationship('Finances', backref='group_finances_finance')
     user = db.relationship('Users', backref='group_finances_user')
 
     def __repr__(self):
-        return f'<Group_Finance {self.id_group} - {self.id_finance} from {self.create_by}>'
+        return f'<Group_Finance {self.id_group} - {self.id_finance} from {self.user.id_user}>'
 
     def serialize(self):
         return {
             "id": self.id_group_finance,
             "id_group": self.id_group,
             "id_finance": self.id_finance,
-            "create_by": self.create_by,
+            "created_by": self.user.id_user,
             "date": self.date
         }

@@ -17,6 +17,12 @@ export function Groups() {
     return savedGroup ? JSON.parse(savedGroup) : null
   })
   const [nameGroup, setNameGroup] = useState(group ? group.name : '')
+  const [finances, setFinances] = useState([]);
+  const [selectedFinance, setSelectedFinance] = useState(null);
+  const [financeUser, setFinanceUser] = useState([]);
+  const [financeAdded, setFinanceAdded] = useState(false);
+
+
 
   console.log(user);
   console.log(group);
@@ -30,6 +36,12 @@ export function Groups() {
       setMessage('You don’t belong to any group; you can create a new one.');
     }
   }, [user, group]);
+
+  useEffect(() => {
+    fetchFinances();
+    getFinancesUsers();
+  }, []);
+
 
   //Obetener el Grupo del usuario
   const getGroup = async () => {
@@ -183,11 +195,82 @@ export function Groups() {
     }
   }
 
+  // Obtener finanzas
+  const fetchFinances = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_group/${group.id}`);
+      const data = await response.json();
+      console.log(data); // Verifica los datos recibidos del backend
+
+
+      if (response.status === 200) {
+        setFinances(data);
+      }
+    } catch (error) {
+      console.error('Error al obtener las finanzas:', error);
+    }
+  };
+
+  // Obtener finanzas
+  const getFinancesUsers = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances/${user.id}`);
+      const data = await response.json();
+
+
+      if (response.status === 200) {
+        setFinanceUser(data);
+      }
+    } catch (error) {
+      console.error('Error al obtener las finanzas:', error);
+    }
+  };
+
+  // Añadir finanza al grupo
+  const addGroupFinance = async () => {
+    const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/add_group_finance`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        "id_group": group.id,
+        "id_finance": selectedFinance.id,
+        "id_user": user.id,
+        "date": new Date().toISOString().split("T")[0],
+      }),
+    });
+
+    const responseData = await response.json();
+
+    if (response.ok) {
+      setMessage("Finanza añadida correctamente al grupo.");
+      console.log("Finanza añadida correctamente:", responseData);
+      fetchFinances(); // Recargar la lista de finanzas
+      setFinanceAdded(true); // Marcar que ya se añadió una finanza
+    } else {
+      setMessage(`Error: ${responseData.error || "No se pudo añadir la finanza."}`);
+      console.error("Error en la respuesta del backend:", responseData);
+    }
+  };
+
+
+  // Formulario para añadir finanza
+  const handleAddFinanceSubmit = (e) => {
+    e.preventDefault(); // Prevenir la acción por defecto
+    if (selectedFinance) {
+      addGroupFinance();
+    }
+  };
+
+
+
   // Manejar el evento de submit del formulario de creación de grupo y llamar a la función de creación de grupo
   const handleSubmit = (e) => {
     e.preventDefault()
     createGroup({ name, description })
   }
+
+
+
 
   return (
     <div>
@@ -228,6 +311,41 @@ export function Groups() {
         </div>
       )}
 
+      <section className="transactions-list">
+        <h3>Recent Transactions</h3>
+        <ul>
+          {finances.map((item, key) => (
+            <li key={key} className="transaction-item">
+              <div className="transaction-logo">
+                <img
+                  src={`https://unavatar.io/${item.name}`}
+                  alt={`${item.name} logo`}
+                />
+              </div>
+              <div className="transaction-info">
+                <strong>{item.name}</strong>
+                <p className="description">
+                  {item.description || "No description"} •{" "}
+                  <span className="date">
+                    {new Date(item.date).toLocaleDateString("es-ES", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+                </p>
+              </div>
+              <div className="transaction-amount">
+                <span className={`amount ${item.category === "Gasto" ? "expense" : "income"}`}>
+                  {item.category === "Gasto" ? "-" : "+"} {item.amount} $
+                </span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+
       {user?.id_rol === 1 && (
 
         <div className='settings'>
@@ -238,7 +356,7 @@ export function Groups() {
           <ul className="dropdown-menu dropdown-menu-end">
             <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#renameGroup">Rename Group</button></li>
             <li><button disabled className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser">Add User</button></li>
-            <li><button disabled className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addFinanze">Add Finance</button></li>
+            <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addFinanceModal">Add Finance</button></li>
             <li className='delete-btn'><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#deleteGroup">Delete Group</button></li>
           </ul>
 
@@ -268,6 +386,53 @@ export function Groups() {
                 </div>
               </div>
             </div>
+            {/* Modal para añadir finanza */}
+            <div className="modal fade" id="addFinanceModal" aria-labelledby="addFinanceModalLabel" aria-hidden="true">
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="addFinanceModalLabel">Añadir Finanza al Grupo</h1>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div className="modal-body">
+                    <form onSubmit={handleAddFinanceSubmit}>
+                      <div className="mb-3">
+                        <label htmlFor="selectFinance" className="form-label">Seleccionar Finanza</label>
+                        <select
+                          id="selectFinance"
+                          className="form-select"
+                          value={selectedFinance?.id || ""}
+                          onChange={(e) => {
+                            const selected = financeUser.find(finance => finance.id === parseInt(e.target.value));
+                            setSelectedFinance(selected);
+                          }}
+                        >
+                          <option value="">Selecciona una opción</option>
+                          {financeUser.map((finance) => (
+                            <option key={finance.id} value={finance.id}>
+                              {finance.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button
+                          type="submit"
+                          className="btn btn-primary"
+                          onClick={addGroupFinance}
+                          disabled={financeAdded} // Deshabilitar el botón si ya se añadió una finanza
+                        >
+                          Añadir Finanza
+                        </button>
+
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Delete Group */}
             <div className="modal fade" id="deleteGroup" aria-labelledby="deleteGroupLabel" aria-hidden="true">
@@ -287,9 +452,6 @@ export function Groups() {
           </div>
         </div>
       )}
-
-
     </div>
   );
 }
-
