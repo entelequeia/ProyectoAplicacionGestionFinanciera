@@ -279,7 +279,7 @@ def send_invitation():
         
         # Crear el correo de invitación
         invite_link_accept = f"{FRONTEND_URL}api/accept_invitation/{data['id_group']}/{email_safe}"
-        invite_link_reject = f"{FRONTEND_URL}api/reject_invitation/{data['id_group']}/{data['email']}"
+        invite_link_reject = f"{FRONTEND_URL}"
 
         # Crear el mensaje
         message = Message(
@@ -300,6 +300,19 @@ def send_invitation():
         mail.send(message)
 
         return jsonify({"success": "Invitation sent"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Obtener el nombre del grupo
+@api.route('/get_group_name/<int:id_group>', methods=['GET'])
+def get_group_name(id_group):
+    try:
+        group = Groups.query.filter_by(id_group=id_group).first()
+        if not group:
+            return jsonify({"error": "Group not found"}), 404
+        
+        return jsonify({"name": group.name}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
