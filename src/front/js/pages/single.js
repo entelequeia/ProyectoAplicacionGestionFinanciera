@@ -8,7 +8,7 @@ export const Single = props => {
 	const params = useParams();
 	const [groupId, setGroupId] = useState(params.theid);
 	const [email, setEmail] = useState(params.theemail.replaceAll("DOT", "."));
-	const [message, setMessage] = useState("User not found");
+	const [message, setMessage] = useState(null);
 	const [groupName, setGroupName] = useState("");
 	const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user')
@@ -49,12 +49,14 @@ export const Single = props => {
 	return (
 		<div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="bg-white p-4 rounded shadow-lg text-center w-75">
-        <h2 className="fw-bold">¡Invitación Aceptada!</h2>
-        <p className="text-secondary mt-2">
-          El usuario con email <span className="fw-bold text-primary">{email}</span>  
-          ha sido añadido al grupo <span className="fw-bold text-success">{groupName}</span>.
-        </p>
-        {message && <div className="alert alert-danger">{message}</div>}
+        {!message && <div>
+					<h2 className="fw-bold">¡Invitación Aceptada!</h2>
+					<p className="text-secondary mt-2">
+						El usuario con email <span className="fw-bold text-primary">{email}</span>  
+						ha sido añadido al grupo <span className="fw-bold text-success">{groupName}</span>.
+					</p>	
+				</div>}
+        {message && <div className="alert alert-danger"><h2>Error</h2>{message}</div>}
         <div className="mt-4">
           <Link to="/groups" className="btn btn-primary">Volver a Mis Grupos</Link>
         </div>
