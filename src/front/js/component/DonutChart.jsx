@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import "../../styles/DonutChart.css";
 
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -123,10 +124,10 @@ export function DonutChart() {
     <div className="container mt-5">
       <div className="row justify-content-center">
         {/* Card con la gráfica */}
-        <div className="col-12 col-md-6">
-          <div className="card shadow-sm p-3 mb-4 bg-white rounded">
+        <div className="expense-distribution col-12 col-md-6">
+          <div className="card expense-distribution-card shadow-sm p-3 mb-4 bg-white rounded">
             <div className="card-body">
-              <h5 className="card-title text-center">Distribución de Gastos</h5>
+              <h5 className="card-title text-center">Expense Distribution</h5>
               {/* Gráfico */}
               <div className="d-flex justify-content-center">
                 <Doughnut data={data} />
@@ -136,10 +137,10 @@ export function DonutChart() {
         </div>
 
         {/* Lista de tipos con iconos y euro */}
-        <div className="col-12 col-md-6 mt-4 mt-md-0">
-          <div className="card shadow-sm p-3 mb-4 bg-white rounded">
+        <div className="expenses-by-type col-12 col-md-6 mt-4 mt-md-0">
+          <div className="card expenses-by-type-card  shadow-sm p-3 mb-4 pb-4 bg-white rounded">
             <div className="card-body">
-              <h5 className="card-title">Gastos por Tipos</h5>
+              <h5 className="card-title">Expenses By Type</h5>
               <ul className="list-unstyled">
                 {types.map((type, index) => (
                   <li key={index} className="d-flex align-items-center mb-2">
@@ -147,12 +148,12 @@ export function DonutChart() {
                       className={`${typeIcons[type]} mr-2`}
                       style={{ fontSize: "20px", color: borderColors[index] }}
                     ></i>
-                    {type}: €{values[index]}
+                    {type}: {values[index]} $
                   </li>
                 ))}
               </ul>
               {/* Total de gastos */}
-              <h6 className="text-right">Total de Gastos: €{total}</h6>
+              <h6 className="text-right">Total Expenses: {total} $</h6>
             </div>
           </div>
         </div>

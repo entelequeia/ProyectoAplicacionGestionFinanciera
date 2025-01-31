@@ -207,8 +207,8 @@ export function Home() {
                             <ChartJSFinancesUser />
                         </div>
                     </section>
-                    <section>
-                        <div className="chart-container">
+                    <section className="donut-chart">
+                        <div>
                             <DonutChart />
                         </div>
                     </section>
