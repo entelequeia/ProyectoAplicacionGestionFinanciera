@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import "../../styles/Groups.css";
 import { FaUsers } from "react-icons/fa";
 import { CgOptions } from "react-icons/cg";
@@ -24,10 +24,9 @@ export function Groups() {
   const [financeUser, setFinanceUser] = useState([]);
   const [financeAdded, setFinanceAdded] = useState(false);
 
-  console.log('user', user)
-  console.log('group', group)
-
   useEffect(() => {
+    if (!group || !user) return;
+
     if (!group && user.id_group) {
       getGroup();
     } else if (group) {
@@ -35,10 +34,6 @@ export function Groups() {
     } else {
       setMessage('You don`t belong to any group; you can create a new one.');
     }
-  }, [user, group]);
-
-  useEffect(() => {
-    if (!group || !user) return;
 
     // Obtener usuarios del grupo
     const getUserGroup = async () => {
@@ -53,20 +48,7 @@ export function Groups() {
       }
     }
 
-    // Obtener finanzas
-    const fetchFinances = async () => {
-      try {
-        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_group/${group?.id}`);
-        const data = await response.json();
-        console.log("Ver finanzas del grupo", data); // Verifica los datos recibidos del backend
 
-        if (response.status === 200) {
-          setFinances(data);
-        }
-      } catch (error) {
-        console.error('Error al obtener las finanzas:', error);
-      }
-    };
 
     // Obtener finanzas
     const getFinancesUsers = async () => {
@@ -254,28 +236,50 @@ export function Groups() {
     }
   }
 
-  // Añadir finanza al grupo
-  /* const addGroupFinance = async () => {
-    const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/add_group_finance`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        "id_group": group.id,
-        "id_finance": selectedFinance.id,
-        "id_user": user.id,
-        "date": new Date().toISOString().split("T")[0],
-      }),
-    });
-    const responseData = await response.json();
+  // Obtener finanzas
+  const fetchFinances = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_group/${group?.id}`);
+      const data = await response.json();
+      console.log("Ver finanzas del grupo", data); // Verifica los datos recibidos del backend
 
-    if (response.ok) {
-      setMessage("Finanza añadida correctamente al grupo.");
-      console.log("Finanza añadida correctamente:", responseData);
-      fetchFinances(); // Recargar la lista de finanzas
-      setFinanceAdded(true); // Marcar que ya se añadió una finanza
-    } else {
-      setMessage(`Error: ${responseData.error || "No se pudo añadir la finanza."}`);
-      console.error("Error en la respuesta del backend:", responseData);
+      if (response.status === 200) {
+        setFinances(data);
+      }
+    } catch (error) {
+      console.error('Error al obtener las finanzas:', error);
+    }
+  }, []);
+
+  // Añadir finanza al grupo
+  const addGroupFinance = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/add_group_finance`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          "id_group": group.id,
+          "id_finance": selectedFinance.id,
+          "id_user": user.id,
+          "date": new Date().toISOString().split("T")[0],
+        }),
+      });
+      const responseData = await response.json();
+
+      if (response.ok) {
+        setFloatingMessage("Finance added successfully");
+        fetchFinances(); // Recargar la lista de finanzas
+        setFinanceAdded(true); // Marcar que ya se añadió una finanza
+      } else {
+        setMessage(`Error: ${responseData.error || "No se pudo añadir la finanza."}`);
+        console.error("Error en la respuesta del backend:", responseData);
+      }
+    } catch (error) {
+      console.error("Error al añadir la finanza:", error);
+    } finally {
+      setTimeout(() => {
+        setFloatingMessage(null);
+      }, 3000);
     }
   };
 
@@ -285,7 +289,7 @@ export function Groups() {
     if (selectedFinance) {
       addGroupFinance();
     }
-  }; */
+  };
 
   // Manejar el evento de submit del formulario de creación de grupo y llamar a la función de creación de grupo
   const handleSubmit = (e) => {
@@ -389,8 +393,8 @@ export function Groups() {
                   </p>
                 </div>
                 <div className="transaction-amount">
-                  <span className={`amount ${item.category === "Gasto" ? "expense" : "income"}`}>
-                    {item.category === "Gasto" ? "-" : "+"} {item.amount} $
+                  <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
+                    {item.category === "Expense" ? "-" : "+"} {item.amount} $
                   </span>
                 </div>
               </li>
@@ -433,7 +437,7 @@ export function Groups() {
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
-              <form /* onSubmit={handleAddFinanceSubmit} */>
+              <form onSubmit={handleAddFinanceSubmit}>
                 <div className="mb-3">
                   <label htmlFor="selectFinance" className="form-label">Seleccionar Finanza</label>
                   <select
@@ -458,12 +462,12 @@ export function Groups() {
                   <button
                     type="submit"
                     className="btn btn-primary"
-                    /* onClick={addGroupFinance} */
                     disabled={financeAdded} // Deshabilitar el botón si ya se añadió una finanza
                   >
                     Añadir Finanza
                   </button>
                 </div>
+                {floatingMessage && <div className="alert alert-success" role="alert">{floatingMessage}</div>}
               </form>
             </div>
           </div>
