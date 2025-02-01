@@ -13,6 +13,7 @@ import { Signup } from "./pages/Signup.jsx";
 import { Groups } from "./pages/Groups.jsx";
 import { Error404 } from "./pages/Error404.jsx";
 import { AccessDenied } from "./pages/AccessDenied.jsx";
+import { Profile } from "./pages/Profile.jsx";
 
 import injectContext from "./store/appContext";
 
@@ -80,7 +81,7 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    {/* {isValidToken && <Navbar />} */}
+                    {isValidToken && <Navbar />}
                     <Routes>
                         <Route element={<Login onLogin={handleLogin}/>} path="/" />
                         <Route element={<Signup />} path="/signup" />
@@ -89,6 +90,7 @@ const Layout = () => {
                             <>
                             <Route element={<Home />} path="/home" />
                             <Route element={<Groups />} path="/groups" />
+                            <Route element={<Profile />} path="/profile" />
                             </>
                         ) : <Route path='/access-denied' element={<AccessDenied/>} />}
                         <Route path="*" element={<Error404 />}/> 
