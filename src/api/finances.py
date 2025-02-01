@@ -3,7 +3,9 @@ from api.models import db, Finances, Categories, Types
 from  flask_cors import CORS
 
 finances_bp = Blueprint('finances', __name__)
+
 CORS(finances_bp)
+
 # Ruta para obtener las categorías
 @finances_bp.route('/api/get_categories', methods=['GET'])
 def get_categories():
