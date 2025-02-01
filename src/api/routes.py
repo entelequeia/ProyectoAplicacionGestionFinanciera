@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, Users, Groups, Roles
+from api.models import db, Users, Groups, Roles, Group_Finances
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -329,3 +329,69 @@ def get_users_group(id_group):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# Endpoint para agregar una finanza al grupo
+@api.route('/add_group_finance', methods=['POST'])
+def add_group_finance():
+    try:
+        # Obtener los datos del cuerpo de la solicitud
+        data = request.get_json()
+        print("Datos recibidos en backend:", data)  # Depuración
+
+        id_group = data.get('id_group')
+        id_finance = data.get('id_finance')
+        id_user = data.get('id_user')
+        date = data.get('date')
+
+        # Verificar si los campos están presentes y no son None
+        if any(field is None for field in [id_group, id_finance, id_user, date]):
+            return jsonify({"error": "Missing required fields"}), 400
+
+        # Crear una nueva entrada en la tabla GroupFinance
+        new_group_finance = Group_Finances(
+            id_group=id_group, 
+            id_finance=id_finance, 
+            id_user=id_user, 
+            date=date
+        )
+
+        # Guardar la nueva entrada en la base de datos
+        db.session.add(new_group_finance)
+        db.session.commit()
+
+        return jsonify({"message": "Finanza añadida correctamente al grupo"}), 200
+
+    except Exception as e:
+        print("Error en backend:", e)
+        return jsonify({"error": "Se produjo un error al agregar la finanza al grupo."}), 500
+
+
+# Obtener todas las finanzas asociadas a un grupo específico.
+@api.route('/get_finances_group/<int:id_group>', methods=['GET'])
+def get_finances_group(id_group):
+    try:
+        # Busca el grupo por su ID
+        group = Groups.query.filter_by(id_group=id_group).first()
+
+        if not group:
+            return jsonify({"error": "Grupo no encontrado"}), 404
+
+        # Obtén las finanzas asociadas al grupo a través de group_finances
+        finances = [
+            {
+                "id": gf.finance.id_finance,
+                "name": gf.finance.name,
+                "amount": gf.finance.amount,
+                "date": gf.finance.date.strftime('%Y-%m-%d') if gf.finance.date else None,
+                "description": gf.finance.description,
+                "category": gf.finance.category.category if gf.finance.category else None,  
+                "type": gf.finance.type.type if gf.finance.type else None,  
+                "user": gf.finance.user.name if gf.finance.user else None  
+            }
+            for gf in group.group_finances
+        ]
+
+        return jsonify(finances), 200
+
+    except Exception as e:
+        return jsonify({"error": "Error interno del servidor", "message": str(e)}), 500

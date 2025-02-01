@@ -19,6 +19,12 @@ export function Groups() {
     return savedGroup ? JSON.parse(savedGroup) : null
   })
   const [nameGroup, setNameGroup] = useState(group ? group.name : '')
+  const [finances, setFinances] = useState([]);
+  const [selectedFinance, setSelectedFinance] = useState(null);
+  const [financeUser, setFinanceUser] = useState([]);
+  const [financeAdded, setFinanceAdded] = useState(false);
+
+
 
   console.log(user);
   console.log(group);
@@ -48,6 +54,11 @@ export function Groups() {
 
     getUserGroup()
   }, [group])
+
+  useEffect(() => {
+    fetchFinances();
+    getFinancesUsers();
+  }, []);
 
   //Obetener el Grupo del usuario
   const getGroup = async () => {
@@ -222,6 +233,72 @@ export function Groups() {
       console.log('Error al enviar invitación', error)
     }
   }
+
+  // Obtener finanzas
+  const fetchFinances = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_group/${group.id}`);
+      const data = await response.json();
+      console.log(data); // Verifica los datos recibidos del backend
+
+
+      if (response.status === 200) {
+        setFinances(data);
+      }
+    } catch (error) {
+      console.error('Error al obtener las finanzas:', error);
+    }
+  };
+
+  // Obtener finanzas
+  const getFinancesUsers = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances/${user.id}`);
+      const data = await response.json();
+
+
+      if (response.status === 200) {
+        setFinanceUser(data);
+      }
+    } catch (error) {
+      console.error('Error al obtener las finanzas:', error);
+    }
+  };
+
+  // Añadir finanza al grupo
+  const addGroupFinance = async () => {
+    const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/add_group_finance`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        "id_group": group.id,
+        "id_finance": selectedFinance.id,
+        "id_user": user.id,
+        "date": new Date().toISOString().split("T")[0],
+      }),
+    });
+
+    const responseData = await response.json();
+
+    if (response.ok) {
+      setMessage("Finanza añadida correctamente al grupo.");
+      console.log("Finanza añadida correctamente:", responseData);
+      fetchFinances(); // Recargar la lista de finanzas
+      setFinanceAdded(true); // Marcar que ya se añadió una finanza
+    } else {
+      setMessage(`Error: ${responseData.error || "No se pudo añadir la finanza."}`);
+      console.error("Error en la respuesta del backend:", responseData);
+    }
+  };
+
+
+  // Formulario para añadir finanza
+  const handleAddFinanceSubmit = (e) => {
+    e.preventDefault(); // Prevenir la acción por defecto
+    if (selectedFinance) {
+      addGroupFinance();
+    }
+  };
 
   // Manejar el evento de submit del formulario de creación de grupo y llamar a la función de creación de grupo
   const handleSubmit = (e) => {
