@@ -34,9 +34,8 @@ class Groups(db.Model):
     description = db.Column(db.String(120), unique=False, nullable=True)
 
     # Relaciones bidireccionales
-    user = db.relationship('Users', backref='groups')
+    user = db.relationship('Users', backref='groups', passive_deletes=True)
     group_finances = db.relationship('Group_Finances', backref='group', lazy=True)
-
 
     def __repr__(self):
         return f'<Group {self.name}>'
@@ -133,9 +132,9 @@ class Types(db.Model):
     
 class Group_Finances(db.Model):
     id_group_finance = db.Column(db.Integer, primary_key=True)
-    id_group = db.Column(db.Integer, db.ForeignKey('groups.id_group', ondelete='CASCADE'), nullable=False)
-    id_finance = db.Column(db.Integer, db.ForeignKey('finances.id_finance', ondelete='CASCADE'), nullable=False)
-    id_user = db.Column(db.Integer, db.ForeignKey('users.id_user', ondelete='CASCADE'), nullable=False)
+    id_group = db.Column(db.Integer, db.ForeignKey('groups.id_group', ondelete = 'CASCADE'), nullable=True)
+    id_finance = db.Column(db.Integer, db.ForeignKey('finances.id_finance', ondelete = 'CASCADE'), nullable=False)
+    id_user = db.Column(db.Integer, db.ForeignKey('users.id_user', ondelete = 'CASCADE'), nullable=False)
     date = db.Column(db.Date, nullable=False)
 
     # Relaciones bidireccionales

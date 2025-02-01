@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import "../../styles/Groups.css";
-import { BsJustify } from 'react-icons/bs';
+import { FaUsers } from "react-icons/fa";
 import { CgOptions } from "react-icons/cg";
 
 
 export function Groups() {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [email, setEmail] = useState('')
   const [message, setMessage] = useState()
+  const [usersGroup, setUsersGroup] = useState([])
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user')
     return savedUser ? JSON.parse(savedUser) : null
@@ -33,15 +35,30 @@ export function Groups() {
     } else if (group) {
       setMessage(`You already belong to a group named: ${group.name}`);
     } else {
-      setMessage('You don’t belong to any group; you can create a new one.');
+      setMessage('You don`t belong to any group; you can create a new one.');
     }
   }, [user, group]);
+
+  useEffect(() => {
+    const getUserGroup = async () => {
+      try {
+        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_users_group/${group.id}`)
+        const data = await response.json()
+        if (response.ok) {
+          setUsersGroup(data)
+        }
+      } catch (error) {
+        console.log('Error getting user group', error)
+      }
+    }
+
+    getUserGroup()
+  }, [group])
 
   useEffect(() => {
     fetchFinances();
     getFinancesUsers();
   }, []);
-
 
   //Obetener el Grupo del usuario
   const getGroup = async () => {
@@ -195,6 +212,28 @@ export function Groups() {
     }
   }
 
+  // Enviar invitación a un usuario
+  const sendInvitation = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/send_invitation`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 'email': email, 'id_group': group.id })
+      })
+
+      const data = await response.json()
+      if (response.status === 200) {
+        console.log(data)
+      }
+
+      if (response.status !== 200) {
+        console.log(data)
+      }
+    } catch (error) {
+      console.log('Error al enviar invitación', error)
+    }
+  }
+
   // Obtener finanzas
   const fetchFinances = async () => {
     try {
@@ -261,16 +300,11 @@ export function Groups() {
     }
   };
 
-
-
   // Manejar el evento de submit del formulario de creación de grupo y llamar a la función de creación de grupo
   const handleSubmit = (e) => {
     e.preventDefault()
     createGroup({ name, description })
   }
-
-
-
 
   return (
     <div>
@@ -311,147 +345,100 @@ export function Groups() {
         </div>
       )}
 
-      <section className="transactions-list">
-        <h3>Recent Transactions</h3>
-        <ul>
-          {finances.map((item, key) => (
-            <li key={key} className="transaction-item">
-              <div className="transaction-logo">
-                <img
-                  src={`https://unavatar.io/${item.name}`}
-                  alt={`${item.name} logo`}
-                />
-              </div>
-              <div className="transaction-info">
-                <strong>{item.name}</strong>
-                <p className="description">
-                  {item.description || "No description"} •{" "}
-                  <span className="date">
-                    {new Date(item.date).toLocaleDateString("es-ES", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </span>
-                </p>
-              </div>
-              <div className="transaction-amount">
-                <span className={`amount ${item.category === "Gasto" ? "expense" : "income"}`}>
-                  {item.category === "Gasto" ? "-" : "+"} {item.amount} $
-                </span>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-
-      {user?.id_rol === 1 && (
-
-        <div className='settings'>
-
-          <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><CgOptions /> Options
-
-          </button>
-          <ul className="dropdown-menu dropdown-menu-end">
-            <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#renameGroup">Rename Group</button></li>
-            <li><button disabled className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser">Add User</button></li>
-            <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addFinanceModal">Add Finance</button></li>
-            <li className='delete-btn'><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#deleteGroup">Delete Group</button></li>
-          </ul>
-
+      {group && (
+        <div className="d-flex gap-2">
+          {/* Botón Users */}
           <div>
+            <button type="button" className="position-relative btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <FaUsers /> Users
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              {usersGroup.map(user => (
+                <li key={user.id} className="dropdown-item">{user.email}</li>
+              ))}
+            </ul>
+          </div>
 
-
-            {/* Name Group */}
-            <div className="modal fade" id="renameGroup" aria-labelledby="renameGroupLabel" aria-hidden="true">
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h1 className="modal-title fs-5" id="renameGroupLabel">Rename Group</h1>
-                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div className="modal-body">
-                    <form onSubmit={renameGroup}>
-                      <div className="mb-3">
-                        <label htmlFor="name" className="form-label">New Name</label>
-                        <input type="text" className="form-control" id="name" value={nameGroup} onChange={(e) => setNameGroup(e.target.value)} />
-                      </div>
-                    </form>
-                  </div>
-                  <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" className="btn rename-button" onClick={renameGroup}>Rename Group</button>
-                  </div>
-                </div>
-              </div>
+          {/* Botón Options (solo para admin) */}
+          {user?.id_rol === 1 && (
+            <div>
+              <button type="button" className="position-relative btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <CgOptions /> Options
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end">
+                <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#renameGroup">Rename Group</button></li>
+                <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser">Add User</button></li>
+                <li><button disabled className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addFinanze">Add Finance</button></li>
+                <li className='delete-btn'><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#deleteGroup">Delete Group</button></li>
+              </ul>
             </div>
-            {/* Modal para añadir finanza */}
-            <div className="modal fade" id="addFinanceModal" aria-labelledby="addFinanceModalLabel" aria-hidden="true">
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h1 className="modal-title fs-5" id="addFinanceModalLabel">Añadir Finanza al Grupo</h1>
-                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div className="modal-body">
-                    <form onSubmit={handleAddFinanceSubmit}>
-                      <div className="mb-3">
-                        <label htmlFor="selectFinance" className="form-label">Seleccionar Finanza</label>
-                        <select
-                          id="selectFinance"
-                          className="form-select"
-                          value={selectedFinance?.id || ""}
-                          onChange={(e) => {
-                            const selected = financeUser.find(finance => finance.id === parseInt(e.target.value));
-                            setSelectedFinance(selected);
-                          }}
-                        >
-                          <option value="">Selecciona una opción</option>
-                          {financeUser.map((finance) => (
-                            <option key={finance.id} value={finance.id}>
-                              {finance.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button
-                          type="submit"
-                          className="btn btn-primary"
-                          onClick={addGroupFinance}
-                          disabled={financeAdded} // Deshabilitar el botón si ya se añadió una finanza
-                        >
-                          Añadir Finanza
-                        </button>
+          )}
+        </div>
+      )}
 
-                      </div>
-                    </form>
-
-                  </div>
-                </div>
-              </div>
+      {/* Rename Group */}
+      <div className="modal fade" id="renameGroup" aria-labelledby="renameGroupLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="renameGroupLabel">Rename Group</h1>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
-            {/* Delete Group */}
-            <div className="modal fade" id="deleteGroup" aria-labelledby="deleteGroupLabel" aria-hidden="true">
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h1 className="modal-title fs-5" id="deleteGroupLabel">Surely you want to delete the group</h1>
-                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" className="btn delete-button" onClick={deleteGroup}>Delete Group</button>
-                  </div>
+            <div className="modal-body">
+              <form onSubmit={renameGroup}>
+                <div className="mb-3">
+                  <label htmlFor="name" className="form-label">New Name</label>
+                  <input type="text" className="form-control" id="name" value={nameGroup} onChange={(e) => setNameGroup(e.target.value)} />
                 </div>
-              </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" className="btn rename-button" onClick={renameGroup}>Rename Group</button>
             </div>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Add User */}
+      <div className="modal fade" id="addUser" aria-labelledby="addUserLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="addUserLabel">Add User</h1>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={sendInvitation}>
+                <div className="mb-3">
+                  <label htmlFor="name" className="form-label">Send Invitation to User</label>
+                  <input type="text" className="form-control" id="name" placeholder='example@gamil.com' onChange={(e) => setEmail(e.target.value)} />
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" className="btn rename-button" onClick={sendInvitation}>Send Invitation</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Delete Group */}
+      <div className="modal fade" id="deleteGroup" aria-labelledby="deleteGroupLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="deleteGroupLabel">Surely you want to delete the group</h1>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" className="btn delete-button" onClick={deleteGroup}>Delete Group</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

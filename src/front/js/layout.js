@@ -88,6 +88,7 @@ const Layout = () => {
                             <Route element={<Home />} path="/home" />
                             <Route element={<Groups />} path="/groups" />
                             <Route element={<CurrencyConversion />} path="/currency" />
+                            <Route element={<Single />} path="/api/accept_invitation/:theid/:theemail" />
                             </>
                         ) : <Route path='/access-denied' element={<AccessDenied/>} />}
                         <Route path="*" element={<Error404 />}/> 
