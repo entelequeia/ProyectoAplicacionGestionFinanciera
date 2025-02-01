@@ -8,6 +8,7 @@ export function Groups() {
   const [description, setDescription] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState()
+  const [floatingMessage, setFloatingMessage] = useState()
   const [usersGroup, setUsersGroup] = useState([])
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user')
@@ -215,13 +216,17 @@ export function Groups() {
           ...prevGroup,
           name: nameGroup
         }))
-        // location.reload()
+        setFloatingMessage('Group name changed successfully')
         await getGroup()
       } else {
         console.log(data)
       }
     } catch (error) {
       console.log('Error al cambiar rol', error)
+    } finally {
+      setTimeout(() => {
+        setFloatingMessage(null)
+      }, 3000)
     }
   }
 
@@ -236,12 +241,16 @@ export function Groups() {
       const data = await response.json()
 
       if (response.status === 200) {
-        console.log(data)
+        setFloatingMessage('Invitation sent successfully')
       } else {
         console.log(data)
       }
     } catch (error) {
       console.log('Error al enviar invitación', error)
+    } finally {
+      setTimeout(() => {
+        setFloatingMessage(null)
+      }, 3000)
     }
   }
 
@@ -405,6 +414,7 @@ export function Groups() {
                   <input type="text" className="form-control" id="name" value={nameGroup} onChange={(e) => setNameGroup(e.target.value)} />
                 </div>
               </form>
+              {floatingMessage && <div className="alert alert-success" role="alert">{floatingMessage}</div>}
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -475,6 +485,7 @@ export function Groups() {
                   <input type="text" className="form-control" id="name" placeholder='example@gamil.com' onChange={(e) => setEmail(e.target.value)} />
                 </div>
               </form>
+              {floatingMessage && <div className="alert alert-success" role="alert">{floatingMessage}</div>}
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
