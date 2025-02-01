@@ -3,7 +3,6 @@ import "../../styles/Groups.css";
 import { FaUsers } from "react-icons/fa";
 import { CgOptions } from "react-icons/cg";
 
-
 export function Groups() {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -24,10 +23,8 @@ export function Groups() {
   const [financeUser, setFinanceUser] = useState([]);
   const [financeAdded, setFinanceAdded] = useState(false);
 
-
-
-  console.log(user);
-  console.log(group);
+  console.log('user', user)
+  console.log('group', group)
 
   useEffect(() => {
     if (!group && user.id_group) {
@@ -42,7 +39,7 @@ export function Groups() {
   useEffect(() => {
     const getUserGroup = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_users_group/${group.id}`)
+        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_users_group/${group?.id}`)
         const data = await response.json()
         if (response.ok) {
           setUsersGroup(data)
@@ -53,12 +50,9 @@ export function Groups() {
     }
 
     getUserGroup()
-  }, [group])
-
-  useEffect(() => {
     fetchFinances();
     getFinancesUsers();
-  }, []);
+  }, [group])
 
   //Obetener el Grupo del usuario
   const getGroup = async () => {
@@ -237,10 +231,9 @@ export function Groups() {
   // Obtener finanzas
   const fetchFinances = async () => {
     try {
-      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_group/${group.id}`);
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_group/${group?.id}`);
       const data = await response.json();
       console.log(data); // Verifica los datos recibidos del backend
-
 
       if (response.status === 200) {
         setFinances(data);
@@ -255,7 +248,6 @@ export function Groups() {
     try {
       const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances/${user.id}`);
       const data = await response.json();
-
 
       if (response.status === 200) {
         setFinanceUser(data);
@@ -290,7 +282,6 @@ export function Groups() {
       console.error("Error en la respuesta del backend:", responseData);
     }
   };
-
 
   // Formulario para añadir finanza
   const handleAddFinanceSubmit = (e) => {
@@ -368,12 +359,48 @@ export function Groups() {
               <ul className="dropdown-menu dropdown-menu-end">
                 <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#renameGroup">Rename Group</button></li>
                 <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser">Add User</button></li>
-                <li><button disabled className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addFinanze">Add Finance</button></li>
+                <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addFinanceModal">Add Finance</button></li>
                 <li className='delete-btn'><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#deleteGroup">Delete Group</button></li>
               </ul>
             </div>
           )}
         </div>
+      )}
+
+      {group && (
+        <section className="transactions-list">
+          <h3>Recent Transactions</h3>
+          <ul>
+            {finances.map((item, key) => (
+              <li key={key} className="transaction-item">
+                <div className="transaction-logo">
+                  <img
+                    src={`https://unavatar.io/${item.name}`}
+                    alt={`${item.name} logo`}
+                  />
+                </div>
+                <div className="transaction-info">
+                  <strong>{item.name}</strong>
+                  <p className="description">
+                    {item.description || "No description"} •{" "}
+                    <span className="date">
+                      {new Date(item.date).toLocaleDateString("es-ES", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </p>
+                </div>
+                <div className="transaction-amount">
+                  <span className={`amount ${item.category === "Gasto" ? "expense" : "income"}`}>
+                    {item.category === "Gasto" ? "-" : "+"} {item.amount} $
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {/* Rename Group */}
@@ -395,6 +422,52 @@ export function Groups() {
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               <button type="button" className="btn rename-button" onClick={renameGroup}>Rename Group</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal para añadir finanza */}
+      <div className="modal fade" id="addFinanceModal" aria-labelledby="addFinanceModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="addFinanceModalLabel">Añadir Finanza al Grupo</h1>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleAddFinanceSubmit}>
+                <div className="mb-3">
+                  <label htmlFor="selectFinance" className="form-label">Seleccionar Finanza</label>
+                  <select
+                    id="selectFinance"
+                    className="form-select"
+                    value={selectedFinance?.id || ""}
+                    onChange={(e) => {
+                      const selected = financeUser.find(finance => finance.id === parseInt(e.target.value));
+                      setSelectedFinance(selected);
+                    }}
+                  >
+                    <option value="">Selecciona una opción</option>
+                    {financeUser.map((finance) => (
+                      <option key={finance.id} value={finance.id}>
+                        {finance.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    onClick={addGroupFinance}
+                    disabled={financeAdded} // Deshabilitar el botón si ya se añadió una finanza
+                  >
+                    Añadir Finanza
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

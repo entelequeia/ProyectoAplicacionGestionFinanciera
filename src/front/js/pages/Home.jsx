@@ -8,8 +8,8 @@ export function Home() {
         const savedUser = localStorage.getItem('user')
         return savedUser ? JSON.parse(savedUser) : null
     });
-    const [gastos, setGastos] = useState(0)
-    const [ingresos, setIngresos] = useState(0)
+    const [expense, setExpense] = useState(0)
+    const [incomes, setIncomes] = useState(0)
     const [finance, setFinance] = useState([]);
     const [financeData, setFinanceData] = useState({
         name: "",
@@ -75,19 +75,18 @@ export function Home() {
     }, [user]);
 
     useEffect(() => {
-        const gastosTotales = finance
-            .filter(item => item.category === "Gasto")  // Filtramos los gastos
-            .reduce((acc, item) => acc + item.amount, 0); // Sumamos los gastos
-        setGastos(gastosTotales);
+        const expenseTotal = finance
+            .filter(item => item.category === "Expense")  // Filtramos los expense
+            .reduce((acc, item) => acc + item.amount, 0); // Sumamos los expense
+        setExpense(expenseTotal);
 
-        const ingresosTotales = finance
-            .filter(item => item.category === "Ingreso")  // Filtramos los Ingreso
-            .reduce((acc, item) => acc + item.amount, 0); // Sumamos los ingresos
-        setIngresos(ingresosTotales);
+        const incomeTotal = finance
+            .filter(item => item.category === "Income")  // Filtramos los incomes
+            .reduce((acc, item) => acc + item.amount, 0); // Sumamos los incomes
+        setIncomes(incomeTotal);
     }, [finance])
 
     const postFinance = async () => {
-        console.log(financeData);
         try {
             const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/create_finance`, {
                 method: 'POST',
@@ -177,8 +176,8 @@ export function Home() {
                                         </p>
                                     </div>
                                     <div className="transaction-amount">
-                                        <span className={`amount ${item.category === "Gasto" ? "expense" : "income"}`}>
-                                            {item.category === "Gasto" ? "-" : "+"} {item.amount} $
+                                        <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
+                                            {item.category === "Expense" ? "-" : "+"} {item.amount} $
                                         </span>
                                     </div>
                                 </li>
@@ -189,7 +188,7 @@ export function Home() {
                     <section className="overview">
                         <div className="balance">
                             <h3>Your Total Balance</h3>
-                            <h1>{(ingresos - gastos).toLocaleString("en-US", { style: "decimal" })} $</h1>
+                            <h1>{(incomes - expense).toLocaleString("en-US", { style: "decimal" })} $</h1>
                             <p className="current-date">{new Date().toLocaleDateString("en-US", {
                                 weekday: "long",
                                 year: "numeric",
