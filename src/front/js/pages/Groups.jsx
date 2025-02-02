@@ -24,9 +24,10 @@ export function Groups() {
   const [financeUser, setFinanceUser] = useState([]);
   const [financeAdded, setFinanceAdded] = useState(false);
 
-  useEffect(() => {
-    if (!group || !user) return;
+  console.log('User:', user);
+  console.log('Group:', group);
 
+  useEffect(() => {
     if (!group && user.id_group) {
       getGroup();
     } else if (group) {
@@ -34,6 +35,10 @@ export function Groups() {
     } else {
       setMessage('You don`t belong to any group; you can create a new one.');
     }
+  }, [group, user])
+
+  useEffect(() => {
+    if (!group || !user) return;
 
     // Obtener usuarios del grupo
     const getUserGroup = async () => {
@@ -47,8 +52,6 @@ export function Groups() {
         console.log('Error getting user group', error)
       }
     }
-
-
 
     // Obtener finanzas
     const getFinancesUsers = async () => {
@@ -68,6 +71,31 @@ export function Groups() {
     fetchFinances();
     getFinancesUsers();
   }, [group, user])
+
+  useEffect(() => {
+    // Verificar si el grupo existe cada 30 segundos
+    const intervalId = setInterval(async () => {
+      if (!group) return; // Si no hay grupo, salir
+
+      try {
+        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_group/${group.id}`);
+        if (response.status !== 200) { // Si el grupo no existe
+          localStorage.removeItem('group');
+          setGroup(null);
+          setFloatingMessage('The group has been deleted');
+        }
+      } catch (error) {
+        console.error('Error al verificar el estado del grupo:', error);
+      } finally {
+        setTimeout(() => {
+          setFloatingMessage(null);
+        }, 3000);
+      }
+    }, 30000); // 30 segundos
+
+    return () => clearInterval(intervalId); // Limpiar el intervalo al desmontar
+  }, [group]);
+
 
   //Obetener el Grupo del usuario
   const getGroup = async () => {
@@ -174,7 +202,7 @@ export function Groups() {
         localStorage.removeItem('group')
         setGroup(null)
         await changeRol({ id_rol: 2 })
-        //setInterval(() => { location.reload() }, 1000)
+        setInterval(() => { location.reload() }, 1000)
       } else {
         console.log(data)
       }
@@ -271,7 +299,6 @@ export function Groups() {
         fetchFinances(); // Recargar la lista de finanzas
         setFinanceAdded(true); // Marcar que ya se añadió una finanza
       } else {
-        setMessage(`Error: ${responseData.error || "No se pudo añadir la finanza."}`);
         console.error("Error en la respuesta del backend:", responseData);
       }
     } catch (error) {
@@ -403,6 +430,8 @@ export function Groups() {
         </section>
       )}
 
+      {floatingMessage && <div className="alert alert-danger" role="alert">{floatingMessage}</div>}
+      
       {/* Rename Group */}
       <div className="modal fade" id="renameGroup" aria-labelledby="renameGroupLabel" aria-hidden="true">
         <div className="modal-dialog">
