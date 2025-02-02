@@ -3,6 +3,8 @@ import "../../styles/Groups.css";
 import { FaUsers } from "react-icons/fa";
 import { CgOptions } from "react-icons/cg";
 import { TbBusinessplan } from "react-icons/tb";
+import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
+import { DonutChart } from "../component/DonutChart.jsx";
 
 export function Groups() {
   const [name, setName] = useState('')
@@ -24,6 +26,8 @@ export function Groups() {
   const [selectedFinance, setSelectedFinance] = useState(null);
   const [financeUser, setFinanceUser] = useState([]);
   const [financeAdded, setFinanceAdded] = useState(false);
+
+  // const [groupFinance, setGroupFinance] = useState([]);
 
   console.log('User:', user);
   console.log('Group:', group);
@@ -325,6 +329,24 @@ export function Groups() {
     createGroup({ name, description })
   }
 
+
+  // // Fetch al mismo endpoint que Home.jsx
+  // useEffect(() => {
+  //   const fetchGroupData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_all/${user.id}`
+  //       );
+  //       const data = await response.json();
+  //       if (response.ok) setGroupFinance(data);
+  //     } catch (error) {
+  //       console.error("Error fetching group finances:", error);
+  //     }
+  //   };
+
+  //   if (user?.id) fetchGroupData();
+  // }, [user]);
+
   return (
     <div>
       <div>
@@ -430,6 +452,20 @@ export function Groups() {
             </ul>
           </section>
         )}
+      </div>
+
+      <div className="section-row chart-row">
+        <section className="chart">
+          <h3>Monthly Overview</h3>
+          <div className="chart-container">
+            <ChartJSFinancesUser finance={financeUser} />  {/* props */}
+          </div>
+        </section>
+        <section>
+          <div className="chart-container">
+            <DonutChart finance={financeUser} /> {/* props */}
+          </div>
+        </section>
       </div>
 
       {/* Rename Group */}
@@ -543,6 +579,6 @@ export function Groups() {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

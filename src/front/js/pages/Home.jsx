@@ -3,6 +3,7 @@ import "../../styles/home.css";
 import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
 import { DonutChart } from "../component/DonutChart.jsx";
 
+
 export function Home() {
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user')
