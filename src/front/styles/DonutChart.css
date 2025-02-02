@@ -1,16 +1,23 @@
-.expense-distribution{
-   height: 100px;
-}
-
-.expense-distribution-card{
+  .expense-distribution-card,
+.expenses-by-type-card {
     border-radius: 20px !important;
-}
+    max-height: 400px;
+    max-width: 300px;
+    display: flex;
+    justify-content: center;
+   
+   
+   
 
+    
+    
+} 
+
+.expense-distribution,
 .expenses-by-type{
-    
-    
-}
-.expenses-by-type-card{
+   
+ max-width: fit-content;
+ max-height: fit-content;
+  
 
-    border-radius: 20px !important;
 }

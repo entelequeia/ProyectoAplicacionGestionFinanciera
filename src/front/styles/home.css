@@ -191,7 +191,7 @@
 
 .chart {
   flex: 1;
-  max-width: 800px;
+  max-width: 700px;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -224,14 +224,54 @@
   }
 }
 
-.donut-chart{
-  max-width: 800px;
+ .donut-chart {
+  flex: 1.5;
+  height: 400px;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  display: flex;
-  
 
+} 
+
+@media (max-width: 1024px) {
+  .section-row {
+    flex-direction: column;
+  }
+
+  .transactions-list {
+    max-width: 100%;
+  }
+
+  .balance {
+    margin-top: 20px;
+  }
 }
 
+@media (max-width: 768px) {
+  .chart-row {
+    flex-direction: column;
+  }
+
+  .chart,
+  .donut-chart {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .transactions-list {
+    padding: 10px;
+  }
+
+  .balance {
+    padding: 20px;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+}
