@@ -259,6 +259,28 @@ def get_user_group(id_user):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Editar usuario
+@api.route('edit_user/<int:id_user>', methods=['PUT'])
+def edit_user(id_user):
+    try:
+        user = Users.query.filter_by(id_user=id_user).first()
+        if not user:
+            return jsonify({"error": "Profile didn't update, please try again"}), 404
+        
+        data = request.get_json()
+
+        if 'name' in data:
+            user.name = data['name']
+        if 'email' in data:
+            user.email = data['email']
+        db.session.commit() 
+        return jsonify({"success": "Profile updated successfully"}), 200
+
+
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # Enviar invitación 
 @api.route('/send_invitation', methods=['POST'])
 def send_invitation():
