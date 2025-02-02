@@ -1,17 +1,19 @@
 from flask import Blueprint, request, jsonify
-from api.models import db, Finances,Categories, Types
-from flask_cors import CORS
+from api.models import db, Finances, Categories, Types
+from  flask_cors import CORS
 
 finances_bp = Blueprint('finances', __name__)
+
 CORS(finances_bp)
+
 # Ruta para obtener las categorías
-@finances_bp.route('/api/categories', methods=['GET'])
+@finances_bp.route('/api/get_categories', methods=['GET'])
 def get_categories():
    categories = Categories.query.all()
    return jsonify([category.serialize() for category in categories ]), 200
 
 # Ruta para obtener los tipos
-@finances_bp.route('/api/types', methods=['GET'])
+@finances_bp.route('/api/get_types', methods=['GET'])
 def get_types():
     types = Types.query.all()
     return jsonify([type.serialize() for type in types]), 200
@@ -30,8 +32,7 @@ def get_finance_by_id(id):
         return jsonify({"error": "Finance not found"}), 404
     return jsonify(finance.serialize()), 200
 
-# Ruta para crear una nueva finanza
-@finances_bp.route('/api/finances', methods=['POST'])
+@finances_bp.route('/api/create_finance', methods=['POST'])
 def create_finance():
     data = request.get_json()
     
@@ -42,6 +43,11 @@ def create_finance():
             return jsonify({"error": f"'{field}' is required"}), 400
 
     try:
+        # Procesa campos que podrían venir como cadenas vacías
+        id_type = data.get('id_type')  # Obtén el valor de id_type
+        if id_type == "" or id_type is None:  # Si es cadena vacía o None, conviértelo a None
+            id_type = None
+
         new_finance = Finances(
             name=data['name'],
             amount=data['amount'],
@@ -49,11 +55,11 @@ def create_finance():
             description=data.get('description'),
             id_category=data['id_category'],
             id_user=data['id_user'],
-            id_type=data['id_type']
+            id_type=id_type
         )
         db.session.add(new_finance)
         db.session.commit()
-        return jsonify(new_finance.serialize()), 201
+        return jsonify(new_finance.serialize()), 200
     except Exception as e:
         return jsonify({"error": f"An error occurred while creating the finance: {str(e)}"}), 500
 

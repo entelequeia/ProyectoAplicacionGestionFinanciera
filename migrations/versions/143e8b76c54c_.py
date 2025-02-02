@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: c36e3781d961
+Revision ID: 143e8b76c54c
 Revises: 
-Create Date: 2025-01-19 18:59:37.911973
+Create Date: 2025-02-01 16:21:09.382141
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c36e3781d961'
+revision = '143e8b76c54c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -72,13 +72,13 @@ def upgrade():
     )
     op.create_table('group__finances',
     sa.Column('id_group_finance', sa.Integer(), nullable=False),
-    sa.Column('id_group', sa.Integer(), nullable=False),
+    sa.Column('id_group', sa.Integer(), nullable=True),
     sa.Column('id_finance', sa.Integer(), nullable=False),
-    sa.Column('create_by', sa.Integer(), nullable=False),
-    sa.Column('date', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['create_by'], ['users.id_user'], ondelete='CASCADE'),
+    sa.Column('id_user', sa.Integer(), nullable=False),
+    sa.Column('date', sa.Date(), nullable=False),
     sa.ForeignKeyConstraint(['id_finance'], ['finances.id_finance'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['id_group'], ['groups.id_group'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['id_user'], ['users.id_user'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id_group_finance')
     )
     # ### end Alembic commands ###
