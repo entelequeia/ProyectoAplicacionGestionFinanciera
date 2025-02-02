@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import "../../styles/Groups.css";
 import { FaUsers } from "react-icons/fa";
 import { CgOptions } from "react-icons/cg";
+import { TbBusinessplan } from "react-icons/tb";
 
 export function Groups() {
   const [name, setName] = useState('')
@@ -326,112 +327,111 @@ export function Groups() {
 
   return (
     <div>
-      <h2 className="encabezado" role="alert">{message}</h2>
-      {!group && (
-        <div>
-          <button type="button" className="btn create-group-btn" data-bs-toggle="modal" data-bs-target="#createGroup">
-            Create Group
-          </button>
+      <div>
+        <div className="d-flex justify-content-between align-items-center">
+          <h2 className="encabezado" role="alert">{message}</h2>
 
-          {/* Create Group */}
-          <div className="modal fade" id="createGroup" aria-labelledby="createGroupLabel" aria-hidden="true">
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h1 className="modal-title fs-5" id="createGroupLabel">New Group</h1>
-                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div className="modal-body">
-                  <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                      <label htmlFor="name" className="form-label">Name for Group</label>
-                      <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+          {!group && (
+            <div>
+              <button type="button" className="btn create-group-btn" data-bs-toggle="modal" data-bs-target="#createGroup">
+                Create Group
+              </button>
+
+              {/* Create Group */}
+              <div className="modal fade" id="createGroup" aria-labelledby="createGroupLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h1 className="modal-title fs-5" id="createGroupLabel">New Group</h1>
+                      <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div className="mb-3">
-                      <label htmlFor="description" className="form-label">Description</label>
-                      <textarea className="form-control" id="description" rows="3" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+                    <div className="modal-body">
+                      <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                          <label htmlFor="name" className="form-label">Name for Group</label>
+                          <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="description" className="form-label">Description</label>
+                          <textarea className="form-control" id="description" rows="3" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+                        </div>
+                        <div className="modal-footer">
+                          <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" className="btn create-button">Create Group</button>
+                        </div>
+                      </form>
                     </div>
-                    <div className="modal-footer">
-                      <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" className="btn create-button">Create Group</button>
-                    </div>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
-      {group && (
-        <div className="d-flex gap-2">
-          {/* Botón Users */}
-          <div>
-            <button type="button" className="position-relative btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              <FaUsers /> Users
-            </button>
-            <ul className="dropdown-menu dropdown-menu-end">
-              {usersGroup.map(user => (
-                <li key={user.id} className="dropdown-item">{user.email}</li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Botón Options (solo para admin) */}
-          {user?.id_rol === 1 && (
-            <div>
-              <button type="button" className="position-relative btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <CgOptions /> Options
+          {group && (
+            <div className="d-flex gap-2">
+              {/* Botón Add Finance */}
+              <button type="button" className='btn btn-warning' data-bs-toggle="modal" data-bs-target="#addFinanceModal">
+                <TbBusinessplan /> Add Finance
               </button>
-              <ul className="dropdown-menu dropdown-menu-end">
-                <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#renameGroup">Rename Group</button></li>
-                <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser">Add User</button></li>
-                <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addFinanceModal">Add Finance</button></li>
-                <li className='delete-btn'><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#deleteGroup">Delete Group</button></li>
-              </ul>
+
+              {/* Botón Users */}
+              <div>
+                <button type="button" className="position-relative btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  <FaUsers /> Users
+                </button>
+                <ul className="dropdown-menu dropdown-menu-end">
+                  {usersGroup.map(user => (
+                    <li key={user.id} className="dropdown-item">{user.email}</li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Botón Options (solo para admin) */}
+              {user?.id_rol === 1 && (
+                <div>
+                  <button type="button" className="position-relative btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <CgOptions /> Options
+                  </button>
+                  <ul className="dropdown-menu dropdown-menu-end">
+                    <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#renameGroup">Rename Group</button></li>
+                    <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser">Add User</button></li>
+                    <li className='delete-btn'><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#deleteGroup">Delete Group</button></li>
+                  </ul>
+                </div>
+              )}
             </div>
           )}
         </div>
-      )}
 
-      {group && (
-        <section className="transactions-list">
-          <h3>Recent Transactions</h3>
-          <ul>
-            {finances.map((item, key) => (
-              <li key={key} className="transaction-item">
-                <div className="transaction-logo">
-                  <img
-                    src={`https://unavatar.io/${item.name}`}
-                    alt={`${item.name} logo`}
-                  />
-                </div>
-                <div className="transaction-info">
-                  <strong>{item.name}</strong>
-                  <p className="description">
-                    {item.description || "No description"} •{" "}
-                    <span className="date">
-                      {new Date(item.date).toLocaleDateString("es-ES", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
+        {/* Transactions Section */}
+        {group && (
+          <section className="transactions-list">
+            <h3>Recent Transactions</h3>
+            <ul>
+              {finances.map((item, key) => (
+                <li key={key} className="transaction-item">
+                  <div className="transaction-logo">
+                    <img src={`https://unavatar.io/${item.name}`} alt={`${item.name} logo`} />
+                  </div>
+                  <div className="transaction-info">
+                    <strong>{item.name}</strong>
+                    <p className="description">
+                      {item.description || "No description"} •
+                      <span className="date">{new Date(item.date).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}</span>
+                    </p>
+                  </div>
+                  <div className="transaction-amount">
+                    <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
+                      {item.category === "Expense" ? "-" : "+"} {item.amount} $
                     </span>
-                  </p>
-                </div>
-                <div className="transaction-amount">
-                  <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
-                    {item.category === "Expense" ? "-" : "+"} {item.amount} $
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
 
-      {floatingMessage && <div className="alert alert-danger" role="alert">{floatingMessage}</div>}
-      
       {/* Rename Group */}
       <div className="modal fade" id="renameGroup" aria-labelledby="renameGroupLabel" aria-hidden="true">
         <div className="modal-dialog">
