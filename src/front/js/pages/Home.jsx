@@ -203,12 +203,12 @@ export function Home() {
                     <section className="chart">
                         <h3>Monthly Overview</h3>
                         <div className="chart-container">
-                            <ChartJSFinancesUser />
+                            <ChartJSFinancesUser finance={finance} />  {/* props */}
                         </div>
                     </section>
                     <section>
                         <div className="chart-container">
-                            <DonutChart />
+                            <DonutChart finance={finance}/> {/* props */}
                         </div>
                     </section>
                 </div>
