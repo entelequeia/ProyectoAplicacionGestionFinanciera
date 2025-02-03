@@ -43,18 +43,18 @@ export function DonutChart({ finance }) {  // Recibe la prop finance con los dat
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    if (finance && finance.length > 0) {  //Eliminé el etch y lo sustituí por la prop
-      const filteredData = finance.filter(item => item.type !== null && item.type !== "");
-      const groupedData = filteredData.reduce((acc, item) => {
-        acc[item.type] = (acc[item.type] || 0) + item.amount;
-        return acc;
-      }, {});
-      const typesArr = Object.keys(groupedData);
-      const amounts = Object.values(groupedData);
-      setTypes(typesArr);
-      setValues(amounts);
-      setTotal(amounts.reduce((sum, val) => sum + val, 0));
-    }
+    const filteredData = finance.filter(item => item.type !== null && item.type !== "");
+
+    const groupedData = filteredData.reduce((acc, item) => {
+      acc[item.type] = (acc[item.type] || 0) + item.amount;
+      return acc;
+    }, {});
+
+    const typesArr = Object.keys(groupedData);
+    const amounts = Object.values(groupedData);
+    setTypes(typesArr);
+    setValues(amounts);
+    setTotal(amounts.reduce((sum, val) => sum + val, 0));
   }, [finance]);  //Array de finanace que llega como prop 
 
   const backgroundColors = [
@@ -96,38 +96,6 @@ export function DonutChart({ finance }) {  // Recibe la prop finance con los dat
       },
     ],
   };
-
-  /* const options = {
-    responsive: true,
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: (context) => {
-            const category = context.label;
-            const value = context.raw;
-            return `${category}: €${value}`;
-          },
-        },
-      },
-      legend: {
-        position: "top",
-      },
-    },
-    elements: {
-      arc: {
-        borderWidth: 2,
-        borderColor: "#ffffff",
-        backgroundColor: "#ff0",
-        hoverBorderColor: "#fff",
-        hoverBorderWidth: 3,
-        backgroundColor: backgroundColors.slice(0, categories.length),
-      },
-    },
-    animation: {
-      animateRotate: true,
-      animateScale: true,
-    },
-  }; */
 
   return (
     <div className="container mt-5">

@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import "../../styles/Groups.css";
 import { FaUsers } from "react-icons/fa";
-import { CgOptions } from "react-icons/cg";
 import { TbBusinessplan } from "react-icons/tb";
-import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
+import { CgOptions, CgRename } from "react-icons/cg";
+import { MdDelete, MdGroupAdd } from "react-icons/md";
 import { DonutChart } from "../component/DonutChart.jsx";
+import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
 
 export function Groups() {
   const [name, setName] = useState('')
@@ -27,16 +28,11 @@ export function Groups() {
   const [financeUser, setFinanceUser] = useState([]);
   const [financeAdded, setFinanceAdded] = useState(false);
 
-  // const [groupFinance, setGroupFinance] = useState([]);
-
-  console.log('User:', user);
-  console.log('Group:', group);
-
   useEffect(() => {
     if (!group && user.id_group) {
       getGroup();
     } else if (group) {
-      setMessage(`You already belong to a group named: ${group.name}`);
+      setMessage(`Welcome to ${group.name}`);
     } else {
       setMessage('You don`t belong to any group; you can create a new one.');
     }
@@ -77,7 +73,7 @@ export function Groups() {
     getFinancesUsers();
   }, [group, user])
 
-  useEffect(() => {
+  /* useEffect(() => {
     // Verificar si el grupo existe cada 30 segundos
     const intervalId = setInterval(async () => {
       if (!group) return; // Si no hay grupo, salir
@@ -87,7 +83,6 @@ export function Groups() {
         if (response.status !== 200) { // Si el grupo no existe
           localStorage.removeItem('group');
           setGroup(null);
-          setFloatingMessage('The group has been deleted');
         }
       } catch (error) {
         console.error('Error al verificar el estado del grupo:', error);
@@ -99,8 +94,7 @@ export function Groups() {
     }, 30000); // 30 segundos
 
     return () => clearInterval(intervalId); // Limpiar el intervalo al desmontar
-  }, [group]);
-
+  }, [group]); */
 
   //Obetener el Grupo del usuario
   const getGroup = async () => {
@@ -274,7 +268,6 @@ export function Groups() {
     try {
       const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_group/${group?.id}`);
       const data = await response.json();
-      console.log("Ver finanzas del grupo", data); // Verifica los datos recibidos del backend
 
       if (response.status === 200) {
         setFinances(data);
@@ -329,29 +322,11 @@ export function Groups() {
     createGroup({ name, description })
   }
 
-
-  // // Fetch al mismo endpoint que Home.jsx
-  // useEffect(() => {
-  //   const fetchGroupData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_all/${user.id}`
-  //       );
-  //       const data = await response.json();
-  //       if (response.ok) setGroupFinance(data);
-  //     } catch (error) {
-  //       console.error("Error fetching group finances:", error);
-  //     }
-  //   };
-
-  //   if (user?.id) fetchGroupData();
-  // }, [user]);
-
   return (
     <div>
       <div>
         <div className="d-flex justify-content-between align-items-center">
-          <h2 className="encabezado" role="alert">{message}</h2>
+          <h2 className="encabezado flex-grow-1 mb-0" role="alert">{message}</h2>
 
           {!group && (
             <div>
@@ -390,7 +365,7 @@ export function Groups() {
           )}
 
           {group && (
-            <div className="d-flex gap-2">
+            <div className="container-btn d-flex gap-2 ms-auto">
               {/* Botón Add Finance */}
               <button type="button" className='btn btn-warning' data-bs-toggle="modal" data-bs-target="#addFinanceModal">
                 <TbBusinessplan /> Add Finance
@@ -398,7 +373,7 @@ export function Groups() {
 
               {/* Botón Users */}
               <div>
-                <button type="button" className="position-relative btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <button type="button" className="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                   <FaUsers /> Users
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
@@ -408,16 +383,16 @@ export function Groups() {
                 </ul>
               </div>
 
-              {/* Botón Options (solo para admin) */}
+              {/* Botón Options */}
               {user?.id_rol === 1 && (
                 <div>
-                  <button type="button" className="position-relative btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     <CgOptions /> Options
                   </button>
                   <ul className="dropdown-menu dropdown-menu-end">
-                    <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#renameGroup">Rename Group</button></li>
-                    <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser">Add User</button></li>
-                    <li className='delete-btn'><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#deleteGroup">Delete Group</button></li>
+                    <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#renameGroup"><CgRename /> Rename Group</button></li>
+                    <li><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#addUser"><MdGroupAdd /> Add User</button></li>
+                    <li className='delete-btn'><button className="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#deleteGroup"><MdDelete /> Delete Group</button></li>
                   </ul>
                 </div>
               )}
@@ -458,12 +433,12 @@ export function Groups() {
         <section className="chart">
           <h3>Monthly Overview</h3>
           <div className="chart-container">
-            <ChartJSFinancesUser finance={financeUser} />  {/* props */}
+            <ChartJSFinancesUser finance={finances} />  {/* props */}
           </div>
         </section>
         <section>
           <div className="chart-container">
-            <DonutChart finance={financeUser} /> {/* props */}
+            <DonutChart finance={finances} /> {/* props */}
           </div>
         </section>
       </div>
