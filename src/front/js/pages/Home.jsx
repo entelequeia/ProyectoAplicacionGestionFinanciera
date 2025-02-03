@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../../styles/home.css";
 import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
 import { DonutChart } from "../component/DonutChart.jsx";
+import {Link} from "react-router-dom"
 
 
 export function Home() {
@@ -140,13 +141,15 @@ export function Home() {
                             <span className="toggle-slider"></span>
                         </label>
                         {/* Icono del usuario */}
-                        <div className="user-icon" title="Account Settings">
-                            <img
-                                src={`https://unavatar.io/${user.name}`}
-                                alt="User Icon"
-                                className="profile-picture"
-                            />
-                        </div>
+                        <Link to="/profile">
+                            <div className="user-icon" title="Account Settings">
+                                <img
+                                    src={`https://unavatar.io/${user.name}`}
+                                    alt="User Icon"
+                                    className="profile-picture"
+                                />
+                            </div>
+                        </Link>
                     </div>
                 </header>
 
