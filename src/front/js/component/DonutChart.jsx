@@ -6,38 +6,6 @@ import "../../styles/DonutChart.css";
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// export function DonutChart({finance}) {  // Recibe la prop finanace
-//   const [types, setTypes] = useState([]);
-//   const [values, setValues] = useState([]);
-//   const [total, setTotal] = useState(0);
-//   const [user, setUser] = useState(() => {
-//     const savedUser = localStorage.getItem('user')
-//     return savedUser ? JSON.parse(savedUser) : null
-//   });
-
-//   useEffect(() => {
-//     if (finance && finance.length > 0) {  //Eliminé el fetch y utilizé la prop finance.
-//       try {
-//         // Filtrar datos nulos o vacíos
-//         const filteredData = data.filter(item => item.type !== null && item.type !== "");
-//         // Agrupar por tipo de finanza y calcular los totales
-//         const groupedData = filteredData.reduce((acc, item) => {
-//           acc[item.type] = (acc[item.type] || 0) + item.amount;
-//           return acc;
-//         }, {});
-//         // Crear arrays separados para categorías y valores
-//         const types = Object.keys(groupedData);
-//         const amounts = Object.values(groupedData);
-//         // Actualizar estados
-//         setTypes(types);
-//         setValues(amounts);
-//         setTotal(amounts.reduce((sum, val) => sum + val, 0));
-//       } catch (error) {
-//         console.log("Error getting finance data", error);
-//       }
-//     };
-//   }, [finance]);  //props
-
 export function DonutChart({ finance }) {  // Recibe la prop finance con los datos de Home
   const [types, setTypes] = useState([]);
   const [values, setValues] = useState([]);

@@ -3,7 +3,7 @@ import "../../styles/home.css";
 import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
 import { DonutChart } from "../component/DonutChart.jsx";
 import { MdDeleteOutline } from "react-icons/md";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 
 export function Home() {
     const [user, setUser] = useState(() => {
@@ -80,7 +80,6 @@ export function Home() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    //'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify(financeData)
             });
@@ -118,11 +117,11 @@ export function Home() {
         } catch (error) {
             console.error('Error getting finance', error);
         }
-    },[user]);
-    
+    }, [user]);
+
     const deleteFinance = async (idFinance) => {
         try {
-           const response = await fetch(`/api/finances/${idFinance}`, { method: "DELETE", redirect: "follow" });
+            const response = await fetch(`/api/finances/${idFinance}`, { method: "DELETE", redirect: "follow" });
             response.ok ? getFinance : null;
         } catch (error) {
             console.error(error);
@@ -183,17 +182,13 @@ export function Home() {
                                                     year: "numeric",
                                                 })}
                                             </span>
-                                            <button className="btn delete-finance" onClick={()=>deleteFinance(item.id)}>
-                                      
-                                            <MdDeleteOutline className="delete-icon" />
-                                   </button>
+                                            <button className="btn delete-finance" onClick={() => deleteFinance(item.id)}>
+
+                                                <MdDeleteOutline className="delete-icon" />
+                                            </button>
                                         </p>
-                                   
+
                                     </div>
-                               
-                                
-                            
-                        
 
                                     <div className="transaction-amount">
                                         <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
@@ -203,7 +198,7 @@ export function Home() {
                                 </li>
                             ))}
                         </ul>
-                     
+
                     </section>
 
                     <section className="overview">

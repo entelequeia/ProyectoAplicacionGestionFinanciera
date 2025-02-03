@@ -1,36 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../../styles/Profile.css";
 
 export function Profile() {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) :null
+    return savedUser ? JSON.parse(savedUser) : null
   });
-
-  const [userData, setUserData] = useState({name:user.name, email:user.email}) 
-
+  const [userData, setUserData] = useState({ name: user.name, email: user.email })
   const [showEditModal, setShowEditModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-
 
   const handleEditClick = () => {
     setShowEditModal(true);
   };
 
-  
   const handleSaveChanges = async () => {
     try {
-    const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/edit_user/${user.id}`, {
-    method: 'PUT',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(userData)
-});
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/edit_user/${user.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
 
-       
       if (response.ok) {
         const updatedUser = await response.json();
-        setUser(prevUser => ({...prevUser, name: user.name, email: user.email}));location.reload()
+        setUser(prevUser => ({ ...prevUser, name: user.name, email: user.email })); location.reload()
         localStorage.setItem("user", JSON.stringify(updatedUser));
         alert("Profile updated successfully!");
       } else {
@@ -44,9 +39,6 @@ export function Profile() {
       setShowEditModal(false);
     }
   };
-  
-
-  
 
   const handleInfoModalClick = (message) => {
     setModalMessage(message);
@@ -88,14 +80,14 @@ export function Profile() {
 
         {/* Options Section */}
         <div className="profile-options">
-          <div 
-            className="option-item" 
+          <div
+            className="option-item"
             title="Show a message"
             onClick={() => handleInfoModalClick("No, no, notifications stay on, grow up!")}
           >
             Notifications <span className="option-status">ON</span>
           </div>
-          <div 
+          <div
             className="option-item"
             onClick={() => handleInfoModalClick("Si no lo entiendes descárgate el Duolingo.")}
           >
@@ -105,20 +97,20 @@ export function Profile() {
 
         {/* Footer Section */}
         <div className="profile-footer">
-          <div 
-            className="footer-item" 
+          <div
+            className="footer-item"
             onClick={() => handleInfoModalClick("Figure it out, you're on your own.")}
           >
             Help & Support
           </div>
-          <div 
-            className="footer-item" 
+          <div
+            className="footer-item"
             onClick={() => handleInfoModalClick("Please leave us alone.")}
           >
             Contact us
           </div>
-          <div 
-            className="footer-item" 
+          <div
+            className="footer-item"
             onClick={() => handleInfoModalClick("We promise to keep your secrets and not sell them to any mafias.")}
           >
             Privacy policy
