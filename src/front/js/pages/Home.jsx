@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "../../styles/home.css";
 import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
 import { DonutChart } from "../component/DonutChart.jsx";
+import { MdDeleteOutline } from "react-icons/md";
 import {Link} from "react-router-dom"
-
 
 export function Home() {
     const [user, setUser] = useState(() => {
@@ -27,20 +27,6 @@ export function Home() {
     const [message, setMessage] = useState('');
 
     useEffect(() => {
-        const getFinance = async () => {
-            try {
-                const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_all/${user.id}`);
-                const data = await response.json();
-                if (response.ok) {
-                    setFinance(data);
-                } else {
-                    console.error('Error getting finance', data);
-                }
-            } catch (error) {
-                console.error('Error getting finance', error);
-            }
-        };
-
         const getCategories = async () => {
             try {
                 const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_categories`);
@@ -120,7 +106,28 @@ export function Home() {
             console.error('Error adding finance', error);
         }
     }
-
+    const getFinance = useCallback(async () => {
+        try {
+            const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_all/${user.id}`);
+            const data = await response.json();
+            if (response.ok) {
+                setFinance(data);
+            } else {
+                console.error('Error getting finance', data);
+            }
+        } catch (error) {
+            console.error('Error getting finance', error);
+        }
+    },[user]);
+    
+    const deleteFinance = async (idFinance) => {
+        try {
+           const response = await fetch(`/api/finances/${idFinance}`, { method: "DELETE", redirect: "follow" });
+            response.ok ? getFinance : null;
+        } catch (error) {
+            console.error(error);
+        }
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         postFinance();
@@ -176,8 +183,18 @@ export function Home() {
                                                     year: "numeric",
                                                 })}
                                             </span>
+                                            <button className="btn delete-finance" onClick={()=>deleteFinance(item.id)}>
+                                      
+                                            <MdDeleteOutline className="delete-icon" />
+                                   </button>
                                         </p>
+                                   
                                     </div>
+                               
+                                
+                            
+                        
+
                                     <div className="transaction-amount">
                                         <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
                                             {item.category === "Expense" ? "-" : "+"} {item.amount} $
@@ -186,6 +203,7 @@ export function Home() {
                                 </li>
                             ))}
                         </ul>
+                     
                     </section>
 
                     <section className="overview">
