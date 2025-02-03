@@ -124,7 +124,6 @@ export function Home() {
         e.preventDefault();
         postFinance();
     };
-    console.log('home', finance);
     return (
         <div className="dashboard-container">
             <main className="main-content">

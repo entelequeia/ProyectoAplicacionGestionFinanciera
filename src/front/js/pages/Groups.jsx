@@ -28,8 +28,6 @@ export function Groups() {
   const [financeUser, setFinanceUser] = useState([]);
   const [financeAdded, setFinanceAdded] = useState(false);
 
-  console.log('desde groups', finances);
-
   useEffect(() => {
     if (!group && user.id_group) {
       getGroup();
