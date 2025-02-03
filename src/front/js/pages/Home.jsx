@@ -124,7 +124,7 @@ export function Home() {
         e.preventDefault();
         postFinance();
     };
-
+    console.log('home', finance);
     return (
         <div className="dashboard-container">
             <main className="main-content">
@@ -209,7 +209,7 @@ export function Home() {
                     </section>
                     <section>
                         <div className="chart-container">
-                            <DonutChart finance={finance}/> {/* props */}
+                            <DonutChart finance={finance} /> {/* props */}
                         </div>
                     </section>
                 </div>

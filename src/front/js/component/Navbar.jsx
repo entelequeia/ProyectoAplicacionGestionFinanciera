@@ -41,7 +41,7 @@ export function Navbar() {
 						<IoAnalytics /> <Link to="/analytics">Analytics</Link>
 					</li>
 					<li>
-						<MdOutlineGroups /> <Link to="/groups">Groups</Link>
+						<Link to="/groups"><MdOutlineGroups /> <span>Groups</span></Link>
 					</li>
 					<li>
 						<IoPersonOutline /> <Link to="/profile">Profile</Link>
