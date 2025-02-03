@@ -3,11 +3,9 @@
   justify-content: center;
   align-items: center;
   position: relative;
-
   width: 100%;
-  height: 100vh
+  height: 80vh
 }
-
 
 .convertor-card {
   background-color: #7e57c2;
@@ -31,7 +29,6 @@
   background-color: #7e57c2;
   text-align: center;
   color: #efe6ff;
-
 }
 
 .value-section {
@@ -56,6 +53,7 @@
   color: #efe6ff;
   background-color: #7e57c2;
 }
+
 .value-section .value.lower-value {
   background-color: #efe6ff;
 }
@@ -105,33 +103,28 @@
 }
 
 .converted {
-  
   background-color: #efe6ff;
   padding-bottom: 20px;
 }
 
-.converted .value, .converted select.currency-select {
+.converted .value,
+.converted select.currency-select {
   color: #7e57c2
-
 }
 
 .symbol {
-
   color: #efe6ff;
 }
 
 .converted .symbol {
-
   color: #7e57c2;
 }
 
 .content {
   width: 100%;
   text-align: center;
-  background-color: #f6f0ff;
 }
 
 .title-container {
-
   padding-top: 20px;
 }
