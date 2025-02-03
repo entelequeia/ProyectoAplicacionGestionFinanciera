@@ -387,7 +387,6 @@ def add_group_finance():
         print("Error en backend:", e)
         return jsonify({"error": "Se produjo un error al agregar la finanza al grupo."}), 500
 
-
 # Obtener todas las finanzas asociadas a un grupo específico.
 @api.route('/get_finances_group/<int:id_group>', methods=['GET'])
 def get_finances_group(id_group):
@@ -406,7 +405,10 @@ def get_finances_group(id_group):
                 "amount": gf.finance.amount,
                 "date": gf.finance.date.strftime('%Y-%m-%d') if gf.finance.date else None,
                 "description": gf.finance.description,
-                "category": gf.finance.category.category if gf.finance.category else None,  
+                "category": gf.finance.category.category if gf.finance.category else None,
+                "id_category": gf.finance.id_category,
+                "id_type": gf.finance.id_type,
+                "id_user": gf.finance.id_user,
                 "type": gf.finance.type.type if gf.finance.type else None,  
                 "user": gf.finance.user.name if gf.finance.user else None  
             }

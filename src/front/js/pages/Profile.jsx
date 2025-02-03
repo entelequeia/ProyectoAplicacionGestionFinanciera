@@ -54,7 +54,7 @@ export function Profile() {
   };
 
   return (
-    <div className="profile-container">
+    <div className="profile-container w-100">
       <div className="profile-card">
         {/* Header Section */}
         <div className="profile-header">

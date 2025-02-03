@@ -3,8 +3,7 @@ import "../../styles/home.css";
 import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
 import { DonutChart } from "../component/DonutChart.jsx";
 import { MdDeleteOutline } from "react-icons/md";
-
-
+import {Link} from "react-router-dom"
 
 export function Home() {
     const [user, setUser] = useState(() => {
@@ -133,7 +132,6 @@ export function Home() {
         e.preventDefault();
         postFinance();
     };
-
     return (
         <div className="dashboard-container">
             <main className="main-content">
@@ -149,13 +147,15 @@ export function Home() {
                             <span className="toggle-slider"></span>
                         </label>
                         {/* Icono del usuario */}
-                        <div className="user-icon" title="Account Settings">
-                            <img
-                                src={`https://unavatar.io/${user.name}`}
-                                alt="User Icon"
-                                className="profile-picture"
-                            />
-                        </div>
+                        <Link to="/profile">
+                            <div className="user-icon" title="Account Settings">
+                                <img
+                                    src={`https://unavatar.io/${user.name}`}
+                                    alt="User Icon"
+                                    className="profile-picture"
+                                />
+                            </div>
+                        </Link>
                     </div>
                 </header>
 
@@ -229,7 +229,7 @@ export function Home() {
                     </section>
                     <section>
                         <div className="chart-container">
-                            <DonutChart finance={finance}/> {/* props */}
+                            <DonutChart finance={finance} /> {/* props */}
                         </div>
                     </section>
                 </div>
