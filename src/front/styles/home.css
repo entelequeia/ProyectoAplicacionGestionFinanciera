@@ -126,7 +126,7 @@
 .balance h1 {
   font-size: 3rem;
   font-weight: bold;
-  color: #2563eb;
+  color: #5614f0;
   margin-bottom: 10px;
 }
 
@@ -136,6 +136,116 @@
   color: #94a3b8;
   margin-bottom: 20px;
 }
+
+/* Estilos generales para el modal */
+.modal-content {
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  width: 700px;
+}
+
+.modal-header {
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 15px;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-body {
+  padding-top: 15px;
+  
+}
+
+/* Estilos para el formulario */
+.form-label {
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.form-control, .form-select {
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 16px;
+}
+
+textarea.form-control {
+  min-height: 100px;
+}
+
+/* Mejor espaciado para filas */
+.row {
+  margin-top: 10px;
+  display: flex;
+  gap: 15px;
+}
+
+.col-md-4, .col-md-6 {
+  flex: 1;
+}
+
+/* Mensaje de alerta */
+.alert {
+  margin-top: 15px;
+  border-radius: 8px;
+}
+
+/* Estilos para el pie del modal */
+.modal-footer {
+  border-top: 2px solid #f0f0f0;
+  padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-secondary {
+  background-color: #f8f9fa;
+  color: #333;
+  border-radius: 8px;
+  padding: 8px 20px;
+}
+
+.save-button {
+  background-color: #5614f0;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 20px;
+  box-shadow: 0 3px 6px rgba(82, 17, 156, 0.3);
+}
+.save-button:hover{
+  background-color: #6f38ef;
+  color: white;
+}
+.add-finance-button{
+  background-color: #5614f0;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 20px;
+  box-shadow: 0 3px 6px rgba(82, 17, 156, 0.3);
+}
+
+.add-finance-button:hover{
+  background-color: #6f38ef;
+  color: white;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .col-md-4, .col-md-6 {
+    width: 100%;
+  }
+}
+
 
 .expense {
   color: #e74c3c;
@@ -233,7 +343,7 @@
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding-bottom: 30px;
 
 } 
 
