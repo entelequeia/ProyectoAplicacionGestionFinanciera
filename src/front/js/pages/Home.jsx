@@ -216,7 +216,7 @@ export function Home() {
                                 month: "long",
                                 day: "numeric"
                             })}</p>
-                            <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFinance">Add New Finance</button>
+                            <button className="btn add-finance-button" data-bs-toggle="modal" data-bs-target="#addFinance">Add New Finance</button>
                         </div>
                     </section>
                 </div>
@@ -227,7 +227,7 @@ export function Home() {
                             <ChartJSFinancesUser finance={finance} />  {/* props */}
                         </div>
                     </section>
-                    <section>
+                    <section className="donut-chart">
                         <div className="chart-container">
                             <DonutChart finance={finance} /> {/* props */}
                         </div>
@@ -341,7 +341,7 @@ export function Home() {
 
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" className="btn btn-primary">Save Finance</button>
+                                    <button type="submit" className="btn save-button">Save Finance</button>
                                 </div>
                             </form>
                         </div>
