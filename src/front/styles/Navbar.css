@@ -171,7 +171,7 @@
   padding-left: 15px;
 }
 
-.sidebar.collapsed .sidebar-menu ul li a {
+.sidebar.collapsed .sidebar-menu ul li span {
   display: none;
 }
 

@@ -14,6 +14,7 @@ import { Groups } from "./pages/Groups.jsx";
 import { CurrencyConversion } from "./pages/CurrencyConversion.jsx";
 import { Error404 } from "./pages/Error404.jsx";
 import { AccessDenied } from "./pages/AccessDenied.jsx";
+import { Profile } from "./pages/Profile.jsx";
 
 import injectContext from "./store/appContext";
 
@@ -87,7 +88,9 @@ const Layout = () => {
                             <>
                             <Route element={<Home />} path="/home" />
                             <Route element={<Groups />} path="/groups" />
+                            <Route element={<Profile />} path="/profile" />
                             <Route element={<CurrencyConversion />} path="/currency" />
+                            <Route element={<Single />} path="/api/accept_invitation/:theid/:theemail" />
                             </>
                         ) : <Route path='/access-denied' element={<AccessDenied/>} />}
                         <Route path="*" element={<Error404 />}/> 

@@ -6,47 +6,57 @@ import "../../styles/DonutChart.css";
 // Registrar los componentes necesarios de Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export function DonutChart() {
+// export function DonutChart({finance}) {  // Recibe la prop finanace
+//   const [types, setTypes] = useState([]);
+//   const [values, setValues] = useState([]);
+//   const [total, setTotal] = useState(0);
+//   const [user, setUser] = useState(() => {
+//     const savedUser = localStorage.getItem('user')
+//     return savedUser ? JSON.parse(savedUser) : null
+//   });
+
+//   useEffect(() => {
+//     if (finance && finance.length > 0) {  //Eliminé el fetch y utilizé la prop finance.
+//       try {
+//         // Filtrar datos nulos o vacíos
+//         const filteredData = data.filter(item => item.type !== null && item.type !== "");
+//         // Agrupar por tipo de finanza y calcular los totales
+//         const groupedData = filteredData.reduce((acc, item) => {
+//           acc[item.type] = (acc[item.type] || 0) + item.amount;
+//           return acc;
+//         }, {});
+//         // Crear arrays separados para categorías y valores
+//         const types = Object.keys(groupedData);
+//         const amounts = Object.values(groupedData);
+//         // Actualizar estados
+//         setTypes(types);
+//         setValues(amounts);
+//         setTotal(amounts.reduce((sum, val) => sum + val, 0));
+//       } catch (error) {
+//         console.log("Error getting finance data", error);
+//       }
+//     };
+//   }, [finance]);  //props
+
+export function DonutChart({ finance }) {  // Recibe la prop finance con los datos de Home
   const [types, setTypes] = useState([]);
   const [values, setValues] = useState([]);
   const [total, setTotal] = useState(0);
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('user')
-    return savedUser ? JSON.parse(savedUser) : null
-  });
 
   useEffect(() => {
-    const getFinanceData = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.BACKEND_URL || "http://localhost:3001/"}api/get_finances_all/${user.id}`
-        );
-        const data = await response.json();
+    const filteredData = finance.filter(item => item.type !== null && item.type !== "");
 
-        // Filtrar datos nulos o vacíos
-        const filteredData = data.filter(item => item.type !== null && item.type !== "");
+    const groupedData = filteredData.reduce((acc, item) => {
+      acc[item.type] = (acc[item.type] || 0) + item.amount;
+      return acc;
+    }, {});
 
-        // Agrupar por tipo de finanza y calcular los totales
-        const groupedData = filteredData.reduce((acc, item) => {
-          acc[item.type] = (acc[item.type] || 0) + item.amount;
-          return acc;
-        }, {});
-
-        // Crear arrays separados para categorías y valores
-        const types = Object.keys(groupedData);
-        const amounts = Object.values(groupedData);
-
-        // Actualizar estados
-        setTypes(types);
-        setValues(amounts);
-        setTotal(amounts.reduce((sum, val) => sum + val, 0));
-      } catch (error) {
-        console.log("Error getting finance data", error);
-      }
-    };
-
-    getFinanceData();
-  }, [user.id]);
+    const typesArr = Object.keys(groupedData);
+    const amounts = Object.values(groupedData);
+    setTypes(typesArr);
+    setValues(amounts);
+    setTotal(amounts.reduce((sum, val) => sum + val, 0));
+  }, [finance]);  //Array de finanace que llega como prop 
 
   const backgroundColors = [
     "rgba(255, 99, 132, 0.2)",
@@ -87,38 +97,6 @@ export function DonutChart() {
       },
     ],
   };
-
-  /* const options = {
-    responsive: true,
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: (context) => {
-            const category = context.label;
-            const value = context.raw;
-            return `${category}: €${value}`;
-          },
-        },
-      },
-      legend: {
-        position: "top",
-      },
-    },
-    elements: {
-      arc: {
-        borderWidth: 2,
-        borderColor: "#ffffff",
-        backgroundColor: "#ff0",
-        hoverBorderColor: "#fff",
-        hoverBorderWidth: 3,
-        backgroundColor: backgroundColors.slice(0, categories.length),
-      },
-    },
-    animation: {
-      animateRotate: true,
-      animateScale: true,
-    },
-  }; */
 
   return (
     <div className="container mt-5">
