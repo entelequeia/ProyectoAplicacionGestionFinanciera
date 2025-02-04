@@ -464,7 +464,7 @@ export function Groups() {
             <ChartJSFinancesUser finance={finances} />  {/* props */}
           </div>
         </section>
-        <section>
+        <section className="donut-chart">
           <div className="chart-container">
             <DonutChart finance={finances} /> {/* props */}
           </div>
