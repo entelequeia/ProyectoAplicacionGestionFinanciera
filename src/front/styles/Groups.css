@@ -111,9 +111,18 @@
 
 .chart-row-group {
   padding: 20px;
-  margin-top: 2rem;
 }
 
 .chart-group h3 {
   margin-bottom: -2rem;
+}
+
+.chart-group {
+  flex: 1.5 !important;
+  max-width: 45% !important;
+}
+
+.donut-chart-group {
+  flex: 1 !important;
+  max-width: 40% !important;
 }

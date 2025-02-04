@@ -295,6 +295,18 @@ textarea.form-control {
 }
 
 .chart {
+  flex: 1.5 !important;
+  /* Ahora ocupa más espacio */
+  max-width: 50% !important;
+}
+
+.donut-chart {
+  flex: 1 !important;
+  /* Ahora ocupa menos espacio */
+  max-width: 50% !important;
+}
+
+.chart {
   flex: 1;
   max-width: 700px;
   background: #ffffff;

@@ -448,7 +448,7 @@ export function Groups() {
                   day: "numeric"
                 })}</p>
                 {/* Botón Add Finance */}
-                <button type="button" className='btn btn-warning' data-bs-toggle="modal" data-bs-target="#addFinanceModal">
+                <button type="button" className='btn add-finance-button' data-bs-toggle="modal" data-bs-target="#addFinanceModal">
                   <TbBusinessplan /> Add Finance
                 </button>
               </div>
@@ -464,7 +464,7 @@ export function Groups() {
             <ChartJSFinancesUser finance={finances} />  {/* props */}
           </div>
         </section>
-        <section className="donut-chart">
+        <section className="donut-chart donut-chart-group">
           <div className="chart-container">
             <DonutChart finance={finances} /> {/* props */}
           </div>
