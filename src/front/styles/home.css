@@ -307,6 +307,7 @@ textarea.form-control {
   text-align: center;
   font-size: 1.5rem;
   color: #334155;
+  margin-bottom: -2rem;
 }
 
 .chart-container {

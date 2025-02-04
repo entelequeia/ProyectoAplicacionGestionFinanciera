@@ -27,6 +27,8 @@ export function Groups() {
   const [selectedFinance, setSelectedFinance] = useState(null);
   const [financeUser, setFinanceUser] = useState([]);
   const [financeAdded, setFinanceAdded] = useState(false);
+  const [expense, setExpense] = useState(0)
+  const [incomes, setIncomes] = useState(0)
 
   useEffect(() => {
     if (!group && user.id_group) {
@@ -72,6 +74,18 @@ export function Groups() {
     fetchFinances();
     getFinancesUsers();
   }, [group, user])
+
+  useEffect(() => {
+    const expenseTotal = finances
+      .filter(item => item.category === "Expense")  // Filtramos los expense
+      .reduce((acc, item) => acc + item.amount, 0); // Sumamos los expense
+    setExpense(expenseTotal);
+
+    const incomeTotal = finances
+      .filter(item => item.category === "Income")  // Filtramos los incomes
+      .reduce((acc, item) => acc + item.amount, 0); // Sumamos los incomes
+    setIncomes(incomeTotal);
+  }, [finances])
 
   /* useEffect(() => {
     // Verificar si el grupo existe cada 30 segundos
@@ -323,9 +337,9 @@ export function Groups() {
   }
 
   return (
-    <div>
+    <div className='container-groups'>
       <div>
-        <div className="d-flex justify-content-between align-items-center">
+        <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="encabezado flex-grow-1 mb-0" role="alert">{message}</h2>
 
           {!group && (
@@ -366,11 +380,6 @@ export function Groups() {
 
           {group && (
             <div className="container-btn d-flex gap-2 ms-auto">
-              {/* Botón Add Finance */}
-              <button type="button" className='btn btn-warning' data-bs-toggle="modal" data-bs-target="#addFinanceModal">
-                <TbBusinessplan /> Add Finance
-              </button>
-
               {/* Botón Users */}
               <div>
                 <button type="button" className="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -402,35 +411,54 @@ export function Groups() {
 
         {/* Transactions Section */}
         {group && (
-          <section className="transactions-list">
-            <h3>Recent Transactions</h3>
-            <ul>
-              {finances.map((item, key) => (
-                <li key={key} className="transaction-item">
-                  <div className="transaction-logo">
-                    <img src={`https://unavatar.io/${item.name}`} alt={`${item.name} logo`} />
-                  </div>
-                  <div className="transaction-info">
-                    <strong>{item.name}</strong>
-                    <p className="description">
-                      {item.description || "No description"} •
-                      <span className="date">{new Date(item.date).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}</span>
-                    </p>
-                  </div>
-                  <div className="transaction-amount">
-                    <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
-                      {item.category === "Expense" ? "-" : "+"} {item.amount} $
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
+          <div className="recent-transaction-container">
+            <section className="transactions-list">
+              <h3>Recent Transactions</h3>
+              <ul>
+                {finances.map((item, key) => (
+                  <li key={key} className="transaction-item">
+                    <div className="transaction-logo">
+                      <img src={`https://unavatar.io/${item.name}`} alt={`${item.name} logo`} />
+                    </div>
+                    <div className="transaction-info">
+                      <strong>{item.name}</strong>
+                      <p className="description">
+                        {item.description || "No description"} •
+                        <span className="date">{new Date(item.date).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}</span>
+                      </p>
+                    </div>
+                    <div className="transaction-amount">
+                      <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
+                        {item.category === "Expense" ? "-" : "+"} {item.amount} $
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="overview-balance">
+              <div className="balance-groups">
+                <h3>Your Total Balance</h3>
+                <h1>{(incomes - expense).toLocaleString("en-US", { style: "decimal" })} $</h1>
+                <p className="current-date">{new Date().toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric"
+                })}</p>
+                {/* Botón Add Finance */}
+                <button type="button" className='btn btn-warning' data-bs-toggle="modal" data-bs-target="#addFinanceModal">
+                  <TbBusinessplan /> Add Finance
+                </button>
+              </div>
+            </section>
+          </div>
         )}
       </div>
 
-      <div className="section-row chart-row">
-        <section className="chart">
+      <div className="section-row chart-row chart-row-group">
+        <section className="chart chart-group">
           <h3>Monthly Overview</h3>
           <div className="chart-container">
             <ChartJSFinancesUser finance={finances} />  {/* props */}
@@ -554,6 +582,6 @@ export function Groups() {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

@@ -105,6 +105,7 @@ export function Home() {
             console.error('Error adding finance', error);
         }
     }
+
     const getFinance = useCallback(async () => {
         try {
             const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_all/${user.id}`);
@@ -127,10 +128,12 @@ export function Home() {
             console.error(error);
         }
     };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         postFinance();
     };
+
     return (
         <div className="dashboard-container">
             <main className="main-content">
@@ -183,11 +186,9 @@ export function Home() {
                                                 })}
                                             </span>
                                             <button className="btn delete-finance" onClick={() => deleteFinance(item.id)}>
-
                                                 <MdDeleteOutline className="delete-icon" />
                                             </button>
                                         </p>
-
                                     </div>
 
                                     <div className="transaction-amount">
@@ -198,7 +199,6 @@ export function Home() {
                                 </li>
                             ))}
                         </ul>
-
                     </section>
 
                     <section className="overview">
