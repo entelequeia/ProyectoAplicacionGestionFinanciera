@@ -93,7 +93,7 @@ def update_finance(id):
         return jsonify({"error": f"An error occurred while updating the finance: {str(e)}"}), 500
 
 # Ruta para eliminar una finanza
-@finances_bp.route('/api/finances/<int:id>', methods=['DELETE'])
+@finances_bp.route('/api/delete_finance/<int:id>', methods=['DELETE'])
 def delete_finance(id):
     finance = Finances.query.get(id)
     

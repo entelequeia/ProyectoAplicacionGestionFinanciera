@@ -127,7 +127,7 @@ class Types(db.Model):
 class Group_Finances(db.Model):
     id_group_finance = db.Column(db.Integer, primary_key=True)
     id_group = db.Column(db.Integer, db.ForeignKey('groups.id_group', ondelete = 'CASCADE'), nullable=True)
-    id_finance = db.Column(db.Integer, db.ForeignKey('finances.id_finance', ondelete = 'CASCADE'), nullable=False)
+    id_finance = db.Column(db.Integer, db.ForeignKey('finances.id_finance', ondelete = 'CASCADE'), nullable=True)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id_user', ondelete = 'CASCADE'), nullable=False)
     date = db.Column(db.Date, nullable=False)
 

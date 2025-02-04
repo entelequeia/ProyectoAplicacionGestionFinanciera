@@ -122,8 +122,16 @@ export function Home() {
 
     const deleteFinance = async (idFinance) => {
         try {
-            const response = await fetch(`/api/finances/${idFinance}`, { method: "DELETE", redirect: "follow" });
-            response.ok ? getFinance : null;
+            const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/delete_finance/${idFinance}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: idFinance }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                await getFinance();
+            }
+            console.log(data);
         } catch (error) {
             console.error(error);
         }
