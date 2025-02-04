@@ -189,17 +189,21 @@
   transition: padding 0.3s ease;
 }
 
+
 .sidebar.collapsed .sidebar-bottom ul li {
   padding-left: 15px;
 }
 
-.sidebar.collapsed .sidebar-bottom ul li a {
-  display: none;
-}
 
 .sidebar.collapsed .sidebar-bottom ul li svg {
   margin: 0 auto;
 }
+
+.sidebar.collapsed .sidebar-bottom ul li span {
+  display: none;
+}
+
+
 
 @media only screen and (max-width: 600px) {
   .sidebar .toggle-button {
