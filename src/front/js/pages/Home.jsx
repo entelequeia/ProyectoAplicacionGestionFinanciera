@@ -131,7 +131,6 @@ export function Home() {
             if (response.ok) {
                 await getFinance();
             }
-            console.log(data);
         } catch (error) {
             console.error(error);
         }

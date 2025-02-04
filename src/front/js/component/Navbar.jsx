@@ -29,13 +29,13 @@ export function Navbar() {
 			<div className="sidebar-menu">
 				<ul>
 					<li>
-						 <Link to="/home"> <CiHome /><span> Home</span></Link>
+						<Link to="/home"> <CiHome /><span> Home</span></Link>
 					</li>
 					<li>
-						 <Link to="/currency"> <BsCash /><span> Currency Conversion</span></Link>
+						<Link to="/currency"> <BsCash /><span> Currency Conversion</span></Link>
 					</li>
 					<li>
-						 <Link to="/messages"> <FaRegEnvelope /><span> Messages</span></Link>
+						<Link to="/messages"> <FaRegEnvelope /><span> Messages</span></Link>
 					</li>
 					<li>
 						<Link to="/analytics"> <IoAnalytics /> <span> Analytics</span></Link>
@@ -44,10 +44,10 @@ export function Navbar() {
 						<Link to="/groups"> <MdOutlineGroups /> <span> Groups</span></Link>
 					</li>
 					<li>
-						 <Link to="/profile"> <IoPersonOutline /><span> Profile</span></Link>
+						<Link to="/profile"> <IoPersonOutline /><span> Profile</span></Link>
 					</li>
 					<li>
-						 <Link to="/settings"> <CiSettings /><span> Settings</span></Link>
+						<Link to="/profile"> <CiSettings /><span> Settings</span></Link>
 					</li>
 				</ul>
 			</div>
@@ -55,10 +55,10 @@ export function Navbar() {
 			<div className="sidebar-bottom">
 				<ul>
 					<li>
-						 <Link to="/help"> <IoHelp /><span>Help</span></Link>
+						<Link to="/help"> <IoHelp /><span>Help</span></Link>
 					</li>
 					<li className="logout">
-						 <Link to="/" onClick={handleLogout}> <IoIosLogOut /><span>Logout</span></Link>
+						<Link to="/" onClick={handleLogout}> <IoIosLogOut /><span>Logout</span></Link>
 					</li>
 				</ul>
 			</div>
