@@ -50,10 +50,10 @@ export const Single = props => {
 		<div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="bg-white p-4 rounded shadow-lg text-center w-75">
         {!message && <div>
-					<h2 className="fw-bold">¡Invitación Aceptada!</h2>
+					<h2 className="fw-bold">¡Invite accepted!</h2>
 					<p className="text-secondary mt-2">
-						El usuario con email <span className="fw-bold text-primary">{email}</span>  
-						ha sido añadido al grupo <span className="fw-bold text-success">{groupName}</span>.
+						The user with email <span className="fw-bold text-primary">{email}</span>  
+						has been added to the group <span className="fw-bold text-success">{groupName}</span>.
 					</p>	
 				</div>}
         {message && <div className="alert alert-danger"><h2>Error</h2>{message}</div>}

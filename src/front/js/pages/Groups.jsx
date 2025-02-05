@@ -35,7 +35,7 @@ export function Groups() {
     } else if (group) {
       setMessage(`You already belong to a group named: ${group.name}`);
     } else {
-      setMessage('You don`t belong to any group; you can create a new one.');
+      setMessage('You do not belong to any group yet; you can create a new one.');
     }
   }, [user, group]);
 
@@ -48,7 +48,7 @@ export function Groups() {
           setUsersGroup(data)
         }
       } catch (error) {
-        console.log('Error getting user group', error)
+        console.log('Unfortunately, user group could not be loaded', error)
       }
     }
 
@@ -75,7 +75,7 @@ export function Groups() {
         console.log(data)
       }
     } catch (error) {
-      console.log('Error al cargar el grupo', error)
+      console.log('Unfortunately group could not be loaded', error)
     }
   }
 
@@ -101,7 +101,7 @@ export function Groups() {
         console.log(data)
       }
     } catch (error) {
-      console.log('Error al añadir usuario al grupo', error)
+      console.log('Unfortunately the user could not be added to the group', error)
     }
   }
 
@@ -123,10 +123,10 @@ export function Groups() {
       }
 
       if (response.status !== 200) {
-        console.log('Error al crear grupo', response)
+        console.log('Unfortunatly, group could not be created', response)
       }
     } catch (error) {
-      console.log('Error al crear grupo', error)
+      console.log('Unfortunately, group could not created', error)
     }
   }
 
@@ -155,7 +155,7 @@ export function Groups() {
         console.log(data)
       }
     } catch (error) {
-      console.log('Error al cambiar rol', error)
+      console.log('Role was not changed', error)
     }
   }
 
@@ -180,7 +180,7 @@ export function Groups() {
         console.log(data)
       }
     } catch (error) {
-      console.log('Error al cambiar rol', error)
+      console.log('Role could not be changed', error)
     }
   }
 
@@ -208,7 +208,7 @@ export function Groups() {
         console.log(data)
       }
     } catch (error) {
-      console.log('Error al cambiar rol', error)
+      console.log('Role could not be changed', error)
     }
   }
 
@@ -230,7 +230,7 @@ export function Groups() {
         console.log(data)
       }
     } catch (error) {
-      console.log('Error al enviar invitación', error)
+      console.log('Invitations could not be sent', error)
     }
   }
 
@@ -246,7 +246,7 @@ export function Groups() {
         setFinances(data);
       }
     } catch (error) {
-      console.error('Error al obtener las finanzas:', error);
+      console.error('Transactions could not be added', error);
     }
   };
 
@@ -261,7 +261,7 @@ export function Groups() {
         setFinanceUser(data);
       }
     } catch (error) {
-      console.error('Error al obtener las finanzas:', error);
+      console.error('Transactions could not be loaded', error);
     }
   };
 
@@ -281,13 +281,13 @@ export function Groups() {
     const responseData = await response.json();
 
     if (response.ok) {
-      setMessage("Finanza añadida correctamente al grupo.");
-      console.log("Finanza añadida correctamente:", responseData);
+      setMessage("Transaction added to the group successfully.");
+      console.log("Transaction added successfully:", responseData);
       fetchFinances(); // Recargar la lista de finanzas
       setFinanceAdded(true); // Marcar que ya se añadió una finanza
     } else {
-      setMessage(`Error: ${responseData.error || "No se pudo añadir la finanza."}`);
-      console.error("Error en la respuesta del backend:", responseData);
+      setMessage(`Error: ${responseData.error || "Transaction could not be added"}`);
+      console.error("There was an error in the backend response", responseData);
     }
   };
 
@@ -326,7 +326,7 @@ export function Groups() {
                 <div className="modal-body">
                   <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                      <label htmlFor="name" className="form-label">Name for Group</label>
+                      <label htmlFor="name" className="form-label">Group Name</label>
                       <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
                     </div>
                     <div className="mb-3">
@@ -411,14 +411,14 @@ export function Groups() {
             <div className="modal-body">
               <form onSubmit={sendInvitation}>
                 <div className="mb-3">
-                  <label htmlFor="name" className="form-label">Send Invitation to User</label>
+                  <label htmlFor="name" className="form-label">Send an invite to User</label>
                   <input type="text" className="form-control" id="name" placeholder='example@gamil.com' onChange={(e) => setEmail(e.target.value)} />
                 </div>
               </form>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" className="btn rename-button" onClick={sendInvitation}>Send Invitation</button>
+              <button type="button" className="btn rename-button" onClick={sendInvitation}>Send Invite</button>
             </div>
           </div>
         </div>
@@ -429,7 +429,7 @@ export function Groups() {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="deleteGroupLabel">Surely you want to delete the group</h1>
+              <h1 className="modal-title fs-5" id="deleteGroupLabel">Are you sure you want to delete the group</h1>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-footer">

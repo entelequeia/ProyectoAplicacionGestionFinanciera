@@ -126,10 +126,14 @@ export function DonutChart() {
         <div className="col-12 col-md-6">
           <div className="card shadow-sm p-3 mb-4 bg-white rounded">
             <div className="card-body">
-              <h5 className="card-title text-center">Distribución de Gastos</h5>
+              <h5 className="card-title text-center">Expense Chart</h5>
               {/* Gráfico */}
               <div className="d-flex justify-content-center">
+              {values.length === 0 ? (
+                              <p>No transactions yet</p>
+                            ) : (
                 <Doughnut data={data} />
+                            )}
               </div>
             </div>
           </div>
@@ -139,7 +143,7 @@ export function DonutChart() {
         <div className="col-12 col-md-6 mt-4 mt-md-0">
           <div className="card shadow-sm p-3 mb-4 bg-white rounded">
             <div className="card-body">
-              <h5 className="card-title">Gastos por Tipos</h5>
+              <h5 className="card-title">Expenses by type</h5>
               <ul className="list-unstyled">
                 {types.map((type, index) => (
                   <li key={index} className="d-flex align-items-center mb-2">
