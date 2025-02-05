@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: fda3db002185
+Revision ID: 427c7cdb1055
 Revises: 
-Create Date: 2025-01-31 18:53:33.653012
+Create Date: 2025-02-04 23:40:35.606230
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fda3db002185'
+revision = '427c7cdb1055'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -63,17 +63,16 @@ def upgrade():
     sa.Column('description', sa.String(length=120), nullable=True),
     sa.Column('id_category', sa.Integer(), nullable=False),
     sa.Column('id_user', sa.Integer(), nullable=False),
-    sa.Column('id_type', sa.Integer(), nullable=False),
+    sa.Column('id_type', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['id_category'], ['categories.id_category'], ),
     sa.ForeignKeyConstraint(['id_type'], ['types.id_type'], ),
     sa.ForeignKeyConstraint(['id_user'], ['users.id_user'], ),
-    sa.PrimaryKeyConstraint('id_finance'),
-    sa.UniqueConstraint('name')
+    sa.PrimaryKeyConstraint('id_finance')
     )
     op.create_table('group__finances',
     sa.Column('id_group_finance', sa.Integer(), nullable=False),
-    sa.Column('id_group', sa.Integer(), nullable=False),
-    sa.Column('id_finance', sa.Integer(), nullable=False),
+    sa.Column('id_group', sa.Integer(), nullable=True),
+    sa.Column('id_finance', sa.Integer(), nullable=True),
     sa.Column('id_user', sa.Integer(), nullable=False),
     sa.Column('date', sa.Date(), nullable=False),
     sa.ForeignKeyConstraint(['id_finance'], ['finances.id_finance'], ondelete='CASCADE'),

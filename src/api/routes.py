@@ -259,6 +259,28 @@ def get_user_group(id_user):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Editar usuario
+@api.route('edit_user/<int:id_user>', methods=['PUT'])
+def edit_user(id_user):
+    try:
+        user = Users.query.filter_by(id_user=id_user).first()
+        if not user:
+            return jsonify({"error": "Profile didn't update, please try again"}), 404
+        
+        data = request.get_json()
+
+        if 'name' in data:
+            user.name = data['name']
+        if 'email' in data:
+            user.email = data['email']
+        db.session.commit() 
+        return jsonify({"success": "Profile updated successfully"}), 200
+
+
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # Enviar invitación 
 @api.route('/send_invitation', methods=['POST'])
 def send_invitation():
@@ -365,7 +387,6 @@ def add_group_finance():
         print("Error en backend:", e)
         return jsonify({"error": "Se produjo un error al agregar la finanza al grupo."}), 500
 
-
 # Obtener todas las finanzas asociadas a un grupo específico.
 @api.route('/get_finances_group/<int:id_group>', methods=['GET'])
 def get_finances_group(id_group):
@@ -384,7 +405,10 @@ def get_finances_group(id_group):
                 "amount": gf.finance.amount,
                 "date": gf.finance.date.strftime('%Y-%m-%d') if gf.finance.date else None,
                 "description": gf.finance.description,
-                "category": gf.finance.category.category if gf.finance.category else None,  
+                "category": gf.finance.category.category if gf.finance.category else None,
+                "id_category": gf.finance.id_category,
+                "id_type": gf.finance.id_type,
+                "id_user": gf.finance.id_user,
                 "type": gf.finance.type.type if gf.finance.type else None,  
                 "user": gf.finance.user.name if gf.finance.user else None  
             }

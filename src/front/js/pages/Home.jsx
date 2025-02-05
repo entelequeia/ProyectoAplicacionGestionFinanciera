@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "../../styles/home.css";
 import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
 import { DonutChart } from "../component/DonutChart.jsx";
+import { MdDeleteOutline } from "react-icons/md";
+import { Link } from "react-router-dom"
 
 export function Home() {
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user')
         return savedUser ? JSON.parse(savedUser) : null
     });
-    const [gastos, setGastos] = useState(0)
-    const [ingresos, setIngresos] = useState(0)
+    const [expense, setExpense] = useState(0)
+    const [incomes, setIncomes] = useState(0)
     const [finance, setFinance] = useState([]);
     const [financeData, setFinanceData] = useState({
         name: "",
@@ -25,20 +27,6 @@ export function Home() {
     const [message, setMessage] = useState('');
 
     useEffect(() => {
-        const getFinance = async () => {
-            try {
-                const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_all/${user.id}`);
-                const data = await response.json();
-                if (response.ok) {
-                    setFinance(data);
-                } else {
-                    console.error('Error getting finance', data);
-                }
-            } catch (error) {
-                console.error('Error getting finance', error);
-            }
-        };
-
         const getCategories = async () => {
             try {
                 const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_categories`);
@@ -75,25 +63,23 @@ export function Home() {
     }, [user]);
 
     useEffect(() => {
-        const gastosTotales = finance
-            .filter(item => item.category === "Gasto")  // Filtramos los gastos
-            .reduce((acc, item) => acc + item.amount, 0); // Sumamos los gastos
-        setGastos(gastosTotales);
+        const expenseTotal = finance
+            .filter(item => item.category === "Expense")  // Filtramos los expense
+            .reduce((acc, item) => acc + item.amount, 0); // Sumamos los expense
+        setExpense(expenseTotal);
 
-        const ingresosTotales = finance
-            .filter(item => item.category === "Ingreso")  // Filtramos los Ingreso
-            .reduce((acc, item) => acc + item.amount, 0); // Sumamos los ingresos
-        setIngresos(ingresosTotales);
+        const incomeTotal = finance
+            .filter(item => item.category === "Income")  // Filtramos los incomes
+            .reduce((acc, item) => acc + item.amount, 0); // Sumamos los incomes
+        setIncomes(incomeTotal);
     }, [finance])
 
     const postFinance = async () => {
-        console.log(financeData);
         try {
             const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/create_finance`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    //'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify(financeData)
             });
@@ -120,6 +106,35 @@ export function Home() {
         }
     }
 
+    const getFinance = useCallback(async () => {
+        try {
+            const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_finances_all/${user.id}`);
+            const data = await response.json();
+            if (response.ok) {
+                setFinance(data);
+            } else {
+                console.error('Error getting finance', data);
+            }
+        } catch (error) {
+            console.error('Error getting finance', error);
+        }
+    }, [user]);
+
+    const deleteFinance = async (idFinance) => {
+        try {
+            const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/delete_finance/${idFinance}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: idFinance }),
+            });
+            if (response.ok) {
+                await getFinance();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         postFinance();
@@ -131,22 +146,16 @@ export function Home() {
                 <header className="header">
                     <h1>Welcome, {user.name.replace(/\b\w/g, (l) => l.toUpperCase())}</h1>
                     <div className="header-right">
-                        {/* Checkbox del modo oscuro */}
-                        <label className="dark-mode-toggle">
-                            <input
-                                type="checkbox"
-                                disabled
-                            />
-                            <span className="toggle-slider"></span>
-                        </label>
                         {/* Icono del usuario */}
-                        <div className="user-icon" title="Account Settings">
-                            <img
-                                src={`https://unavatar.io/${user.name}`}
-                                alt="User Icon"
-                                className="profile-picture"
-                            />
-                        </div>
+                        <Link to="/profile">
+                            <div className="user-icon" title="Account Settings">
+                                <img
+                                    src={`https://unavatar.io/${user.name}`}
+                                    alt="User Icon"
+                                    className="profile-picture"
+                                />
+                            </div>
+                        </Link>
                     </div>
                 </header>
 
@@ -183,10 +192,20 @@ export function Home() {
                                             <span className={`amount ${item.category === "Gasto" ? "expense" : "income"}`}>
                                                 {item.category === "Gasto" ? "-" : "+"} {item.amount} $
                                             </span>
-                                        </div>
-                                    </li>
-                                ))
-                            )}
+                                            <button className="btn delete-finance" onClick={() => deleteFinance(item.id)}>
+                                                <MdDeleteOutline className="delete-icon" />
+                                            </button>
+                                        </p>
+                                    </div>
+
+                                    <div className="transaction-amount">
+                                        <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
+                                            {item.category === "Expense" ? "-" : "+"} {item.amount} $
+                                        </span>
+                                    </div>
+                                </li>
+                            ))}
+
                         </ul>
 
                     </section>
@@ -194,14 +213,14 @@ export function Home() {
                     <section className="overview">
                         <div className="balance">
                             <h3>Your Total Balance</h3>
-                            <h1>{(ingresos - gastos).toLocaleString("en-US", { style: "decimal" })} $</h1>
+                            <h1>{(incomes - expense).toLocaleString("en-US", { style: "decimal" })} $</h1>
                             <p className="current-date">{new Date().toLocaleDateString("en-US", {
                                 weekday: "long",
                                 year: "numeric",
                                 month: "long",
                                 day: "numeric"
                             })}</p>
-                            <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFinance">Add New Finance</button>
+                            <button className="btn add-finance-button" data-bs-toggle="modal" data-bs-target="#addFinance">Add New Finance</button>
                         </div>
                     </section>
                 </div>
@@ -209,12 +228,12 @@ export function Home() {
                     <section className="chart">
                         <h3>Monthly Overview</h3>
                         <div className="chart-container">
-                            <ChartJSFinancesUser />
+                            <ChartJSFinancesUser finance={finance} />  {/* props */}
                         </div>
                     </section>
-                    <section>
+                    <section className="donut-chart">
                         <div className="chart-container">
-                            <DonutChart />
+                            <DonutChart finance={finance} /> {/* props */}
                         </div>
                     </section>
                 </div>
@@ -326,7 +345,7 @@ export function Home() {
 
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" className="btn btn-primary">Save Finance</button>
+                                    <button type="submit" className="btn save-button">Save Finance</button>
                                 </div>
                             </form>
                         </div>
@@ -336,3 +355,4 @@ export function Home() {
         </div>
     );
 }
+

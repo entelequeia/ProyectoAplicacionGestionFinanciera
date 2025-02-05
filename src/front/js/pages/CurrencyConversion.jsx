@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { currencyObj } from "../component/currency-converter.js";
 import "../../styles/currencies.css";
 
-export function CurrencyConversion () {
+export function CurrencyConversion() {
   const [baseCurrency, setBaseCurrency] = useState("");
   const [targetCurrency, setTargetCurrency] = useState("");
   const [baseValue, setBaseValue] = useState(1);
@@ -41,7 +41,7 @@ export function CurrencyConversion () {
   });
 
   const handleBaseValueChange = (e) => {
-    const newValue = parseFloat(e.target.value) 
+    const newValue = parseFloat(e.target.value)
     setBaseValue(newValue);
     updateTargetValue(newValue, baseCurrency, targetCurrency);
   };
@@ -66,58 +66,58 @@ export function CurrencyConversion () {
   };
 
   return (
-  <div className="content">
-    <div className="title-container">
-      <h1>Currency Converter</h1>
-    </div>
-    <div className="convertor-wrapper">
-      <div className="convertor-card">
+    <div className="content">
+      <div className="title-container">
+        <h1>Currency Converter</h1>
+      </div>
+      <div className="convertor-wrapper">
+        <div className="convertor-card">
           <div className="base">
-              <select value={baseCurrency} onChange={handleBaseCurrencyChange} className="currency-select">
-                  <option value="" disabled>Choose your currency</option>
-                  {currencyObj.map((currency) => (
-                      <option key={currency.currency} value={currency.currency}>
-                          {currency.name}
-                      </option>
-                  ))}
-              </select>
-              <div className="value-section">
-                  <input 
-                    type="number" 
-                    className="value" 
-                    value={baseValue} 
-                    onChange={handleBaseValueChange}
-                    disabled={!baseCurrency}
-                  />
-                  <span className="symbol">{currencyObj.find(c => c.currency === baseCurrency)?.symbol}</span>
-              </div>
+            <select value={baseCurrency} onChange={handleBaseCurrencyChange} className="currency-select">
+              <option value="" disabled>Choose your currency</option>
+              {currencyObj.map((currency) => (
+                <option key={currency.currency} value={currency.currency}>
+                  {currency.name}
+                </option>
+              ))}
+            </select>
+            <div className="value-section">
+              <input
+                type="number"
+                className="value"
+                value={baseValue}
+                onChange={handleBaseValueChange}
+                disabled={!baseCurrency}
+              />
+              <span className="symbol">{currencyObj.find(c => c.currency === baseCurrency)?.symbol}</span>
+            </div>
           </div>
           <div className="arrow-container">
-              <div className="arrow-icon">↓</div>
+            <div className="arrow-icon">↓</div>
           </div>
           <div className="converted lower-value">
-              <select value={targetCurrency} onChange={handleTargetCurrencyChange} className="currency-select lower-value">
-                  <option value="" disabled>Choose your currency</option>
-                  {currencyObj.map((currency) => (
-                      <option key={currency.currency} value={currency.currency}>
-                          {currency.name}
-                      </option>
-                  ))}
-              </select>
-              <div className="value-section lower-value">
-                  <input 
-                    type="text" 
-                    className="value lower-value" 
-                    value={targetValue} 
-                    readOnly
-                    disabled={!targetCurrency}
-                  />
-                  <span className="symbol">{currencyObj.find(c => c.currency === targetCurrency)?.symbol}</span>
-              </div>
+            <select value={targetCurrency} onChange={handleTargetCurrencyChange} className="currency-select lower-value">
+              <option value="" disabled>Choose your currency</option>
+              {currencyObj.map((currency) => (
+                <option key={currency.currency} value={currency.currency}>
+                  {currency.name}
+                </option>
+              ))}
+            </select>
+            <div className="value-section lower-value">
+              <input
+                type="text"
+                className="value lower-value"
+                value={targetValue}
+                readOnly
+                disabled={!targetCurrency}
+              />
+              <span className="symbol">{currencyObj.find(c => c.currency === targetCurrency)?.symbol}</span>
+            </div>
           </div>
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 

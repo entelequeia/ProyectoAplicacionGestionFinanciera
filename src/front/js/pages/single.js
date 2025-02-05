@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
-import { Context } from "../store/appContext";
 
-export const Single = props => {
-	const { store, actions } = useContext(Context);
+export const Single = () => {
 	const params = useParams();
 	const [groupId, setGroupId] = useState(params.theid);
 	const [email, setEmail] = useState(params.theemail.replaceAll("DOT", "."));
@@ -15,15 +13,12 @@ export const Single = props => {
     return savedUser ? JSON.parse(savedUser) : null
   })
 
-	console.log("params", groupId, email);
-
 	useEffect(() => {
 		const addUserToGroup = async () => {
 			const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}/api/add_user_to_group/${user?.id}`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
-					//Authorization: `Bearer ${localStorage.getItem("token")}`
 				},
 				body: JSON.stringify({ 'id_group': groupId })
 			})

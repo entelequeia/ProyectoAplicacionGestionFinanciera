@@ -7,7 +7,7 @@ import image from "../../img/denied.png"
 export function AccessDenied() {
   return (
     <div className="denied-container">
-      <img className="denied-image" src={image} width={300} alt="denied"/>
+      <img className="denied-image" src={image} width={300} alt="denied" />
 
       <h1 className="denied-title"> We are sorry...</h1>
       <p>
