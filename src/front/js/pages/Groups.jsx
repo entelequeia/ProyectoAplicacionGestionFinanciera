@@ -5,6 +5,7 @@ import { TbBusinessplan } from "react-icons/tb";
 import { CgOptions, CgRename } from "react-icons/cg";
 import { MdDelete, MdGroupAdd } from "react-icons/md";
 import { DonutChart } from "../component/DonutChart.jsx";
+import { MdDeleteOutline } from "react-icons/md";
 import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
 
 export function Groups() {
@@ -86,29 +87,6 @@ export function Groups() {
       .reduce((acc, item) => acc + item.amount, 0); // Sumamos los incomes
     setIncomes(incomeTotal);
   }, [finances])
-
-  /* useEffect(() => {
-    // Verificar si el grupo existe cada 30 segundos
-    const intervalId = setInterval(async () => {
-      if (!group) return; // Si no hay grupo, salir
-
-      try {
-        const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/get_group/${group.id}`);
-        if (response.status !== 200) { // Si el grupo no existe
-          localStorage.removeItem('group');
-          setGroup(null);
-        }
-      } catch (error) {
-        console.error('Error al verificar el estado del grupo:', error);
-      } finally {
-        setTimeout(() => {
-          setFloatingMessage(null);
-        }, 3000);
-      }
-    }, 30000); // 30 segundos
-
-    return () => clearInterval(intervalId); // Limpiar el intervalo al desmontar
-  }, [group]); */
 
   //Obetener el Grupo del usuario
   const getGroup = async () => {
@@ -322,6 +300,24 @@ export function Groups() {
     }
   };
 
+  const deleteFinanceGroup = async (idFinanceGroup) => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/delete_group_finance/${idFinanceGroup}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: idFinanceGroup }),
+      });
+      console.log(response);
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        await fetchFinances();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // Formulario para añadir finanza
   const handleAddFinanceSubmit = (e) => {
     e.preventDefault(); // Prevenir la acción por defecto
@@ -337,7 +333,7 @@ export function Groups() {
   }
 
   return (
-    <div className='container-groups'>
+    <div className={`${group ? 'container-groups' : ''}`}>
       <div>
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="encabezado flex-grow-1 mb-0" role="alert">{message}</h2>
@@ -424,7 +420,16 @@ export function Groups() {
                       <strong>{item.name}</strong>
                       <p className="description">
                         {item.description || "No description"} •
-                        <span className="date">{new Date(item.date).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}</span>
+                        <span className="date">
+                          {new Date(item.date).toLocaleDateString("es-ES", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric"
+                          })}
+                        </span>
+                        <button className="btn delete-finance" onClick={() => deleteFinanceGroup(item.id)}>
+                          <MdDeleteOutline className="delete-icon" />
+                        </button>
                       </p>
                     </div>
                     <div className="transaction-amount">
@@ -457,19 +462,21 @@ export function Groups() {
         )}
       </div>
 
-      <div className="section-row chart-row chart-row-group">
-        <section className="chart chart-group">
-          <h3>Monthly Overview</h3>
-          <div className="chart-container">
-            <ChartJSFinancesUser finance={finances} />  {/* props */}
-          </div>
-        </section>
-        <section className="donut-chart donut-chart-group">
-          <div className="chart-container">
-            <DonutChart finance={finances} /> {/* props */}
-          </div>
-        </section>
-      </div>
+      {group && (
+        <div className="section-row chart-row chart-row-group">
+          <section className="chart chart-group">
+            <h3>Monthly Overview</h3>
+            <div className="chart-container">
+              <ChartJSFinancesUser finance={finances} />  {/* props */}
+            </div>
+          </section>
+          <section className="donut-chart donut-chart-group">
+            <div className="chart-container">
+              <DonutChart finance={finances} /> {/* props */}
+            </div>
+          </section>
+        </div>
+      )}
 
       {/* Rename Group */}
       <div className="modal fade" id="renameGroup" aria-labelledby="renameGroupLabel" aria-hidden="true">
@@ -486,7 +493,7 @@ export function Groups() {
                   <input type="text" className="form-control" id="name" value={nameGroup} onChange={(e) => setNameGroup(e.target.value)} />
                 </div>
               </form>
-              {floatingMessage && <div className="alert alert-success" role="alert">{floatingMessage}</div>}
+              {floatingMessage && <div className="alert alert-info" role="alert">{floatingMessage}</div>}
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -585,3 +592,4 @@ export function Groups() {
     </div>
   );
 }
+

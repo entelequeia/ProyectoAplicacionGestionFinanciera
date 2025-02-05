@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f1f5f9;
+  background-color: #F1F5F9;
 }
 
 .profile-card {
@@ -15,7 +15,7 @@
 }
 
 .profile-header {
-  background: linear-gradient(to bottom, #baa0f7, #8b5cf6);
+  background: linear-gradient(to bottom, #BAA0F7, #8B5CF6);
   height: auto;
   position: relative;
   display: flex;
@@ -29,7 +29,7 @@
   position: relative;
   width: 96px;
   height: 96px;
-  background: #bfdbfe;
+  background: #BFDBFE;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -60,7 +60,7 @@
 .edit-icon {
   width: 16px;
   height: 16px;
-  color: #6b7280;
+  color: #6B7280;
 }
 
 .profile-name {
@@ -81,7 +81,7 @@
 
 .option-item,
 .footer-item {
-  background: #f3f4f6;
+  background: #F3F4F6;
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 8px;
@@ -93,12 +93,12 @@
 
 .option-item:hover,
 .footer-item:hover {
-  background: #e5e7eb;
+  background: #E5E7EB;
 }
 
 .option-status {
   font-weight: 600;
-  color: #ef4444;
+  color: #EF4444;
 }
 
 /* Modal Styles */
@@ -115,19 +115,19 @@
   z-index: 1000;
 }
 
-/* .modal-content {
+.modal-content-profile {
   background: white;
   padding: 20px;
   border-radius: 8px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 300px;
-} */
+}
 
 .modal-close-btn {
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #3b82f6;
+  background-color: #3B82F6;
   color: white;
   border: none;
   border-radius: 4px;
@@ -136,7 +136,7 @@
 }
 
 .modal-close-btn:hover {
-  background-color: #2563eb;
+  background-color: #2563EB;
 }
 
 .option-status-on {
@@ -164,8 +164,8 @@
 }
 
 /* Modal Content */
-/* .modal-content {
-  background-color: #6366f1;
+.modal-content-profile {
+  background-color: #6366F1;
   width: 90%;
   max-width: 400px;
   padding: 20px;
@@ -173,19 +173,19 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
   color: white;
-} */
+}
 
 /* Form Labels */
-/* .modal-content label {
+.modal-content-profile label {
   display: block;
   text-align: left;
   margin-bottom: 8px;
   font-size: 14px;
   color: white;
-} */
+}
 
 /* Form Inputs */
-/* .modal-content input {
+.modal-content-profile input {
   width: 100%;
   padding: 10px;
   margin-bottom: 16px;
@@ -193,14 +193,14 @@
   border-radius: 8px;
   font-size: 14px;
   color: #111827;
-  background-color: #f3f4f6;
-} */
+  background-color: #F3F4F6;
+}
 
 /* Form Input Focus */
-/* .modal-content input:focus {
+.modal-content-profile input:focus {
   outline: none;
-  border: 2px solid #3b82f6;
-} */
+  border: 2px solid #3B82F6;
+}
 
 /* Modal Buttons */
 .modal-buttons {
@@ -218,21 +218,21 @@
 }
 
 .modal-buttons button:first-of-type {
-  background-color: #d1d5db;
+  background-color: #D1D5DB;
   /* Gray Close Button */
   color: #111827;
 }
 
 .modal-buttons button:first-of-type:hover {
-  background-color: #e5e7eb;
+  background-color: #E5E7EB;
 }
 
 .modal-buttons button:last-of-type {
-  background-color: #3b82f6;
+  background-color: #3B82F6;
   /* Save Button */
   color: white;
 }
 
 .modal-buttons button:last-of-type:hover {
-  background-color: #2563eb;
+  background-color: #2563EB;
 }
