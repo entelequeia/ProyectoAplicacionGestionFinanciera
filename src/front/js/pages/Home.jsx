@@ -3,6 +3,7 @@ import "../../styles/home.css";
 import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
 import { DonutChart } from "../component/DonutChart.jsx";
 import { MdDeleteOutline } from "react-icons/md";
+import { TbBusinessplan } from "react-icons/tb";
 import { Link } from "react-router-dom"
 
 export function Home() {
@@ -221,7 +222,7 @@ export function Home() {
                                 month: "long",
                                 day: "numeric"
                             })}</p>
-                            <button className="btn add-finance-button" data-bs-toggle="modal" data-bs-target="#addFinance">Add New Finance</button>
+                            <button className="btn add-finance-button" data-bs-toggle="modal" data-bs-target="#addFinance"><TbBusinessplan /> Add Finance</button>
                         </div>
                     </section>
                 </div>
