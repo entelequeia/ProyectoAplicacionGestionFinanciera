@@ -1,3 +1,5 @@
+
+
 /* Main Content */
 .main-content {
   flex: 1;
@@ -291,18 +293,15 @@ textarea.form-control {
 .chart-row {
   display: flex;
   align-items: center;
-  /* padding: 20px; */
 }
 
 .chart {
   flex: 1.5 !important;
-  /* Ahora ocupa más espacio */
   max-width: 50% !important;
 }
 
 .donut-chart {
   flex: 1 !important;
-  /* Ahora ocupa menos espacio */
   max-width: 50% !important;
 }
 

@@ -127,7 +127,6 @@ export function Home() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: idFinance }),
             });
-            const data = await response.json();
             if (response.ok) {
                 await getFinance();
             }
@@ -147,14 +146,6 @@ export function Home() {
                 <header className="header">
                     <h1>Welcome, {user.name.replace(/\b\w/g, (l) => l.toUpperCase())}</h1>
                     <div className="header-right">
-                        {/* Checkbox del modo oscuro */}
-                        <label className="dark-mode-toggle">
-                            <input
-                                type="checkbox"
-                                disabled
-                            />
-                            <span className="toggle-slider"></span>
-                        </label>
                         {/* Icono del usuario */}
                         <Link to="/profile">
                             <div className="user-icon" title="Account Settings">
@@ -353,3 +344,4 @@ export function Home() {
         </div>
     );
 }
+

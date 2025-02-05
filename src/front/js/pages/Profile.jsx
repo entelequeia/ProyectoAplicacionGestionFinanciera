@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "../../styles/Profile.css";
-
 export function Profile() {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
@@ -10,11 +9,9 @@ export function Profile() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-
   const handleEditClick = () => {
     setShowEditModal(true);
   };
-
   const handleSaveChanges = async () => {
     try {
       const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:3001/'}api/edit_user/${user.id}`, {
@@ -22,7 +19,6 @@ export function Profile() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData)
       });
-
       if (response.ok) {
         const updatedUser = await response.json();
         setUser(prevUser => ({ ...prevUser, name: user.name, email: user.email })); location.reload()
@@ -39,12 +35,10 @@ export function Profile() {
       setShowEditModal(false);
     }
   };
-
   const handleInfoModalClick = (message) => {
     setModalMessage(message);
     setShowInfoModal(true);
   };
-
   return (
     <div className="profile-container w-100">
       <div className="profile-card">
@@ -77,7 +71,6 @@ export function Profile() {
           <p className="profile-info">{user?.email || "youremail@domain.com"} </p>
           <h2 className="profile-name">{user?.name || "Puerto Rico"}</h2>
         </div>
-
         {/* Options Section */}
         <div className="profile-options">
           <div
@@ -94,7 +87,6 @@ export function Profile() {
             Language <span className="option-status">{user?.language || "English"}</span>
           </div>
         </div>
-
         {/* Footer Section */}
         <div className="profile-footer">
           <div
@@ -117,11 +109,10 @@ export function Profile() {
           </div>
         </div>
       </div>
-
       {/* Edit Profile Modal */}
       {showEditModal && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="modal-content-profile">
             <h2>Edit Profile</h2>
             <form onSubmit={handleSaveChanges}>
               <label>Name</label>
@@ -139,10 +130,10 @@ export function Profile() {
                 onChange={(e) => setUserData({ ...userData, email: e.target.value })}
               />
               <div className="modal-buttons">
-                <button type="button" onClick={() => setShowEditModal(false)}>
+                <button type="button" className="btn" onClick={() => setShowEditModal(false)}>
                   Close
                 </button>
-                <button type="button" onClick={handleSaveChanges}>
+                <button type="button" className="btn" onClick={handleSaveChanges}>
                   Save Changes
                 </button>
               </div>
@@ -150,11 +141,10 @@ export function Profile() {
           </div>
         </div>
       )}
-
       {/* Info Modal */}
       {showInfoModal && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="modal-content-profile">
             <p>{modalMessage}</p>
             <button onClick={() => setShowInfoModal(false)}>Close</button>
           </div>
