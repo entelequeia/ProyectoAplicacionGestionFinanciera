@@ -10,7 +10,7 @@ def setup_admin(app):
     admin = Admin(app, name='4Geeks Admin', template_mode='bootstrap3')
 
     class adminView(ModelView):
-        colum_display_pk = True
+        column_display_pk = True
 
     # Add your models here, for example this is how we add a the User model to the admin
     admin.add_view(adminView(Users, db.session))
