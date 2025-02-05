@@ -42,7 +42,7 @@ export const Single = () => {
 	}, [params]);
 
 	return (
-		<div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+		<div className="d-flex justify-content-center align-items-center vh-100 w-100 bg-light">
       <div className="bg-white p-4 rounded shadow-lg text-center w-75">
         {!message && <div>
 					<h2 className="fw-bold">¡Invite accepted!</h2>
