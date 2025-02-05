@@ -11,7 +11,7 @@ export function AccessDenied() {
 
       <h1 className="denied-title"> We are sorry...</h1>
       <p>
-        You don't have permissions to access this page. <br />Please check out your credentials and try again.
+        You don't have permission to access this page. <br />Please check out your credentials and try again.
       </p>
       <Link to="/" className="btn custom-btn">
         Go to home

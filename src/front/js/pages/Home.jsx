@@ -164,24 +164,33 @@ export function Home() {
                     <section className="transactions-list">
                         <h3>Recent Transactions</h3>
                         <ul>
-                            {finance.map((item, key) => (
-                                <li key={key} className="transaction-item">
-                                    <div className="transaction-logo">
-                                        <img
-                                            src={`https://unavatar.io/${item.name}`}
-                                            alt={`${item.name} logo`}
-                                        />
-                                    </div>
-                                    <div className="transaction-info">
-                                        <strong>{item.name}</strong>
-                                        <p className="description">
-                                            {item.description || "No description"} •{" "}
-                                            <span className="date">
-                                                {new Date(item.date).toLocaleDateString("es-ES", {
-                                                    day: "numeric",
-                                                    month: "long",
-                                                    year: "numeric",
-                                                })}
+                            {finance.length === 0 ? (
+                                <p>No transactions yet</p>
+                            ) : (
+                                finance.map((item, key) => (
+                                    <li key={key} className="transaction-item">
+                                        <div className="transaction-logo">
+                                            <img
+                                                src={`https://unavatar.io/${item.name}`}
+                                                alt={`${item.name} logo`}
+                                            />
+                                        </div>
+                                        <div className="transaction-info">
+                                            <strong>{item.name}</strong>
+                                            <p className="description">
+                                                {item.description || "No description"} •{" "}
+                                                <span className="date">
+                                                    {new Date(item.date).toLocaleDateString("es-ES", {
+                                                        day: "numeric",
+                                                        month: "long",
+                                                        year: "numeric",
+                                                    })}
+                                                </span>
+                                            </p>
+                                        </div>
+                                        <div className="transaction-amount">
+                                            <span className={`amount ${item.category === "Gasto" ? "expense" : "income"}`}>
+                                                {item.category === "Gasto" ? "-" : "+"} {item.amount} $
                                             </span>
                                             <button className="btn delete-finance" onClick={() => deleteFinance(item.id)}>
                                                 <MdDeleteOutline className="delete-icon" />
@@ -196,7 +205,9 @@ export function Home() {
                                     </div>
                                 </li>
                             ))}
+
                         </ul>
+
                     </section>
 
                     <section className="overview">
