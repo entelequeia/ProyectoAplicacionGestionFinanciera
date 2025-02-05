@@ -190,26 +190,19 @@ export function Home() {
                                             </p>
                                         </div>
                                         <div className="transaction-amount">
-                                            <span className={`amount ${item.category === "Gasto" ? "expense" : "income"}`}>
-                                                {item.category === "Gasto" ? "-" : "+"} {item.amount} $
-                                            </span>
                                             <button className="btn delete-finance" onClick={() => deleteFinance(item.id)}>
                                                 <MdDeleteOutline className="delete-icon" />
                                             </button>
-                                        
-                                    </div>
+                                        </div>
 
-                                    <div className="transaction-amount">
-                                        <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
-                                            {item.category === "Expense" ? "-" : "+"} {item.amount} $
-                                        </span>
-                                    </div>
-                                </li>
-                            )))}
-                        
-
+                                        <div className="transaction-amount">
+                                            <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
+                                                {item.category === "Expense" ? "-" : "+"} {item.amount} $
+                                            </span>
+                                        </div>
+                                    </li>
+                                )))}
                         </ul>
-
                     </section>
 
                     <section className="overview">
@@ -222,7 +215,9 @@ export function Home() {
                                 month: "long",
                                 day: "numeric"
                             })}</p>
-                            <button className="btn add-finance-button" data-bs-toggle="modal" data-bs-target="#addFinance"><TbBusinessplan /> Add Finance</button>
+                            <button className="btn add-finance-button" data-bs-toggle="modal" data-bs-target="#addFinance">
+                                <TbBusinessplan /> Add Finance
+                            </button>
                         </div>
                     </section>
                 </div>
@@ -355,7 +350,5 @@ export function Home() {
                 </div>
             </div>
         </div>
-    
     );
 }
-
