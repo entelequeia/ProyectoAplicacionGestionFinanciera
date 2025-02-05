@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, Users, Groups, Roles, Group_Finances
+from api.models import db, Users, Groups, Roles, Group_Finances, Categories, Types
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -419,3 +419,79 @@ def get_finances_group(id_group):
 
     except Exception as e:
         return jsonify({"error": "Error interno del servidor", "message": str(e)}), 500
+@api.route('/roles', methods=['POST'])
+def add_roles():
+    try:
+        # Definir los roles a agregar
+        roles = ["Admin", "Guest"]
+        # Verificar si ya existen para evitar duplicados
+        existing_roles = {role.rol for role in Roles.query.all()}
+        new_roles = [Roles(rol=role) for role in roles if role not in existing_roles]
+        if not new_roles:
+            return jsonify({"message": "Los roles ya existen"}), 400
+        # Guardar en la base de datos
+        db.session.add_all(new_roles)
+        db.session.commit()
+        return jsonify({"message": "Roles agregados correctamente"}), 201
+    except Exception as e:
+        return jsonify({"error": "Error interno del servidor", "message": str(e)}), 500
+@api.route('/categories', methods=['POST'])
+def add_categories():
+    try:
+        # Definir las categorías a agregar
+        categories = ["Expense", "Income"]
+        # Verificar si ya existen para evitar duplicados
+        existing_categories = {category.name for category in Categories.query.all()}
+        new_categories = [Categories(category=category) for category in categories if category not in existing_categories]
+        if not new_categories:
+            return jsonify({"message": "Las categorías ya existen"}), 400
+        # Guardar en la base de datos
+        db.session.add_all(new_categories)
+        db.session.commit()
+        return jsonify({"message": "Categorías agregadas correctamente"}), 201
+    except Exception as e:
+        return jsonify({"error": "Error interno del servidor", "message": str(e)}), 500
+
+@api.route('/types', methods=['POST'])
+def add_types():
+    try:
+        # Definir los tipos a agregar
+        types = ["Food", "Transportation", "Leisure", "Bizum", "Fuel"]
+        # Verificar si ya existen para evitar duplicados
+        existing_types = {type.name for type in Types.query.all()}
+        new_types = [Types(type=type) for type in types if type not in existing_types]
+        if not new_types:
+            return jsonify({"message": "Los tipos ya existen"}), 400
+        # Guardar en la base de datos
+        db.session.add_all(new_types)
+        db.session.commit()
+        return jsonify({"message": "Tipos agregados correctamente"}), 201
+    except Exception as e:
+        return jsonify({"error": "Error interno del servidor", "message": str(e)}), 500
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
