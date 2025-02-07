@@ -543,7 +543,7 @@ export function Groups() {
                   <button
                     type="submit"
                     className="btn btn-primary"
-                    disabled={financeAdded} // Deshabilitar el botón si ya se añadió una finanza
+                  //disabled={financeAdded} // Deshabilitar el botón si ya se añadió una finanza
                   >
                     Añadir Finanza
                   </button>
