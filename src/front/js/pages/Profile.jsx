@@ -53,7 +53,7 @@ export function Profile() {
             {/* Avatar Placeholder */}
             <img
               className="profile-avatar"
-              src={`https://unavatar.io/${user?.firstName || 'placeholder'}`}
+              src={`https://unavatar.io/x/${user?.firstName || 'placeholder'}`}
               alt="profile"
             />
             <button className="profile-edit-btn" onClick={handleEditClick}>

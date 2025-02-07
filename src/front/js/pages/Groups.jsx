@@ -420,7 +420,7 @@ export function Groups() {
                   finances.map((item, key) => (
                     <li key={key} className="transaction-item">
                       <div className="transaction-logo">
-                        <img src={`https://unavatar.io/${item.name}`} alt={`${item.name} logo`} />
+                        <img src={`https://unavatar.io/x/${item.name}`} alt={`${item.name} logo`} />
                       </div>
                       <div className="transaction-info">
                         <strong>{item.name}</strong>

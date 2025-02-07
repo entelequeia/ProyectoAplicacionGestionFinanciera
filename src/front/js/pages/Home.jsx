@@ -151,7 +151,7 @@ export function Home() {
                         <Link to="/profile">
                             <div className="user-icon" title="Account Settings">
                                 <img
-                                    src={`https://unavatar.io/${user.name}`}
+                                    src={`https://unavatar.io/x/${user.name}`}
                                     alt="User Icon"
                                     className="profile-picture"
                                 />
@@ -172,7 +172,7 @@ export function Home() {
                                     <li key={key} className="transaction-item">
                                         <div className="transaction-logo">
                                             <img
-                                                src={`https://unavatar.io/${item.name}`}
+                                                src={`https://unavatar.io/x/${item.name}`}
                                                 alt={`${item.name} logo`}
                                             />
                                         </div>
