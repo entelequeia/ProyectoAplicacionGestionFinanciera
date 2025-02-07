@@ -9,6 +9,7 @@ export function Profile() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [message, setMessage] = useState('')
   const handleEditClick = () => {
     setShowEditModal(true);
   };
@@ -23,18 +24,22 @@ export function Profile() {
         const updatedUser = await response.json();
         setUser(prevUser => ({ ...prevUser, name: user.name, email: user.email })); location.reload()
         localStorage.setItem("user", JSON.stringify(updatedUser));
-        alert("Profile updated successfully!");
+        setMessage("Profile updated successfully!");
       } else {
-        alert("Failed to update profile. Please try again.");
+        console.log("Failed to update profile. Please try again.");
       }
     } catch (error) {
       console.error("Error saving profile:", error);
       console.log(error);
-      alert("An error occurred while updating the profile.");
+      console.log("An error occurred while updating the profile.");
     } finally {
       setShowEditModal(false);
+      setTimeout(() => {
+        setMessage(null)
+      }, 3000)
     }
   };
+
   const handleInfoModalClick = (message) => {
     setModalMessage(message);
     setShowInfoModal(true);
@@ -129,6 +134,7 @@ export function Profile() {
                 value={userData.email}
                 onChange={(e) => setUserData({ ...userData, email: e.target.value })}
               />
+              {message && <div className="alert alert-info" role="alert">{message}</div>}
               <div className="modal-buttons">
                 <button type="button" className="btn" onClick={() => setShowEditModal(false)}>
                   Close
@@ -146,11 +152,10 @@ export function Profile() {
         <div className="modal-overlay">
           <div className="modal-content-profile">
             <p>{modalMessage}</p>
-            <button onClick={() => setShowInfoModal(false)}>Close</button>
+            <button onClick={() => setShowInfoModal(false)} className="btn btn-primary">Close</button>
           </div>
         </div>
       )}
     </div>
   );
 }
-

@@ -53,7 +53,7 @@ export const Single = () => {
 				</div>}
         {message && <div className="alert alert-danger"><h2>Error</h2>{message}</div>}
         <div className="mt-4">
-          <Link to="/groups" className="btn btn-primary">Volver a Mis Grupos</Link>
+          <Link to="/groups" className="btn btn-primary">Return to My Groups</Link>
         </div>
       </div>
     </div>

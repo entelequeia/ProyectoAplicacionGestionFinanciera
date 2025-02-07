@@ -2,10 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react'
 import "../../styles/Groups.css";
 import { FaUsers } from "react-icons/fa";
 import { TbBusinessplan } from "react-icons/tb";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { MdDeleteOutline } from "react-icons/md";
 import { CgOptions, CgRename } from "react-icons/cg";
 import { MdDelete, MdGroupAdd } from "react-icons/md";
 import { DonutChart } from "../component/DonutChart.jsx";
-import { MdDeleteOutline } from "react-icons/md";
 import { ChartJSFinancesUser } from "../component/ChartJSFinancesUser.jsx";
 
 export function Groups() {
@@ -343,7 +344,7 @@ export function Groups() {
           {!group && (
             <div>
               <button type="button" className="btn create-group-btn" data-bs-toggle="modal" data-bs-target="#createGroup">
-                Create Group
+                <FaPeopleGroup /> Create Group
               </button>
 
               {/* Create Group */}
@@ -413,34 +414,37 @@ export function Groups() {
             <section className="transactions-list">
               <h3>Recent Transactions</h3>
               <ul>
-                {finances.map((item, key) => (
-                  <li key={key} className="transaction-item">
-                    <div className="transaction-logo">
-                      <img src={`https://unavatar.io/${item.name}`} alt={`${item.name} logo`} />
-                    </div>
-                    <div className="transaction-info">
-                      <strong>{item.name}</strong>
-                      <p className="description">
-                        {item.description || "No description"} •
-                        <span className="date">
-                          {new Date(item.date).toLocaleDateString("es-ES", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric"
-                          })}
+                {finances.length === 0 ? (
+                  <p style={{ color: '#B0B0B0' }}>No transactions yet</p>
+                ) : (
+                  finances.map((item, key) => (
+                    <li key={key} className="transaction-item">
+                      <div className="transaction-logo">
+                        <img src={`https://unavatar.io/${item.name}`} alt={`${item.name} logo`} />
+                      </div>
+                      <div className="transaction-info">
+                        <strong>{item.name}</strong>
+                        <p className="description">
+                          {item.description || "No description"} •
+                          <span className="date">
+                            {new Date(item.date).toLocaleDateString("es-ES", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric"
+                            })}
+                          </span>
+                          <button className="btn delete-finance" onClick={() => deleteFinanceGroup(item.id)}>
+                            <MdDeleteOutline className="delete-icon" />
+                          </button>
+                        </p>
+                      </div>
+                      <div className="transaction-amount">
+                        <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
+                          {item.category === "Expense" ? "-" : "+"} {item.amount} $
                         </span>
-                        <button className="btn delete-finance" onClick={() => deleteFinanceGroup(item.id)}>
-                          <MdDeleteOutline className="delete-icon" />
-                        </button>
-                      </p>
-                    </div>
-                    <div className="transaction-amount">
-                      <span className={`amount ${item.category === "Expense" ? "expense" : "income"}`}>
-                        {item.category === "Expense" ? "-" : "+"} {item.amount} $
-                      </span>
-                    </div>
-                  </li>
-                ))}
+                      </div>
+                    </li>
+                  )))}
               </ul>
             </section>
 

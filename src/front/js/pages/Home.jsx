@@ -166,7 +166,7 @@ export function Home() {
                         <h3>Recent Transactions</h3>
                         <ul>
                             {finance.length === 0 ? (
-                                <p>No transactions yet</p>
+                                <p style={{ color: '#B0B0B0' }}>No transactions yet</p>
                             ) : (
                                 finance.map((item, key) => (
                                     <li key={key} className="transaction-item">
